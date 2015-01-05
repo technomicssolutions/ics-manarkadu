@@ -1,0 +1,26 @@
+<div style='display:none' id="followup_details_view">
+    <div id='followup_details_view' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+	                <div id="main-title">
+						<div class="alert " align="Center"><h4>Followup Details</h4></div>
+					</div>
+					<div class="section_1">
+						<table class="table table-hover table-striped" id="list" ng-show="followups.length > 0">
+							<tr>
+								<th>Date</th>
+								<th>Remark</th>
+							</tr>
+							<tr ng-repeat="followup in followups">
+								<td>[[followup.date]]</td>
+								<td>[[followup.remark]]</td>
+							</tr>
+						</table>
+						<p ng-show="followups.length == 0" class="error_message"> No Followups</p>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

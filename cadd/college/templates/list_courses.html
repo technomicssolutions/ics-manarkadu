@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock title %}
+{% block body_id %}Courses{% endblock %}
+
+{% block controller %}
+	ng-controller="CollegeController" ng-init="init('{{csrf_token}}', 'courses')"
+{% endblock controller %}
+
+{% block dialogue_popup %}
+	{% include 'add_course.html' %} 	              	
+{% endblock %}
+
+{% block content %}
+	<div class="main-title">
+		<div class="alert alert-info" align="Center">Courses </div>
+		<div  class="new_button">		
+			<input type="button" class="btn btn-info" value="New Course" ng-click="add_new_course()">
+		</div>
+	</div>
+	<div class="form_container">
+		<div class="search_staff">
+		<table id="list" class="table table-hover" style="width:90%;margin:auto" >
+			<tr>
+			  <th>Course</th>
+			  <th>Softwares</th>
+			  <th>Duration</th>
+			  <th>Amount</th>
+			  <th>Edit </th>
+			  <th>Delete</th>
+			</tr>
+			<tr ng-repeat="course in courses">
+				<td>[[course.name]]</td> 
+				<td>
+					<table>
+						<tr ng-repeat="software in course.softwares">
+							<td class="no_border_top">[[software.name]]</td>
+						</tr>
+					</table>
+				</td>
+				<td>[[course.duration]] [[course.duration_unit]]</td> 
+				<td>[[course.amount]]</td> 
+				<td> <a href="" ng-click="edit_course(course)"><img src="/static/images/edit.png"> </td>
+				<td><a href="" ng-click="delete_course(course)"><img src="/static/images/delete.png"></td>
+			</tr>
+		</table> 
+	</div>
+		  <div class="form_text">
+            <p class="error_message"> [[message]] </p>
+        </div>
+	</div>	
+{% endblock content %}

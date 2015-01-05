@@ -1,0 +1,62 @@
+<div style='display:none' id="add_course">
+    <div id='add_batch' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+                    <div id="main-title">
+                        <div class="alert alert-info" align="Center"><h4>New Course</h4></div>
+                    </div>
+                    <form action="" id="add_course" name="add_course" method="post" class="add_course">
+
+                    <div class="section_1">
+
+                        <div class="form_text">
+                            <label > Course</label> 
+                        </div>
+                        <div class="form_input"> 
+                            <input type="text"  name="course" ng-model="course.name" />
+                        </div> 
+                        <div class="form_text">
+                            <label > Add Softwares</label> 
+                        </div>
+                        <div class="form_input"> 
+                            <select size="5" name="semester_list" ng-model="course.softwares" multiple>
+                            <option ng-repeat="software in softwares" value="[[software.id]]" ng-selected="software.selected=='true'">[[software.name]]</option>
+                            </select>   
+                        </div>
+                        <div class="form_text">
+                            <label > Duration</label> 
+                        </div>
+                        <div class="form_input"> 
+                            <input class="width_popup_input" type="text"  name="duration" ng-model="course.duration" />
+                            <select class="width_popup_input" ng-model="course.duration_unit">
+                                <option value="Hours">Hours</option>
+                                 <option value="Weeks">Weeks</option>
+                                <option value="Months">Months</option>
+                                <option value="Years">Years</option>
+                            </select>
+                        </div> 
+                        <div class="form_text">
+                            <label > Amount</label> 
+                        </div>
+                        <div class="form_input"> 
+                            <input type="text"  name="duration" ng-model="course.amount" />
+                        </div> 
+                        
+                        <div class="form_text">
+                            <p class="error_message"> [[validation_error]] </p>
+                        </div>
+
+                    </div>
+                <div align="center">
+                            <p ng-show="error_flag" class="error_message">[[message]]</p>
+                            <input class ="btn btn-info" name="submit" type="button" value="Add" ng-click="save_new_course()">
+                            <input class ="btn btn-info" name="cancel" type="button" value="Cancel" ng-click="close_course_popup()">
+                        </div>
+                    </form>                        
+                </div>
+            </div>    
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

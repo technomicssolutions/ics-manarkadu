@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Fees Payment{% endblock title %}
+{% block body_id %}fees_payment{% endblock %}
+
+{% block controller %}
+	ng-controller="FeesPaymentController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+	
+	<div id="main-title">
+		<div class="alert alert-info" align="Center"><h4>Fees Payment</h4></div>
+	</div>
+	<div class="form_container">
+		<form class="" name="payment" method="post" action="">
+			{% csrf_token %}
+			
+			<div class="control">
+				<label> Course</label> 
+				<select name="course" ng-model="course" ng-options="course.id as course.course_name for course in courses" ng-change="get_student_list()" >
+					<option value="">Select</option>
+				</select>
+			</div>
+			<div class"error_message">
+				<p class='error_message'>[[no_batch_error]]</p>
+			</div>
+			<div class="control">
+				<label> Student</label>
+				<select name="student" ng-model="student" ng-change="get_installment()" ng-options="student as student.student for student in students">
+					<option value="">Select</option>
+					
+				</select>
+			</div>
+			<div class"error_message">
+				<p class='error_message'>[[no_installment_error]]</p>
+			</div>
+			<div class="control">
+				<label> Installment </label>  
+				<select name="installment" ng-model="installment">
+					<option value="">Select</option>
+					<option ng-repeat="installment in installments" value="[[installment.id]]" ng-click="get_fees(installment)">[[installment.name]]
+					</option>
+				</select>
+			</div>
+			<div class="control">
+				<label>Due Date</label>
+				<input type="text" name="date" id="due_date" ng-model="payment_installment.due_date" readonly/> 
+			</div>
+			<div class="control">
+				<label>Total Fee Amount</label>
+				<input type="text" name="amount" ng-model="payment_installment.student_fee_amount"  readonly/>
+			</div>
+			<div class="control">
+				<label>Installment Amount</label>
+				<input type="text" name="amount" id="fee_amount" ng-model="payment_installment.amount"  readonly/>
+			</div>
+			<div class="control">
+				<label>Fine</label>
+				<input type="text" name="fine" id="fine_amount" ng-model="payment_installment.fine" readonly /> 
+			</div>
+			<div class="control">
+				<label>Installment + Fine</label>
+				<input type="text" name="total_amount" id="total_fee_amount"  readonly/> 
+			</div>
+			 <div class="control">
+				<label>Paid Date</label>
+				<input type="text" name="paid_date" id="paid_date" value="{{current_date}}" onSelect="calculate_total_amount()"/> 
+			</div>
+			<div class="control">
+				<label>Paid Installment Amount</label>
+				<input type="text" name="paid_amount" ng-model="payment_installment.paid_installment_amount" readonly id="paid_installment_amount"/> 
+			</div> 
+			<div class="control">
+				<label>Paying Amount</label>
+				<input type="text" name="paid_amount" ng-model="payment_installment.paid_amount" ng-change="calculate_balance()" autocomplete="off"/> 
+			</div>
+			<div class="control">
+				<label>Fee Waiver</label>
+				<input type="text" name="fee_waiver" ng-model="payment_installment.fee_waiver" ng-change="calculate_balance()" autocomplete="off"/> 
+			</div>
+			<div class="control">
+				<label>Paying Fine Amount</label>
+				<input type="text" name="paid_amount" ng-model="payment_installment.paid_fine_amount" ng-change="calculate_balance()" autocomplete="off"/> 
+			</div>
+			<div class="control">
+				<label>Installment Balance</label>
+				<input type="text" name="installment_balance" ng-model="payment_installment.installment_balance" readonly id="installment_balance"/>
+				<input type="hidden" name="installment_balance" ng-model="payment_installment.installment_balance" readonly id="installment_balance_amount"/>
+			</div>
+			<div class="control">
+				<label>Total Balance</label>
+				<input type="text" name="total_balance" ng-model="payment_installment.total_balance" readonly id="total_balance"/> 
+				<input type="hidden" name="total_balance" ng-model="payment_installment.total_balance_amount"/> 
+			</div>
+			<div class="buttons" align="center">
+				<p class="error_message"> [[validation_error]] </p>
+				<input type="button" class="btn btn-info" value="Cancel" onClick="document.location.href = '/'">
+				<input type="submit" value="Submit" ng-click="save_fees_payment()" class="btn btn-info">
+			</div>
+		</form>
+	</div>	
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body_id %}expense_head{% endblock %}
+
+{% block title %}New Expense Head{% endblock title %}
+
+{% block content %}
+	<div class="form_container single_column_container">
+		<form class="add_expense_head" name="add_expense_head" method="post" action="{% url 'new_expense_head' %}">{% csrf_token %}
+			<div class="control">
+				<label for="head_name">Head Name<span class="required_field">&nbsp;*</span>:</label>
+				<input type="text" name="head_name" />
+			</div>
+			<div class="control">
+				<input class="btn btn-info" type="submit" value="Submit">
+				<a class="btn btn-info" id="cancel_butn" href="{% url 'home' %}">Cancel</a>
+				<p class="error_message">{{message}}</p>
+			</div>
+		</form>
+	</div>
+
+{% endblock content %}

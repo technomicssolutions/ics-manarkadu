@@ -1,0 +1,10 @@
+Django==1.5
+Pillow==2.4.0
+South==0.7.4
+psycopg2==2.5.1
+simplejson==3.3.1
+django-jsonfield==0.9.13
+reportlab==2.7
+pytz==2014.4
+xlwt==0.7.5
+

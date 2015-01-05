@@ -1,0 +1,28 @@
+<div style='display:none' id="add_expense_head">
+    <div id='add_new_item' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+                    <span>
+                        <form action="" id="register" name="register" method="post" class="reg_sec">
+                            <div class="formrow">
+                                <div class="formtext">
+                                    <label>Head Name</label>
+                                </div>
+                                <div class="forminput">  
+                                    <input type="text" name="name" ng-model="head_name" />
+                                </div>  
+                            </div>
+                            <div align="center">
+                                <p class="error_message">[[message]]</p>
+                                <input name="submit" type="button" value="Add" ng-click="add_head()">
+                                <input name="cancel" type="button" value="Cancel" ng-click="close_popup()">
+                            </div>
+                        </form>                        
+                    </span>
+                </div>
+            </div>    
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

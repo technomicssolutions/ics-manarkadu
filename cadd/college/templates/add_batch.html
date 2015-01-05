@@ -1,0 +1,91 @@
+<div style='display:none' id="add_batch">
+    <div id='add_batch' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+                    <div id="main-title">
+                        <div class="alert alert-info" align="Center"><h4>New Batch</h4></div>
+                    </div>
+                    <form action="" id="add_batch" name="add_batch" method="post" class="add_batch">
+                        <div class="section_1">
+                            <div class="form_text">
+                                <label> Name</label>  
+                            </div>
+                            <div class="form_input">
+                                <input type="text"name="name" value="" ng-model="batch.name" id="name"></text>
+                            </div>
+                            <div class="form_text">
+                                <label> Software</label>
+                            </div>
+                            <div class="form_input"> 
+                                <select name="software" ng-model="batch.software_id" ng-change=" ">
+                                    <option value="">Select</option>
+                                    <option ng-repeat="software in softwares" value="[[software.id]]" ng-selected="batch.software_id==software.id">[[software.name]]
+                                    </option>
+                                </select>
+                            </div>                                       
+                            <div class="form_text">
+                                <label> Start Time</label>  
+                            </div>
+                            <div class="form_input">
+                                <input type="text"name="batch_start" value="" ng-model="batch.start" id="batch_start">
+                            </div>
+                            <div class="formtext">
+                                <label> End Time</label>  
+                            </div>
+                            <div class="form_input">
+                                <input type="text"name="batch_end" value="" ng-model="batch.end" id="batch_end"></text>
+                            </div>
+                            <div class="formtext">
+                                <label> Allowed No:of students</label>  
+                            </div>
+                            <div class="form_input">
+                                <input type="text"name="allowed_students" value="" ng-model="batch.allowed_students" id="allowed_students"></text>
+                            </div>
+                            <div class="form_text">
+                                <p class="error_message"> [[validation_error]] </p>
+                            </div>
+                        </div>
+                        <div align="center">
+                            <p ng-show="error_flag" class="error_message">[[message]]</p>
+                            <input class ="btn btn-info" name="submit" type="button" value="Add" ng-click="save_batch()">
+                            <input class ="btn btn-info" name="cancel" type="button" value="Cancel" ng-click="close_popup()">
+                        </div>
+                    </form>                        
+                </div>
+            </div>    
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

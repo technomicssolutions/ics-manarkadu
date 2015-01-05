@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}Edit Student Details{% endblock title %}
+{% block body_id %}edit_student{% endblock %}
+
+{% block controller %}
+	ng-controller="EditStudentController" ng-init="init('{{csrf_token}}', '{{student_id}}')"
+{% endblock controller %}
+
+{% block content %}
+
+
+ <div id="main-title">
+        <div class="alert alert-info" align="Center">
+            <h4>Edit Student Details</h4>
+        </div>
+    </div>
+    <div class="form_container">
+        <!-- <h2>Admission Form</h2> -->
+        <form>
+            
+            <div class="section_1" >
+                
+                <div class="control">
+                    <label>Student Name*</label>
+                    <input type="text" name="student_name" value="" ng-model="student.student_name" />
+                </div>
+                <div class="control">
+                    <label > Roll No*</label>  
+                    <input type="text" name="roll_number" value="" ng-model="student.roll_number"/>
+                </div>
+                <div class="control">
+                    <label> Course*</label>  
+                    <select name="course" ng-model="student.course" ng-selected="course.id == student.course_id" ng-options="course.id as course.course_name for course in courses" ng-change="get_fees()">
+					<option value="">Select</option>
+				</select>
+                </div>
+                <div class="control">
+                    <label> Batch*</label>  
+                    <select name="batch" ng-model="student.batch" ng-change="get_fees_head()"  multiple>
+                         <option ng-repeat="batch in batches" value="[[batch.id]]" ng-selected="batch.selected=='true'">[[batch.batch_name]]</option>
+                    </select>
+                </div>
+                <div class="control">
+                    <label> Qualification</label>  
+                    <input type="text" name="qualifications" value="" ng-model="student.qualifications" />
+                </div>
+                <div class="control">
+                    <label> DOB*</label>  
+                    <input type="text"name="dob" value="" ng-model="student.dob" id="dob" />
+                </div>
+                <div class="control">
+                    <label>Address*</label> 
+                    <textarea name="address" value="" ng-model="student.address"></textarea>
+                </div>
+                <div class="control">
+                    <label> Mobile* </label>  
+                    <input type="text"  name="mobile_number" value=""  ng-model="student.mobile_number" />
+                </div>
+                <div class="control">
+                    <label> Email</label>      
+                    <input type="text"name="email" value="" ng-model="student.email">
+                </div>
+                <div class="control">
+                    <label>Blood Group*</label> 
+                    <select ng-model="student.blood_group">
+                        <option value="">Select</option>
+                        <option value="A-">A-</option>
+                        <option value="A+">A+</option>
+                        <option value="B-">B-</option>
+                        <option value="B+">B+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="O-">O-</option>
+                        <option value="O+">O+</option>
+                    </select>
+                </div>
+                <div class="control">
+                    <label> Date of join*</label>
+                    <input type="text"name="doj" value="" ng-model="student.doj" id="doj" />
+                </div>
+                <div class="control">
+                    <label>Photo</label>
+                    <input type="file" fileread="photo_img.src"/>
+                    <input type="hidden" ng-model="photo_img.src">
+                </div>
+                <div class="control">
+                    <label> Cadd Registration Number</label>
+                    <input type="text"name="cadd_registration_no" value="" ng-model="student.cadd_registration_no" />
+                </div>
+                <div class="control">
+                    <label>Certificates* </label>
+                    <textarea name="certificates_submitted" value="" ng-model="student.certificates_submitted"> </textarea>
+                </div>
+                <div class="control">
+                    <label>ID Proofs* </label>
+                    <textarea name="id_proof" value="" ng-model="student.id_proofs_submitted"></textarea> 
+                </div>
+                <div class="control">
+                    <label> Guardian's Name*</label>   
+                    <input type="text" name="guardian_name" value="" ng-model="student.guardian_name">
+                </div>
+                <div class="control">
+                    <label> Relationship*</label>
+                    <input type="text" ng-model="student.relationship" />
+                </div>
+                <div class="control">
+                    <label > Mobile* </label> 
+                    <input type="text"  name="guardian_mobile_number" value=""  ng-model="student.guardian_mobile_number" />
+                </div>
+                <div class="control">
+                    <label>Actual Fees</label>
+                    <input type="text" name="fees" value="" ng-model="student.fees" readonly>
+                </div>
+                 <div class="control">
+                    <label> Discount</label>
+                    <input type="text" name="fees" value="" ng-model="student.discount" ng-change="calculate_actual_fees()">
+                </div>
+                <div class="control">
+                    <label> Fees*</label>
+                    <input type="text" name="fees" value="" ng-model="student.fees_after_discount">
+                </div>
+                <div class="control">
+                    <label> No of Installmets*</label>
+                    <input type="text" name="no_installments" value="" ng-model="student.no_installments" ng-change="load_installments()"/>
+                </div>
+
+                <div class="control" ng-show="student.no_installments">
+                    <table>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                            <th>Fine</th>
+                        </tr>
+                        <tr ng-repeat="installment in installments">
+                            <td><input type="text" ng-model="installment.amount" /></td>
+                            <td><input type="text" ng-model="installment.due_date" id="[[installment.due_date_id]]"ng-click="attach_date_picker(installment)"/></td>
+                            <td><input type="text" ng-model="installment.fine" /></td>
+                        </tr>
+                    </table>        
+                </div>
+                <div class="buttons" align="Center">
+                    <p class="error_message">[[validation_error]]</p>
+                    <input type="button" class="btn btn-info" value="Save" ng-click="save_student()"/>
+                </div>
+            </div>
+        </form>
+    </div>
+	
+
+
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Staff Details{% endblock title %}
+{% block body_id %}list_staff{% endblock %}
+
+{% block controller %}
+	ng-controller="StaffController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block dialogue_popup %}
+	{% include 'add_staff.html' %}
+	           	
+{% endblock %}
+
+{% block content %}	
+	<div class="main-title">
+		<div class="alert alert-info" align="Center">Staff Details </div>
+		<div  class="new_button">		
+			<input type="button" class="btn btn-info" value="New Staff" ng-click="add_new_staff()">
+		</div>
+	</div>
+	<div class="list_staff">
+		<table id="list" class="table table-striped" ng-show="staffs.length > 0">
+			<tr class="success" style="font-size: 12px" style="width:auto">
+				<th>Sl no</th>
+				<th>Staff Name</th>
+				<th>Role</th>
+				<th>Edit</th>
+				<th>Delete</th>
+			</tr>
+			<tr ng-repeat="staff in visible_list">
+				<td>[[$index+1]]</td>
+				<td>[[staff.first_name]] [[staff.last_name]]</td>
+				<td>[[staff.role]]</td>
+				<td><a href="" ng-click="edit_staff(staff)"><img src="/static/images/edit.png"></td>
+				<td><a href="/staff/delete_staff_details/[[staff.id]]"><img src="/static/images/delete.png"></td>
+			</tr>
+		</table> 
+		{% include 'pagination_div.html' %}
+	</div>	
+
+{% endblock content %}

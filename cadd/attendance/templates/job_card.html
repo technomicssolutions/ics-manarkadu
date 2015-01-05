@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Card{% endblock title %}
+{% block body_id %}job_card{% endblock %}
+
+{% block controller %}
+	ng-controller="JobCardController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+	<div id="main-title">
+		<div class="alert alert-info" align="Center"><h4>Job Card</h4></div>
+	</div>
+
+	<div class="search_batch">
+		<label>Select Batch</label>		
+		<select ng-model="batch_id" ng-change="select_batch()">
+			<option value="">Select</option>
+			<option ng-repeat="batch in batches" value="[[batch.id]]">[[batch.batch_name]]</option>
+		</select>					
+		<label>Select Student</label>			
+		<input type="text" ng-model="student_name" ng-change="student_search()" autocomplete="off">
+		<div ng-show="students_list.length > 0" class="search_list">
+			<div ng-repeat="student in students_list" class="search_list_item" ng-click="get_student_details(student)" ng-class="{'highlight': $index == focusIndex}">
+			<span>[[student.roll_number]]-[[student.name]]</span>
+			</div>
+		</div>
+		<p class="error_message">[[no_student_msg]]</p>
+	<div class="clear"></div>
+	<div class="control" align="Center">
+		<div class="buttons">
+			<p class="error_message"> [[message]] </p>
+			<input type="button" class="btn btn-info" ng-click="show_jobcard()" value="View Jobcard">	
+		</div>
+	</div>
+	</div>
+{% endblock content %}
+

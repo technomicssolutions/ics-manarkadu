@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Edit Batch Details{% endblock title %}
+{% block body_id %}edit_batch{% endblock %}
+
+{% block controller %}
+	ng-controller="BatchController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+
+
+<div id="main-title">
+	<div class="alert alert-info" align="Center"><h4>Edit Batch Details </h4></div>
+</div>
+
+
+<div class="form_container">
+	<form class="" name="edit_college" method="post" action="">
+		{% csrf_token %}
+		
+
+		<div class="form_text">
+			<label > Batch Name</label> 
+		</div>
+		<div class="form_input"> 
+			<input type="text"  name="course" value=""  ng-model="batch.name" /readonly>
+		</div>
+		<div class="form_text">
+			<label > Software</label> 
+		</div>
+		<div class="form_input"> 
+			<select name="software" ng-model="batch.software" ng-change=" ">
+                <option value="">Select</option>
+                <option ng-repeat="software in softwares" value="[[software.id]]" ng-selected="batch.software_id == software.id">[[software.name]]
+                </option>
+            </select>
+		</div>
+
+
+		<div class="form_text">
+            <label> Start Time</label>  
+        </div>
+
+        <div class="form_input">
+            <input type="text"name="batch_start" value="" ng-model="batch.start" id="batch_start"></text>
+        </div>
+        <div class="form_text">
+            <label> End Time</label>  
+        </div>
+
+       <div class="form_input">
+            <input type="text"name="batch_end" value="" ng-model="batch.end" id="batch_end"></text>
+        </div>
+
+        <div class="form_text">
+            <label> Allowed No of Students</label>  
+        </div>
+
+        <div class="form_input">
+            
+            <input type="text"name="allowed_students" value="" ng-model="batch.allowed_students" id="allowed_students"></text>
+        </div>
+		
+		<div class="control">
+	        <p class="error_message"> [[validation_error]] </p>
+	    </div>
+		
+		<div  align="Center">
+			<div class="buttons">
+				<input type="button" class="btn btn-info" value="Cancel" onClick="document.location.href = '/college/batches/'">
+				<input type="submit" value="Submit" ng-click="edit_batch()" class="btn btn-info">
+				
+			</div></div></div>
+		</div>
+	</form>
+</div>
+
+
+{% endblock content %}

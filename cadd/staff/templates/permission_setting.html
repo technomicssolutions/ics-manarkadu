@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Staff Permissions{% endblock title %}
+{% block body_id %}staff_permission{% endblock %}
+
+{% block controller %}
+	ng-controller="PermissionController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block dialogue_popup %}
+	{% include 'add_staff.html' %}
+	           	
+{% endblock %}
+
+{% block content %}
+	<div class="main-title">
+		<div class="alert alert-info" align="Center">Permissions </div>
+	</div>
+	<div class="form_container single_column_container">
+		<form name="permission_form">
+			<div class="control">
+				<label> Staff</label>
+				<input type="text" name="first_name" ng-model="staff_name" ng-change="search_staff()" autocomplete="off" ng-click="staff_selected=true"/>
+				<div class="search_list" ng-show="staff_selected">
+					<div class="search_list_item" ng-click="staff_selected=false">
+						<span><a href="" ng-click="new_staff()">New</a></span>
+					</div>
+					<div ng-repeat="staff in staffs" class="search_list_item" ng-class="{'highlight': $index == focusIndex}" ng-click="select_staff(staff)" >
+						<span>[[staff.first_name]] [[staff.last_name]]</span>
+					</div>
+				</div>
+			</div>
+			<br> 
+			<div class="control">
+				<input type="checkbox" ng-model="permission.attendance_module">
+				<label>Attendance Module</label><br>
+			</div>
+			<div class="control">
+				<input type="checkbox" ng-model="permission.student_module">
+				<label>Student Module</label><br>
+			</div>
+			<div class="control">
+				<input type="checkbox" ng-model="permission.master_module">
+				<label>Master Module</label><br>
+			</div>
+			<div class="control">
+				<input type="checkbox" ng-model="permission.fees_module">
+				<label>Fees Module</label><br>
+			</div>
+			<div class="control">
+				<input type="checkbox" ng-model="permission.register_module">
+				<label>Register Module</label><br>
+			</div>
+
+			<div class="control">
+				<input type="checkbox" ng-model="permission.expense_module">
+				<label>Expense Module</label><br>
+			</div>
+			
+			<p class="error_message">[[validate_staff_permission]]</p>
+			<p class="error_message">[[no_staff_message]]</p>
+			<input type="button" value="Set Permission" ng-click="save_permissions()">
+		</form>
+	</div>
+
+{% endblock %}

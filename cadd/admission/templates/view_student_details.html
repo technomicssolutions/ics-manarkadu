@@ -1,0 +1,105 @@
+<div style='display:none' id="student_details_view">
+    <div id='student_details_view' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+	                <div id="main-title">
+						<div class="alert alert-info" align="Center"><h4>Student Details</h4></div>
+					</div>
+					<div class="section_1">
+						<div class="formrow student_detail_section">
+							<img src="/site_media/[[student.photo]]" ng-show="student.photo != ''"  class="staff_pic"/> 
+							<img src="/static/images/profile_pic.jpeg" ng-hide="student.photo != ''"  class="staff_pic"/>
+							<div class="control">
+								<label class="bold">Student Name</label> 
+								<label name="student_name" value="" ng-model="student_name">[[student.student_name]] </label> 
+								<label class="bold"> Roll No</label>
+								<label name="roll_number" value="" > &nbsp;[[student.roll_number]]</label>
+								<label class="bold">Course</label>
+								<label name="course" value="" > &nbsp;[[student.course]]</label>
+								<label class="bold">Batch</label>
+								<label name="batch" value="" > &nbsp;[[ student.name ]]</label>
+								<label class="bold">Qualified Exam</label>
+								<label name="qualified_exam" value="" > &nbsp;[[student.qualified_exam]]</label>
+								<label class="bold"> Date of join</label>
+								<label name="doj" value="" > &nbsp;[[student.doj]]</label>  
+								<label class="bold">Tech Quali</label>					
+								<label name="technical_qualification" value="" > &nbsp;[[student.technical_qualification]]</label>
+							</div>
+						</div>
+						<div class="formrow student_detail_section">
+							<h3> Personal Details </h3>
+							<label class="bold"> DOB</label>
+							<label name="dob" value="" > &nbsp;[[student.dob]]</label>
+							<label class="bold">Address</label>
+							<label name="address" value="" > &nbsp;[[student.address]]</label>
+							<label class="bold"> Mobile </label> 
+							<label name="mobile_number" value="" > &nbsp;[[student.mobile_number]]</label> 
+							<label class="bold"> Tel:</label>
+							<label name="land_number" value="" > &nbsp;[[student.land_number]]</label>
+							<label class="bold"> Email</label>
+							<label name="email" value="" > &nbsp;[[student.email]]</label>
+							<label class="bold">Blood Group</label>
+							<label name="blood_group" value="" > &nbsp;[[student.blood_group]]</label>
+						</div>
+						<div class="formrow student_detail_section">
+							<h3> Certificates and Proofs </h3>
+							<label class="bold">Certificates Submitted</label>
+							<label name="certificates_submitted" value="" > &nbsp;[[student.certificates_submitted]]</label>
+							<label class="bold">Remarks </label>
+							<label name="certificates_submitted" value="" > &nbsp;[[student.certificates_remarks]]</label>
+							<label class="bold">File Number</label>
+							<label name="certificates_file" value="" > &nbsp;[[student.certificates_file]]</label>
+							<label class="bold">ID Proof Submitted</label>
+							<label name="id_proofs_submitted" value="" > &nbsp;[[student.id_proofs_submitted]]</label>
+							<label class="bold">Remarks </label>
+							<label name="id_proofs_remarks" value="" > &nbsp;[[student.id_proofs_remarks]]</label>
+							<label class="bold">File Number</label>
+							<label name="id_proofs_file" value="" > &nbsp;[[student.id_proofs_file]]</label>
+						</div>
+						<div class="formrow student_detail_section">
+							<h3> Father/Mother/Guardian Details</h3>
+							<label class="bold"> Name</label>
+							<label name="guardian_name" value="" > &nbsp;[[student.guardian_name]]</label>
+							<label class="bold">Address</label>
+							<label name="guardian_address" value="" > &nbsp;[[student.guardian_address]]</label>
+							<label class="bold"> Relationship</label>
+							<label name="relationship" value="" > &nbsp;[[student.relationship]]</label>
+							<label class="bold"> Mobile </label>
+							<label name="guardian_mobile_number" value="" > &nbsp;[[student.guardian_mobile_number]]</label>  
+							<label class="bold"> Tel:</label>
+							<label name="guardian_land_number" value="" > &nbsp;[[student.guardian_land_number]]</label> 
+							<label class="bold"> Email</label>
+							<label name="guardian_email" value="" > &nbsp;[[student.guardian_email]]</label> 
+						</div>
+					</div>				
+					<div  align="Center">
+						<div class="buttons">
+							<input type="button" class="btn btn-info" value="Close" ng-click="close_popup()" >
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

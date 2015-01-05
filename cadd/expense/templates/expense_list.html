@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Expenses{% endblock title %}
+{% block body_id %}expenses{% endblock %}
+
+{% block controller %}
+	ng-controller="ExpenseController" ng-init="init('{{csrf_token}}')"   
+{% endblock controller %}
+{% block content %}
+
+<div id="main-title">
+	<div class="alert alert-info" align="Center"><h4>Expenses</h4></div>
+</div>
+
+<div class="top_section">
+	<a class="btn btn-info" href="{% url 'new_expense' %}"> New Expense </a>
+</div>
+{% if expenses.count == 0 %}
+	<p class="error_message"> No Expenses </p>
+{% else %}
+	<table class="table table-striped">
+		<tr>
+			<th> Expense Head </th> 
+			<th> Date</th> 
+			<th> Voucher No</th> 
+			<th> Amount</th> 
+			<th> &nbsp;</th> 
+		</tr>
+	 	<tr ng-repeat="expense in expenses"> 
+	 		<td> [[expense.expense_head]] </td>
+	 		<td> [[expense.date]] </td>
+	 		<td> [[expense.voucher_no]] </td>
+	 		<td> [[expense.amount]] </td>
+	 		<td> 
+	 			<a href="{% url 'edit_expense' %}?expense_id=[[expense.id]]">
+					<img src="/static/images/edit.png">
+				</a>					
+			</td>
+	 	</tr>
+	</table>
+{% endif %}
+
+
+{% endblock content %}

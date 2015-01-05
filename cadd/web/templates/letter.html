@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Letter{% endblock title %}
+{% block body_id %}letter{% endblock %}
+
+{% block controller %}
+	ng-controller="LetterController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block dialogue_popup %}
+	{% include 'add_letter.html' %} 
+	              	
+{% endblock %}
+{% block content %}
+	<div id="main-title">
+		<div class="alert alert-info" align="Center"><h4>Letter</h4></div>
+	</div>
+	<div  align="Center">		
+		<input type="button" class="btn btn-info" value="New Letter" ng-click="new_letter()">
+	</div>
+	<div class="form_container">
+		<div class="control">
+			<label>Start Date</label>
+			<input type="text" id="start_date" name="start_date" />
+		</div>
+		<div class="control">
+			<label>End Date</label>
+			<input type="text" id="end_date" name="end_date" />
+		</div>
+		
+		<div class="control">
+			<input type="radio" ng-model="letter_type" value="Incoming" /> <label>Incoming</label>
+			<input type="radio" ng-model="letter_type" value="Outgoing" /> <label>Outgoing</label>
+		</div>
+		<div class="control">
+			<p class="error_message">[[error_message]]</p>
+			<input type="button" value="View" ng-click="view_list('view')" />
+			<input type="button" value="Print" ng-click="view_list('print')" />
+		</div>
+		<div class="search_staff" ng-show="letters.length > 0">
+			<table class="table table-hover" id="list">
+				<tr>
+					<th>#</th>
+					<th>Date</th>
+					<th>To</th>
+					<th>From</th>
+					<th>Edit </th>
+					<th>Delete</th>
+				</tr>
+				<tr ng-repeat="letter in letters">
+					<td>[[$index + 1]]</td>
+					<td>[[letter.date]]</td>
+					<td>[[letter.to]]</td>
+					<td>[[letter.from]]</td>
+					<td> <a href="" ng-click="edit_letter(letter)"><img src="/static/images/edit.png"> </td>
+					<td><a href="/delete_letter/[[letter.id]]/" ><img src="/static/images/delete.png"></td>
+				</tr>
+			</table>
+		</div>	
+	</div>
+{% endblock content %}

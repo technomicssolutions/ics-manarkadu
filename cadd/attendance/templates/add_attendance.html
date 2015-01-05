@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance{% endblock title %}
+{% block body_id %}attendance{% endblock %}
+
+{% block controller %}
+	ng-controller="AttendanceController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+	<div id="main-title">
+        <div class="alert alert-info" align="Center">
+            <h4>Add Attendance</h4>
+        </div>
+    </div>
+	<div class="attendance_form_container">
+		<form name="attendance_entry" method="post">
+			<div class="form_contents_attendance">
+				<div class="section_1_attendance">
+					<div class="add_attendance_row">
+						<label class="add_attendance_label">Select Batch</label>				  <select ng-model="batch.id" >
+							<option value="">Select</option>
+							<option ng-repeat="batch in batches" value="[[batch.id]]" ng-click="get_batch_details(batch)">[[batch.batch_name]]</option>
+						</select>					
+					</div>
+					<div class="display_date">
+						<label class="add_attendance_label">Date: {{current_date}}</label>
+					</div>
+					<div class="display_details">
+						<label class="add_attendance_label"><b>P</b> - Present <b>A</b> - Absent</label>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div class="section_1_attendance">
+					<table border="0" class="table table-striped" cellpadding="0" cellspacing="0" ng-show="students.length > 0">
+						<tr>
+							<th>Roll No</th>
+							<th>Name</th>
+							<th>Absent/Present</th>
+						</tr>
+						<tr ng-repeat="student in students">
+							<td>[[ student.roll_number ]]</td>
+							<td>[[student.name]]</td>
+							<td><span ng-show="!is_edit">
+									<span class="red_font" ng-hide="student.status=='P'">[[ student.status ]]</span>
+									<span class="bold_font" ng-show="student.status=='P'">[[student.status]]</span>
+								</span>
+								<span ng-hide="!is_edit">
+									<input type="checkbox" ng-model="student.is_presented">
+								</span>
+							</td>
+						</tr>	                        
+					</table>
+				</div>
+			</div>
+			<div class="" ng-show="students.length > 0">
+				 <div class="form_text">
+                    <label> Staff</label>
+                </div>
+                 <div class="form_input">
+                    <input type="text" ng-model="batch.staff" readonly>
+                </div>
+				<div class="form_text">
+                    <label> Topics*</label>  
+                </div>
+                <div class="form_input">
+                    <textarea ng-model="batch.topics" ng-disabled="!is_edit"></textarea>
+                </div>
+                <div class="form_text">
+                    <label> Remarks</label>
+                </div>
+                 <div class="form_input">
+                    <textarea ng-model="batch.remarks" ng-disabled="!is_edit"></textarea>
+                </div>
+			</div>
+			<div  align="Center">
+				<div class="buttons" ng-show="show_buttons">
+					<p class="error_message"> [[validation_error]] </p>
+						<input type="button" value="Submit" ng-click="save_attendance();" class="btn btn-info">
+						<input type="button" value="Edit" ng-click="edit_attendance();" class="btn btn-info">
+					<a href="{% url 'add_attendance' %}"><input type="button" value="Cancel" class="btn btn-info"></a>
+				</div>
+			</div>			
+		</form>
+		<div class="clear"></div>
+	</div>
+
+
+{% endblock content %}

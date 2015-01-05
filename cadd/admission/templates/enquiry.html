@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block body_id %}enquiry{% endblock %}
+{% block title %} Enquiry {% endblock title%}
+{% block controller %} ng-controller="EnquiryController" ng-init="init('{{csrf_token}}')"{% endblock controller %}
+
+{% block content %}
+<div id="main-title">
+    <div class="alert alert-info" align="Center">
+        <h4>Enquiry Form</h4>
+    </div>
+</div>
+	<div class="section_1">
+		<div class="formrow">
+			
+			<div class="formtext">
+				<label> Name</label>  
+			</div>
+			<div class="forminput">
+				<input type="text" name="student_name" value="" ng-model="enquiry.student_name">
+			</div>
+			<div class="formtext">
+				<label>Address</label> 
+			</div>
+			<div class="forminput">							
+				<textarea name="address" value="" ng-model="enquiry.address"></textarea>
+			</div>
+			<div class="formtext">
+				<label > Mobile </label>			
+			</div>
+			<div class="forminput">							
+				<input type="text"  name="mobile_number" value=""  ng-model="enquiry.mobile_number">
+			</div>
+			<div class="formtext">
+				<label> Email</label>		
+			</div>
+			<div class="forminput">							
+				<input type="text"name="email" value="" ng-model="enquiry.email"></textarea>						
+			</div>
+			<div class="formtext">
+				<label> Date</label>
+			</div>
+			<div class="forminput">
+				<input type="text"name="date" value="" ng-model="enquiry.date" id="date">						
+			</div>
+			<div class="formtext">
+				<label> Course</label>  
+			</div>
+			<div class="forminput">
+				<select name="course" ng-model="enquiry.course" ng-options="course.id as course.course_name for course in courses" ng-change="get_fees()">
+					<option value="">Select</option>
+				</select>
+			</div>
+			
+			<div class="formtext">
+				<label>Educational Qualification</label>  
+			</div>
+			<div class="forminput">							
+				<input type="text" name="educational_qualification" value="" ng-model="enquiry.educational_qualification">
+			</div>
+			
+		</div>
+		<div class="formrow">
+			<div class="formtext">
+				<label> Enquiry Mode</label>  
+			</div>
+			<div class="forminput">
+				 <select ng-model="enquiry.mode">
+                        <option value="">Select</option>
+                        <option value="Telephone">Telephone</option>
+                        <option value="Newspaper">Newspaper</option>
+                        <option value="Website">Website</option>
+                        <option value="Demos">Demos</option>
+                        <option value="Marketing Executives">Marketing Executives</option>
+                        <option value="References">References</option>
+                    </select>
+			</div>
+			<div class="formtext">
+				<label>Land Mark </label>
+			</div>
+			<div class="forminput">
+				<input type="text" name="land_mark" value="" ng-model="enquiry.land_mark"/>
+			</div>
+			<div class="formtext">
+				<label>Details </label>
+			</div>
+			<div class="forminput">
+				<textarea name="details_about_clients_enquiry" value="" ng-model="enquiry.details_about_clients_enquiry"> </textarea>
+			</div>
+			<div class="formtext">
+				<label>Fees</label>			
+			</div>
+			<div class="forminput">
+				<input type="text" name="fees" value="" ng-model="enquiry.fees" readonly>
+			</div>
+			<div class="formtext">
+				<label>Discount</label>			
+			</div>
+			<div class="forminput">
+				<input type="text" name="discount" value="" ng-model="enquiry.discount">
+			</div>
+			<div class="formtext">
+				<label>Remarks </label>
+			</div>
+			<div class="forminput">
+				<textarea name="remarks" value="" ng-model="enquiry.remarks"> </textarea>
+			</div>
+			<div class="follow_up_div">
+				<h5 style="text-align:center">Follow Up Details</h5>
+				<div ng-repeat="follow_up in enquiry.follow_up" >
+					<div>
+						<div class="formtext">
+							<label>Follow Up Date</label>
+						</div>
+						<div class="forminput">
+							<input type="text"name="follow_up_date" value="" ng-model="follow_up.follow_up_date" id="[[follow_up.follow_up_date_id]]" ng-click="attach_date_picker(follow_up)">
+						</div>
+						<div class="close_button_followup">
+							<a href="" ng-click="remove_follow_up(follow_up)"><input class="btn" type="button" value="X" ng-hide="enquiry.follow_up.length == 1"></a>
+						</div>
+						<div class="formtext">
+							<label>Remarks To Follow Up Date </label>
+						</div>
+						<div class="forminput">
+							<textarea name="remarks_for_follow_up_date" value="" ng-model="follow_up.remarks_for_follow_up_date"> </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="add_button_followup"><a href="" ng-click="add_follow_up()"><input class="btn " type="button" value="+"></a></div>
+				
+			</div>
+		<div class="button_control">
+			<p class="error_message">[[validation_error]]</p>
+			<input  type="button" value="Save" ng-click="save_enquiry()">
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body_id %}enquiry_report{% endblock %}
+{% block title %} Enquiry Report {% endblock title%}
+{% block controller %} ng-controller="EnquiryReportController" ng-init="init('{{csrf_token}}')"{% endblock controller %}
+
+{% block content %}
+ 	<div id="main-title">
+        <div class="alert alert-info" align="Center">
+            <h4>Enquiry Report</h4>
+        </div>
+    </div>
+    <div class="form_container single_column_container">
+		<form name="permission_form">
+			<div class="control">
+				<label>Start Date</label>
+				<input type="text"name="start_date" value="" ng-model="start_date" id="start_date">	
+			</div>
+			<div class="control">
+				<label>End Date</label>
+				<input type="text"name="end_date" value="" ng-model="end_date" id="end_date">	
+			</div>
+			<div class="button_control">
+				<p class="error_message">[[validate_error_msg]]</p>
+				<button  ng-click="view_enquiry()" >View</button>
+				<button  ng-click="get_enquiry_report()" >Generate PDF</button>
+
+			</div>
+		</form>
+		{% include 'pagination_div.html' %}
+	</div>
+	<div class="form_container">
+		<table ng-show="enquiries.length > 0" class="table list_table" style="width:90%;margin:auto">
+			<tr>
+				<th>#</th>
+				<th>Date</th>
+				<th>Enquiry Number</th>
+				<th>Name</th>
+				<th>Course</th>
+				
+			</tr>
+			<tr ng-repeat="enquiry in visible_list">
+				<td>[[$index+1]]</td>
+				<td>[[enquiry.saved_date]]</td>
+				<td>[[enquiry.auto_generated_num]]</td>
+				<td>[[enquiry.student_name]]</td>
+				<td>[[enquiry.course]]</td>
+			</tr>
+			
+		</table>
+	</div>
+
+{% endblock content %}

@@ -1,0 +1,101 @@
+<div class="menu_header">
+	<div class="logo">
+		<img src="/static/images/Logo.png" >
+	</div>
+	<div class="menu_div">
+		{% if user.is_authenticated %}
+			<ul>
+				<li class="menu"> <img src="/static/images/user.png" width="24px" >
+					<span class="user_name"> 
+						{% if user.is_authenticated %}
+							{% if user.first_name %}
+								{{user.first_name}} {{user.last_name}} 
+							{% else %} 
+								{{user.username}}
+							{% endif %} 
+						{% endif %}
+					</span>
+					<ul>
+						<li> <a href="{% url 'reset_password' user.id %}"> Reset password </a> </li>
+						<li> <a href="{% url 'logout' %}"> Logout </a> </li>
+					</ul>
+				</li>
+				{% if user.is_superuser or user.staff_set.all.0.permission.master_module %}
+					<li class="menu"> <a href=""> Masters </a> 
+						<ul> 
+							<li> <a href="{% url 'softwares' %}"> Software </a> </li>
+							<li> <a href="{% url 'courses' %}"> Course </a> </li>
+							<li> <a href="{% url 'batches' %}"> Batch </a> </li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if user.is_superuser %}
+					<li class="menu"> <a href=""> Staff </a> </a> 
+						<ul> 
+							<li> <a href="{% url 'staffs' %}"> Staffs </a> </li>
+							<li> <a href="{% url 'permissions' %}"> Permissions </a> </li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if user.is_superuser or user.staff_set.all.0.permission.student_module %}
+					<li class="menu"> <a href=""> Student </a>
+						<ul> 
+							<li> <a href="{% url 'enquiry'  %}"> Enquiry Form</a> </li>
+							<li> <a href="{% url 'all_enquiries'  %}"> Enquiry View </a> </li>
+							<li> <a href="{% url 'student_admission'  %}"> Admission </a> </li>
+							<li><a href="{% url 'list_student'  %}">Students</a></li>
+							<li><a href="{% url 'enquiry_to_admission' %}">Enquiry to Admission</a></li>
+							<li><a href="{% url 'follow_up_details' %}">Follow Up Report</a></li>
+							<li> <a href="{% url 'enquiry_report'  %}"> Enquiry Report </a> </li>
+							<li><a href="{% url 'admission_report'  %}">Admission Report</a></li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if user.is_superuser or user.staff_set.all.0.permission.fees_module %}
+					<li class="menu"> <a href=""> Fees </a>
+						<ul>
+							<li> <a href="{% url 'fees_payment' %}">Fees Payment</a> </li>
+							<li> <a href="{% url 'list_outstanding_fees' %}">Outstanding Fees </a> </li>
+							<li><a href="{% url 'fees_payment_report'  %}">Fees Payment Report</a></li>
+							<li><a href="{% url 'unroll_students'  %}">Unroll Students</a></li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if user.is_superuser or user.staff_set.all.0.permission.attendance_module %}
+					<li class="menu"> <a href=""> Attendance </a>
+						<ul>
+							<li> <a href="{% url 'add_attendance' %}" >Attendance</a>
+							</li>
+							<li> <a href="{% url 'attendance_details' %}" >View Attendance</a>
+							</li>	
+							<li> <a href="{% url 'job_card' %}" >Job Card</a>
+							</li>
+							<li><a href="{% url 'attendance_report' %}">Attendance Report</a></li>		
+							<li> <a href="{% url 'topics_covered' %}"> Topics Covered </a> </li>	
+						</ul>
+					</li>	
+				{% endif %}	
+				{% if user.is_superuser or user.staff_set.all.0.permission.expense_module %}
+					<li class="menu"> <a href=""> Expense </a>
+						<ul>
+							<li> <a href="{% url 'expense_list' %}" >Expenses</a></li>
+							<li><a href="{% url 'new_expense' %}">Add Expense</a></li>
+							<li><a href="{% url 'new_expense_head' %}"> Expense Head</a></li>				
+							<li> <a href="{% url 'expense_report' %}" >Expense Report</a></li>
+						</ul>
+					</li>	
+				{% endif %}	
+				{% if user.is_superuser or user.staff_set.all.0.permission.register_module %}
+					<li class="menu last"> <a href=""> Register </a>
+						<ul>
+							<li> <a href="{% url 'letters' %}" >Letter</a>
+							</li>
+							<li> <a href="{% url 'certificate' %}" >Certificate</a>
+							</li>	
+						</ul>
+					</li>	
+				{% endif %}		
+			</ul>
+		{% endif %}
+	</div>
+</div>

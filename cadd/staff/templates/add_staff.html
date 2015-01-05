@@ -1,0 +1,163 @@
+<div style='display:none' id="add_staff_details">
+    <div id='add_staff_details' style='padding:10px; background:#fff;'>
+        <div class="sign_box">
+            <div class="row-fluid">
+                <div class="span12 sign_mid">
+	                <div id="main-title">
+						<div class="alert alert-info" align="Center"><h4>Staff Registration</h4></div>
+					</div>
+					<form action="" id="" name="" method="post" class="">
+						<div class="section_1">
+							<div class="formrow">
+								<div class="formtext">
+									<label> First Name</label>  
+								</div>
+								<div class="forminput">
+									<input type="text" name="first_name" value="" ng-model="staff.first_name" />
+								</div>
+								<div class="formtext">
+									<label> Last Name</label>  
+								</div>
+								<div class="forminput">
+									<input type="text" name="last_name" value="" ng-model="staff.last_name" />
+								</div>
+								<div class="formtext">
+									<label> Username</label>  
+								</div>
+								<div class="forminput">
+									<input type="text" name="username" value="" ng-model="staff.username" ng-change="is_username_exists()" ng-readonly="!new_staff"/>
+									<p class="error_message">[[is_exist_message]]</p>
+								</div>
+								<div class="formtext" ng-show="new_staff">
+									<label> Password</label>  
+								</div>
+								<div class="forminput" ng-show="new_staff">
+									<input type="password" name="password" value="" ng-model="staff.password">
+								</div>
+								<div class="formtext" ng-show="new_staff">
+									<label> Confirm Password</label>  
+								</div>
+								<div class="forminput" ng-show="new_staff">
+									<input type="password" name="confirm_password" value="" ng-model="confirm_password">
+								</div>
+								<div class="formtext">
+									<label> DOB</label>  
+								</div>
+								<div class="forminput">
+									<input type="text"name="dob" value="" ng-model="staff.dob" id="dob"></text>
+								</div>
+								<div class="formtext">
+									<label>Address</label> 
+								</div>
+								<div class="forminput">
+									<textarea name="address" value="" ng-model="staff.address"></textarea>
+								</div>
+								<div class="formtext">
+									<label > Mobile </label>  
+								</div>
+								<div class="forminput">
+									<input type="text"  name="mobile_number" value=""  ng-model="staff.mobile_number">
+								</div>
+							</div>
+							<div class="formrow">
+								<div class="formtext">
+									<label> Tel:</label>
+								</div>
+								<div class="forminput">
+									<input type="text" name="land_number" value="" ng-model="staff.land_number">
+								</div>
+								<div class="formtext">
+									<label> Email</label>
+								</div>
+								<div class="forminput">
+									<input type="text"name="email" value="" ng-model="staff.email"></textarea>
+								</div>
+								<div class="formtext">
+									<label>Blood Group</label>	
+								</div>
+								<div class="forminput">
+									<select ng-model="staff.blood_group">
+										<option value="">Select</option>
+										<option value="A-">A-</option>
+										<option value="A+">A+</option>
+										<option value="B-">B-</option>
+										<option value="B+">B+</option>
+										<option value="AB-">AB-</option>
+										<option value="AB+">AB+</option>
+										<option value="O-">O-</option>
+										<option value="O+">O+</option>
+									</select>
+								</div>
+								<div class="formtext">
+									<label > Date of join</label>  
+								</div>
+								<div class="forminput">
+									<input type="text"  name="doj" value=""  ng-model="staff.doj" id="doj">	
+								</div>
+								
+								<div class="formtext">
+									<label > Qualifications</label>  
+								</div>
+								<div class="forminput">
+									<textarea  name="qualifications" value=""  ng-model="staff.qualifications"></textarea>
+								</div>
+								<div class="formtext">
+									<label>Photo</label>
+								</div>
+								<div class="forminput">
+									<input type="file" fileread="photo_img.src"/>
+									<input type="hidden" ng-model="photo_img.src"> 
+									<a href="/site_media/[[staff.photo]]" ng-show="staff.photo" target="_blank">View</a>
+								</div>
+								<div class="formtext">
+									<label>Experience</label>
+								</div>
+								<div class="forminput">
+									<textarea name="experiance" value="" ng-model="staff.experience"></textarea>
+								</div>
+								<div class="formtext">
+									<label> Role </label>
+								</div>
+								<div class="formtext">
+									<select ng-model="staff.role">
+										<option value="">Select</option>
+										<option value="teacher">Teacher</option>
+										<option value="staff">Staff</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div  align="Center">
+							<div class="buttons">
+								<p class="error_message"> [[validation_staff_error]] </p>
+								<input type="button" class="btn btn-info" value="Cancel" ng-click="close_popup()">
+								<input type="submit" value="Submit" ng-click="save_new_staff()" class="btn btn-info">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

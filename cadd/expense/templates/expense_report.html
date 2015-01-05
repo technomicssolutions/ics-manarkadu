@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense Report{% endblock title %}
+{% block body_id %}expense_report{% endblock %}
+
+{% block controller %}
+	ng-controller="ExpenseReportController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+	<div id="main-title">
+		<div class="alert alert-info" align="Center"><h4>Expense Report</h4></div>
+	</div>
+	<div class="form_container single_column_container">
+		<div class="control">
+			<label>Start Date</label>
+			<input type="text" name="start_date" id="start_date" />
+		</div>
+		<div class="control">
+			<label>End Date</label>
+			<input type="text" name="end_date" id="end_date" />
+		</div>
+		<div class="control">
+			<p class="error_message">[[error_message]]</p>
+			<input type="button" value="Generate" ng-click="generate()" />
+		</div>
+	</div>
+{% endblock %}

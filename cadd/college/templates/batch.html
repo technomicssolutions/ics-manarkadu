@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Batch{% endblock title %}
+{% block body_id %}Batch{% endblock %}
+
+{% block controller %}
+	ng-controller="BatchController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block dialogue_popup %}
+	{% include 'add_batch.html' %} 
+	              	
+{% endblock %}
+
+{% block content %}
+	<div class="">
+		<form class="" name="branch" method="post" action="">		
+			<div class="main-title">
+				<div class="alert alert-info" align="Center">Batch </div>
+					<div  align="Center">		
+						<input type="button" class="btn btn-info" value="New Batch" ng-click="add_new_batch()">
+		
+					</div>
+			</div>
+			<div class="form_container">
+				<div class="search_staff">
+
+					<table id="list" class="table table-hover" style="width:90%;margin:auto">
+						<tr>
+						  <th>Name</th>
+						  <th>Software</th>
+						  <th>Start</th>
+						  <th>End</th>
+						  <th>Allowed Students</th>
+						  <th>Edit </th>
+						  <th>Delete</th>						  
+						</tr>
+						<tr ng-repeat="batch in batches">
+							<td>[[batch.batch_name]]</td>
+							<td>[[batch.software]]</td>
+							<td>[[batch.start]]</td>
+							<td>[[batch.end]]</td>
+							<td>[[batch.allowed_students]]</td>
+							<td> <a href="" ng-click="edit_batch(batch)"><img src="/static/images/edit.png"> </td>
+							<td><a href="/college/delete_batch/[[batch.id]]/" ><img src="/static/images/delete.png"></td>
+						</tr>
+					</table> 
+				</div>
+			</div>	
+		</form>
+	</div> 
+{% endblock content %}

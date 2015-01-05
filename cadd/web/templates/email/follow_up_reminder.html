@@ -1,0 +1,31 @@
+<html>
+	<body> 
+		<h2>Today's Follow Ups</h2>
+		<br>
+		<p>
+			{% if enquiries|length > 0 %}
+				Please look forward with the following details.
+				<table border="1" style="width:50%; border-collapse: collapse; color:#000000;">
+					<tr style="border-collapse: collapse;">
+						<th style="border-collapse: collapse;">Enquiry No</th>
+						<th>Student Name</th>
+						<th>Enquiry Date</th>
+						<th>Email</th>
+						<th>Mobile</th>
+					</tr>
+					{% for enquiry in enquiries %}
+						<tr>
+							<td style="border-collapse: collapse;">{{enquiry.enquiry_no}}</td>
+							<td>{{enquiry.name}}</td>
+							<td>{{enquiry.date}}</td>
+							<td>{{enquiry.email}}</td>
+							<td>{{enquiry.mobile}}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+				<p>No Follow Ups</p>
+			{% endif %}
+		</p>
+	</body>
+</html>

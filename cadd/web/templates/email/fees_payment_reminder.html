@@ -1,0 +1,36 @@
+<html>
+	<body> 
+		<h2>Fees Payment Reminder</h2>
+		<br>
+		<p>
+			Hi {{payment.student_name}}, 
+			<br/>
+			This mail is to remind you of your outstanding balance fee amount. Please remit this balance amount within 2 days.
+			<br/>
+			If you have already paid your balance amount, please accept our thanks and apologies for any inconvenience caused. 
+			<br/>
+			Following is the balance payment details.
+			{% if payment.installments|length > 0 %}
+				<table border="1" style="width:50%; border-collapse: collapse; color:#000000;">
+					<tr style="border-collapse: collapse;">
+						<th style="border-collapse: collapse;">Installment</th>
+						<th>Amount</th>
+						<th>Due Date</th>
+						<th>Fine</th>
+					</tr>
+					{% for installment in payment.installments %}
+						<tr>
+							<td style="border-collapse: collapse;">{{installment.name}}</td>
+							<td>{{installment.amount}}</td>
+							<td>{{installment.due_date}}</td>
+							<td>{{installment.fine}}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+				<p>No Balance Payment</p>
+			{% endif %}
+		</p>
+	</body>
+</html>
+

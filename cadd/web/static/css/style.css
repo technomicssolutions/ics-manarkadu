@@ -1,0 +1,809 @@
+/* *******/
+@media (min-width:1021px)  {
+	.login {
+		width: 30%;
+	}
+	.form_container {
+		min-width: 417px;
+	}
+}
+
+@media (min-width: 951px) and (max-width:1020px) { 
+	.login {
+		width: 30%;
+	}
+ 	.form_container {
+		min-width: 417px;
+	}
+ }
+@media (min-width: 700px) and (max-width:950px) {
+	.login {
+		width: 30%;
+	}
+ 	.form_container {
+		min-width: 417px;
+	}
+}
+
+@media (min-width: 588px) and (max-width:699px) {
+	.login {
+		width: 30%;
+	}
+ 	.form_container {
+		min-width: 417px;
+	}
+}
+
+@media (min-width: 400px) and (max-width:587px) {
+	.login {
+		width: 30%;
+	}
+ 	.form_container {
+		min-width: 417px;
+	}
+}
+@media (min-width: 100px) and (max-width:399px) { 
+}
+
+.login {
+	min-width: 320px;
+}
+.login label {
+	width: 25%;
+	float: left;
+	margin-left: 6px;
+}
+/******************** responsive styling end ************/
+body {
+	width: 100%;
+	height: 100%;
+}
+.container {
+	width: 100% !important;
+	margin: auto;	
+	height: 100%;
+}
+
+.menu_div {
+	float: right;
+	height: 50%;
+	margin-top: 2%;
+	margin-right: 7%;
+}
+
+.menu_div ul li {
+	float: left;
+	display: block;
+	padding: 2px 10px 2px 5px;
+	border-right: 1px solid #FFFFFF;
+	position: relative;
+}
+.menu_div ul li ul li {
+	float: none;
+	display: block;
+	padding: 3px 5px 0px 5px;
+	border: none;	
+	height: 30px;
+	width: 161px;
+}
+.menu_div ul li ul {
+	position: absolute;
+	z-index: 1;
+	margin: 0px;
+	padding: 5px;
+	background-color: #336699;
+	min-width: 150px;
+	display: none;
+}
+.menu_div ul li a{
+	color: #FFFFFF;
+}
+.menu_div ul li a:hover {
+	color: #235580;
+	text-decoration: none;
+}
+.menu_div ul li ul li a{
+	color: #FFFFFF;
+	font-weight: normal;
+}
+.menu_div ul li ul li a:hover {
+	color: #235580;
+	text-decoration: none;
+}
+.last {
+	border: none !important;
+}
+a {
+	text-decoration: none;
+}
+.logo {
+	margin: 10px;
+	width: 250px;
+	height: 60px;
+	float: left;	
+}
+.menu_header {
+	background-color: #336699;
+	width: 100%;
+	min-height: 20px !important;
+	margin: 0px !important;
+	color: #FFFFFF;
+	font-size: 15px;
+	font-weight: bold;
+	display: block;
+	padding: 1px 0px 1px 0px;
+	float: left;
+}
+
+.div_header {
+	background-color: #336699;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0 10px 17px;
+    width: 95%;
+}
+.login {
+	border: 1px solid #336699;
+    margin: auto;
+    width: 26%;
+    margin-top: 5%;
+    border-radius: 3px;
+}
+.login_form_container {
+	margin-bottom: 154px;
+	margin-top: 25px;
+	width: 90%;
+}
+.content {
+	float: left;
+	width: 100%;
+	min-height: 540px;
+	padding-bottom: 30px;
+	height: 100% !important;
+}
+
+.welcome {
+	color: #006E80;
+	margin: auto;
+	width: 60%;
+	margin-top: 10%;
+}
+
+footer {
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	float: left;
+	width: 100%;
+	min-height: 50px;
+	text-align: center;
+	padding-top: 5px;
+}
+
+.user_name {
+	color: green;
+}
+
+.main-content {
+	padding:5px 0 10px 0;
+	font-size:14px;
+	background-color: white;
+}
+
+.main-title {
+	font-size:19px;
+	/*padding:8px 0 8px 0;*/
+    font-weight: bold;
+}
+.align{
+	width: 45% !important;
+}
+textarea{
+    height: 32px;
+    padding-left: 3px;
+}
+
+.form_container {
+	margin: auto;
+	width: 35%;
+	min-height: 100%
+}
+.form_container .control {
+	width: 100%;
+	height: 30px;
+	float: left;
+	padding: 10px;
+}
+.form_container label{
+	display: block !important;
+    float: left;
+    width: 45%;
+}
+#letter .form_container {
+	margin: auto;
+	width: 35%;
+	min-height: 100%
+}
+#letter .form_container .control {
+	width: 100%;
+	height: 30px;
+	float: left;
+	padding: 10px;
+}
+#letter .form_container label{
+	display: block !important;
+    float: left;
+    width: 45%;
+}
+#letter textarea{
+	width: 50% !important;
+}
+
+.form_container input[type="text"], .form_container input[type="file"]{
+	float: left;
+	display: block;
+	width: 50%;
+}
+.form_container input[type="button"]{
+	width: auto;
+}
+.form_container select{
+	float: left;
+	display: block;
+	width: 50%;
+}
+
+form {
+	display: block;
+	float: left;
+	min-height: 100%;
+	width: 100%;
+}
+
+.error_message {
+	text-align: center;
+	color: red;
+}
+.buttons {
+	margin: auto;
+    width: 42%;
+}
+.buttons .btn {
+	margin-left: 2%;
+/*	width: 20%; */
+}
+.formrow {
+	min-height: 40px;
+    width: 50%;
+    float: left;
+}
+.form_text {
+	float: left;
+   	width:50%;
+}
+.form_input {
+	float: left;
+	width:50%;
+}
+.section_1 {
+	margin: auto;
+    width: 98%;
+
+}
+/****************************Staff Module*******************************/
+
+.staff_form_container {
+	margin: auto;
+    width: 100%;
+}
+.section_3_staff {
+	float: left;
+	width: 100%;
+	margin-top: 30px; 
+}
+.sec{
+	width: 100%;
+	float: left;
+}
+/******************************  Popup box **********************/
+
+#overlay {
+  background-color: #000000;
+  background:url(../images/overlay.png) repeat 0 0;
+  opacity: 0.9;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+}
+#dialogue_popup_container {
+  z-index: 2;
+  position: absolute;
+  width: 100%;
+}
+#dialogue_popup {
+  height: auto;
+  border-radius: 15px 15px 15px 15px;
+  border: 2px solid #336699;
+  margin: 138px auto auto!important;
+  z-index: 2;
+  position: relative;
+  background-color: #FFFFFF;
+  display: none;
+  overflow: hidden;
+  padding-bottom: 20px;
+  width: 384px;
+  padding: 1%;
+}
+#dialogue_popup form {
+	width: 100%;
+}
+#dialogue_popup .control {
+    float: left;
+    height: auto;
+    margin: 5px;
+    padding: 5px;
+    width: 97%;
+}
+#dialogue_popup label {
+	width: 50% !important;
+	float: left;
+}
+.close_pop {
+  width: 32px;
+  height: 32px;
+  background: url('../images/close_pop.png');
+  display: block;
+  float: right;
+  position: relative;
+}
+#enquiry_search .close_pop {
+  width: 32px;
+  height: 32px;
+  background: url('../images/close_pop.png');
+  display: block;
+  float: right;
+  position: relative;
+}
+/******************************  Popup box end **********************/
+
+
+/******************************  Attendance Module Starts ****************/
+
+.attendance_form_container {
+	margin: auto;
+    width: 90%;
+}
+.form_contents_attendance {
+	margin-top: 50px;
+}
+.section_1_attendance {
+	float: left;	
+	width: 100%;
+}
+.formrow_attendance {
+	min-height: 40px;
+    width: 50%;
+    float: left;
+}
+.formrow_view_attendance {
+	min-height: 40px;
+    width: 33%;
+    float: left;
+}
+.form_text_attendance {
+	float: left;
+    width: 248px;
+}
+.form_input_attendance {
+	float: left;
+}
+.view_flags{
+	float: right;
+	width: 10%;
+}
+.blue_box{
+	height: 20px;
+	width:  20px; 
+	background-color: #336699; 
+}
+#attendance .days, #attendance_details .days {
+	width:3%;
+}
+.allign_center{
+	text-align: center !important;
+}
+#attendance .days input, #attendance_details .days input {
+	width:3%;
+}
+#attendance_details table #attendance table {
+	width: 100% !important;
+}
+/******************************  Attendance Module ****************/
+
+#spinner {
+    background: url("../images/loading.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    background-position: center; 
+    opacity: 0.9;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    margin-left: auto;
+    margin-right: auto;
+}
+td input {
+	width: 100% !important;
+}
+
+.login_button {
+	width: 10% !important;
+	margin: auto;
+}
+
+.login_elements {
+	margin: auto;
+	padding-left: 10px;
+}
+.error_element {
+	margin-bottom: 0px;
+}
+
+.blue_color {
+	background-color:  #ADD8E6 !important;
+}
+.white_color {
+	background-color: #FFFFFF;
+}
+.red_color {
+	background-color: #FF0000 !important;
+}
+.add_attendance_label{
+	display: inline;
+	margin-right: 3%;
+}
+.add_attendance_row{
+	margin-left: 38%;
+    min-height: 40px;
+    padding: 6px;
+    width: 26%;
+}
+.display_date{
+	float: left;	
+    min-height: 40px;
+    padding: 6px;
+    width: 20%;
+}
+.display_details{
+	float: right;	
+    min-height: 40px;
+    padding: 6px;
+    width: 20%;
+}
+label.one{
+	width: 60%;
+}
+select.one{
+	width: 55%;
+}
+table.inline{
+	display: inline;
+}
+th.no_border_top{
+	border-top: none;
+	white-space: nowrap;	
+}
+td.no_border_top{
+	border-top: none;
+}
+td.allign_center{
+	text-align: center;
+	width: 50px;
+}
+th.exam_tab{
+	border-top: none;
+	text-align: center;
+	white-space: nowrap;
+}
+td.mark_add{
+	border-top: none;
+	text-align: center;
+}
+td.mark_add input[type="text"] {
+	width: 35px !important;
+	margin-bottom: 0%;
+}
+td.nowrap{
+	height: 30px !important;
+	white-space: nowrap;
+}
+label.block{
+	display: block;
+    margin-top: 6px !important;
+}
+.red_font{
+	color: red;
+	font-weight: bold;
+}
+.bold_font{
+	font-weight: bold;
+}
+.align_right {
+	float: right;
+}
+.align_left {
+	float: left;
+}
+/************ Common styles ***********/
+
+.new_button input[type="button"] {
+	margin: auto;
+	display: block;
+}
+
+.new_button {
+	margin-bottom: 20px;
+}
+
+.table_container {
+	width: auto;
+}
+
+.course_list, .branch_list, .semester_list, .list_designation{
+	width: 30%;
+	margin: auto;
+}
+
+.list_staff, .list_student {
+	width: 80%;
+	margin: auto;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.staff_pic {
+	width: 150px;
+	height: 150px;
+	display: block;
+	float: left
+}
+
+.personal_details, .reference_details, .official_details, .guardian_details, .student_detail_section{
+	width: 100%;
+}
+.personal_details .control, .student_detail_section .control {
+	float: right !important;
+	width: 75% !important;
+}
+.page {
+	width: 100%;
+	height: 30px;
+}
+.pagination li {
+	list-style: none;
+	float: left;
+	font-weight: bold;
+	padding: 3px;
+	width: 20px;
+}
+.clear {
+	clear: both;
+}
+/************ Common styles end ***********/
+
+.section_3 {
+	width: 85%;
+	margin: auto; 
+}
+.control input[type="radio"] {
+	float: left;
+}
+#letter .control label {
+	width: 21% !important;
+}
+.inner_table{
+	width: auto !important;
+	float: left !important;
+	display: block !important;
+	margin-right: 20px;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+#spinner_overlay {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background-color: #FFFFFF;
+	z-index: 5;
+	opacity: 0.5;
+	display: none;
+}
+
+#spinner {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 6;
+	display: none;
+	background: url('../images/ajax-loader.gif') no-repeat;
+}
+/********** Student Module **************/
+
+.search_students, .search_batch {
+	width: 35%;
+	margin: auto;
+}
+.search_batch label{
+	width: 50%;
+	float: left;
+}
+.search_students label, .search_students input[type="text"]{
+	width: 50% !important;
+	float: left !important;
+}
+.alert-info{
+	background-color: #FFFFFF  !important;
+}
+.width_popup_input{
+	width: 40%;
+}
+
+.no_border_top{
+	border-top: none;
+}
+.search_list {
+	background-color: #FFFFFF;
+    border: 1px solid #C3C3C3;
+    position: absolute;
+    width: 46%;
+    border-bottom: none;
+    right: 0;    
+    width: 16%;
+    z-index: 1;
+    margin-right: 34%;
+    float: left;
+}
+.search_list_item {
+	border-bottom: 1px solid #C3C3C3;
+    padding: 5px;
+}
+#attendance_details .search_list{
+	margin-right: 19.5%;
+}
+.highlight {
+	border: 2px solid #707070;
+}
+.form_container .control {
+	float: left;
+    height: auto;
+    width: 30%;
+    padding: 10px 5px;
+    position: relative;
+}
+.form_container .button_control {
+	float: right;
+    text-align: center;
+    width: 50%;
+    margin-bottom: 30px;
+}
+.form_container {
+	width: 100%;
+}
+.single_column_container {
+	margin: auto;
+	width: 35%;
+	min-height: 100%
+}
+.single_column_container .control {
+	width: 100%;
+}
+.datepicker_bootstrap .time {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.datepicker_bootstrap .time .hour,
+.datepicker_bootstrap .time .separator,
+.datepicker_bootstrap .time .minutes {
+  background: #ffffff;
+  width: 50px;
+  font-size: 32px;
+  color: #000000;
+  position: absolute;
+  top: 10px;
+  text-align: center;
+  padding: 2px;
+  height: 29px;
+}
+
+.datepicker_bootstrap .time .hour {
+  left: 15px;
+}
+.datepicker_bootstrap .time .separator {
+  background: transparent;
+  width: 10px;
+  left: 76px;
+}
+
+.datepicker_bootstrap .time .minutes {
+  left: 95px;
+}
+.datepicker_bootstrap .time .ok {
+  position: absolute;
+  top: 65px;
+  height: 32px;
+  width: 136px;
+  left: 15px;
+  font-size: 20px;
+}
+
+.datepicker_bootstrap .time.ampm .ok {
+  top: 80px;
+}
+.datepicker_bootstrap .time .ampm_container{
+  position:absolute;
+  top: 55px;
+  left: 15px;
+  width: 135px;
+  text-align: center;
+}
+.datepicker_bootstrap .time .am, .datepicker_bootstrap .time .pm{
+  margin-right:10px;
+  margin-left: 5px;
+  float: left; 
+}
+.datepicker_bootstrap .time .ampm_container label {
+  float: left;
+}
+a:hover , a:focus{
+	color: #33CCFF !important;
+}
+#attendance textarea{
+	height: 75px;
+    padding-left: 21px;
+}
+#search_box {
+	border: 1px solid #336699;
+    border-radius: 5px;
+}
+#radio_label {
+	width: 20% !important;
+}
+#certificate .search_batch{
+	margin-top: 2% !important;
+}
+.follow_up_div {
+	border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 10px;
+    width: 50%;
+}
+.close_button_followup {
+	float: right;
+}
+.add_button_followup {
+	text-align: center;
+}
+#fee_collected_report .search_list {
+	margin-right: 15px;
+    margin-top: 30px;
+    width: 51%;
+    font-weight: normal;
+    font-size: 14px;
+}
+#staff_permission .search_list {
+	margin-right: 15px;
+    margin-top: 30px;
+    width: 51%;
+}
+
+ .search_staff{
+	width: 100%;
+	height: 100%;
+	padding-bottom: 30px;
+	float: left;
+	margin-top: 50px;
+}

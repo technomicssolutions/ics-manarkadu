@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Outstanding Fees{% endblock title %}
+{% block body_id %}list_outstanding_fees{% endblock %}
+{% block controller %}
+	ng-controller="FeesController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+	<div class="main-title">
+		<div class="alert alert-info" align="Center">Outstanding Fees</div>
+		<div class="form_container">		
+			<div class="control">
+				<select name="course" ng-model="course" ng-change="get_student()" ng-options="course.id as course.course_name for course in courses">
+					<option value="">Course</option>
+				</select>
+			</div>
+			<div class="control">
+				<select name="student" ng-model="student_id" ng-change="outstanding_fees_details()" ng-options="student.id as student.student for student in students">
+					<option value="">Student</option>
+					
+				</select>
+			</div>
+			
+		</div>
+	</div>
+	<div class="section_1">
+		<div class="search_staff">
+			<div class="control">
+				<label>Roll No:  [[fees_details.roll_no]]</label>
+				<p>Student Name: [[fees_details.student_name]] </p>
+				
+			</div>				
+			<table id="list" class="table striped" ng-show="fees_details.installments.length > 0">
+				<tr class="success" style="font-size: 12px" style="width:auto">
+					<th>Installment</th>
+					<th>Inst.Amt</th>
+					<th>Inst.Due date</th>
+					<th>Inst.Fine Amt</th>
+					<th>Inst.Paid Amt</th>
+					<th>Inst.Balance Amt</th>
+				</tr>
+				<tr ng-repeat="installment in fees_details.installments">
+					<td> [[installment.name]] </td>
+					<td> [[installment.amount]] </td>
+					<td> [[installment.due_date]] </td>
+					<td> [[installment.fine_amount]] </td>
+					<td> [[installment.paid_installment_amount]] </td>
+					<td> [[installment.balance]] </td>
+				</tr>
+			</table> 
+		</div>
+	</div>	
+	<br/>
+	<div class="section_1">
+		<div class="control buttons">
+			<input type="button" ng-click="print_outstanding_fees_list()" value="Print">
+		</div>
+	</div>
+{% endblock content %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificate{% endblock title %}
+{% block body_id %}certificate{% endblock %}
+
+{% block controller %}
+	ng-controller="CertificateController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+	<div id="main-title">
+		<div class="alert alert-info" align="Center"><h4>Certificate</h4></div>
+	</div>
+	<div  align="Center">		
+		<a class="btn btn-info" href="{% url 'add_certificate' %}"> New Certificate </a>
+	</div>
+	<div class="search_batch">
+		<label>	Start Date</label>
+		<input type="text" id="start_date">
+	</div>
+	<div class="search_batch">
+		<label>	End Date</label>
+		<input type="text" id="end_date">
+	</div>
+	<div class="control" align="Center">
+		<div class="buttons">
+			<p class="error_message"> [[message]] </p>
+			<input type="button" class="btn btn-info" ng-click="show_certificates()" value="View">	
+			<input type="button" class="btn btn-info" ng-click="show_pdf()" value="View PDF">	
+		</div>
+	</div>
+	<div class="form_container">
+		<div class="search_staff">
+			<table id="list" class="table table-hover" ng-show="certificates.length > 0">
+				<tr>
+				  <th>SL No</th>
+				  <th>Date</th>
+				  <th>Name</th>
+				  <th>Issued To</th>
+				  <th>Issued Authority</th>
+				  <th>Course </th>
+				  <th>Delete</th>						  
+				</tr>
+				<tr ng-repeat="certificate in certificates">
+					<td>[[$index+1]]</td>
+					<td>[[certificate.date]]</td>
+					<td>[[certificate.name]]</td>
+					<td>[[certificate.student]]</td>
+					<td>[[certificate.issued_authority]]</td>
+					<td>[[certificate.course]]</td>
+					<td><a href="/delete_certificate/[[certificate.id]]/" ><img src="/static/images/delete.png"></td>
+				</tr>
+			</table> 
+		</div>
+	</div>	
+	</div>
+{% endblock content %}

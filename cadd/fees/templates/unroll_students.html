@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Un Roll Students{% endblock title %}
+{% block body_id %}un-rool_students{% endblock %}
+{% block controller %}
+	ng-controller="UnRollController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+<div class="main-title">
+	<div class="alert alert-info" align="Center">Unroll Students</div>
+	<div class="form_container single_column_container">
+			<form name="permission_form">		
+			<div class="control">
+				<select name="course" ng-model="course" ng-change="get_outstanding_student()" ng-options="course.id as course.course_name for course in courses">
+					<option value="">Course</option>
+				</select>
+				<p class="error_message">[[no_student_error]]</p>
+			</div>
+		</form>
+	</div>
+</div>
+	<table id="list" class="table striped" ng-show="fees_details.student_details.length > 0"style="width:90%;margin:auto">
+		<tr class="success" style="font-size: 12px" style="width:auto">
+			<th>Name</th>
+			<th>Roll no</th>
+			<th>Installments</th>
+			<th>Installment Name</th>
+			<th>Balance</th>
+			<th >Unroll</th>
+			<th >Roll</th>
+		</tr>
+		<tr ng-repeat="fee_detail in fees_details.student_details">
+			<td> [[fee_detail.student_name]] </td>
+			<td> [[fee_detail.roll_no]] </td>
+			<td> [[fee_detail.no_installments]] </td>
+			<td><span ng-repeat="installment in fee_detail.installments">[[installment.name]], </span></td>
+			<td><span ng-repeat="installment in fee_detail.installments">[[installment.balance]], </span></td>
+			<td ng-show="unroll_student_flag"><input type="checkbox" ng-model="fee_detail.is_rolled" ng-click="unroll(fee_detail)"></td>
+			<td ng-show="roll_student_flag"><input type="checkbox"  ng-model="fee_detail.is_unrolled" ng-click="roll(fee_detail)"></td>
+		</tr>
+	</table> 
+{% endblock content %}

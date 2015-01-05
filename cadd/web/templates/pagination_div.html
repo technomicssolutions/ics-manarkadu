@@ -1,0 +1,14 @@
+<div class="page" ng-hide="visible_list.length < 1">
+    <ul class="pagination"> 
+    	<li class="arrow unavailable">
+    		<a href="">&laquo;</a>
+    	</li>
+    	<li ng-repeat="page in range(pages)" ng-class="getClass($index+1)">
+    		<a href="" ng-click="select_page($index+1)">[[$index+1]]</a>
+    	</li>
+    	<li class="arrow">
+    		<a href="">&raquo;</a>
+    	</li> 
+    </ul>
+</div>
+<div class="clear"></div>

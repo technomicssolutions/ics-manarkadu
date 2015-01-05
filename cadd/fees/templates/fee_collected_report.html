@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %} Fees Payment{% endblock title %}
+{% block body_id %}fee_collected_report{% endblock %}
+{% block controller %}
+	ng-controller="FeesPaymentReportController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+	<div class="main-title">
+		<div class="alert alert-info" align="Center">Fees Payment Report</div>
+		<div class="form_container single_column_container">
+			<form name="permission_form">
+				<div class="control">
+	                <input type="radio"  ng-model="report_type" value="course_wise" ng-click="change_report_type('course_wise')" />
+	                <label>Course wise</label>
+	                <input type="radio" ng-model="report_type" value="student_wise" ng-click="change_report_type('student_wise')" />
+	                <label>Student wise</label>
+	                <input type="radio" ng-model="report_type" value="date_wise" ng-click="change_report_type('date_wise')" />
+	                <label>Date wise</label>
+	            </div>		
+				<div class="control" ng-show="show_course_wise_report">
+					<select name="course" ng-model="course"  ng-options="course.id as course.course_name for course in courses">
+						<option value="">Course</option>
+					</select>
+					<div class="button_control">
+						<p class="error_message">[[message]]</p>
+						<input type="button"  ng-click="get_report('course_wise','')" value="Generate PDF" />
+					</div>
+				</div>
+				<div class="control" ng-show="show_student_wise_report">
+					<label>Search Student</label>
+					<input type="text" ng-model="student_name" ng-change="student_search()" autocomplete="off">
+					<div ng-show="students_list.length > 0" class="search_list">
+						<div ng-repeat="student in students_list" ng-class="{'highlight': $index == focusIndex}"class="search_list_item" ng-click="get_report('student_wise', student)">
+						<span>[[student.roll_number]]-[[student.name]]</span>
+						</div>
+					</div>
+					<p class="error_msg">[[no_student_msg]]</p>
+				</div>
+				<div class="control" ng-show="show_date_wise_report">
+					<label>Date</label>
+					<input type="text" name="date" id="date" ng-model="date" /> 
+					<div class="button_control">
+						<p class="error_message">[[message]]</p>
+						<input type="button"  ng-click="get_report('date_wise','')" value="Generate PDF" />
+					</div>
+				</div>
+			</form>
+		</div>
+
+	</div>
+{% endblock content %}

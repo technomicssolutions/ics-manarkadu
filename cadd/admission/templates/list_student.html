@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Student Details{% endblock title %}
+{% block body_id %}list_student{% endblock %}
+
+{% block controller %}
+	ng-controller="StudentListController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block dialogue_popup %}
+	{% include 'view_student_details.html' %} 
+	           	
+{% endblock %}
+
+{% block content %}	
+	<div class="main-title">
+		<div class="alert alert-info" align="Center"> Students </div>
+		<div class="search_students">
+			<label> Batch</label> 
+			<select name="batch" ng-model="batch" ng-change="get_students()">
+				<option value="">Select</option>
+				<option ng-repeat="bat in batches" value="[[bat.id]]">[[bat.batch_name]]
+				</option>
+			</select>
+		</div>
+		
+	</div>
+	<div class="list_student">
+		<table id="list" class="table table-hover" >
+			<tr class="success" style="font-size: 12px" style="width:auto">			
+			  	<th>Student Name</th>
+			  	<th>Roll No</th>			  
+			  	<!-- <th>View</th> -->
+			  	<th>Edit</th>
+			  	<th>Delete</th>			  
+			</tr>			
+			<tr ng-repeat="student in visible_list">
+				<td>[[student.name]]</td>
+				<td>[[student.roll_number]]</td>
+				<!-- <td><a href="" ng-click="display_student_details(student)" >View</td> -->
+				<td><a href="" ng-click="edit_student_details(student)"><img src="/static/images/edit.png"></td>
+				<td><a href="/admission/delete_student_details/[[student.id]]/" ><img src="/static/images/delete.png"></td>
+			</tr>
+		</table> 
+		{% include 'pagination_div.html' %}
+	
+	</div>
+{% endblock content %}

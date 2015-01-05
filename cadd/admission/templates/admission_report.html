@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body_id %}admission_report{% endblock %}
+{% block title %} Admission Report {% endblock title%}
+{% block controller %} ng-controller="AdmissionReportController" ng-init="init('{{csrf_token}}')"{% endblock controller %}
+
+{% block content %}
+ 	<div id="main-title">
+        <div class="alert alert-info" align="Center">
+            <h4>Admission Report</h4>
+        </div>
+    </div>
+<div class="form_container single_column_container">
+	<form name="permission_form">
+		<div class="control">
+			<label>Start Date</label>
+			<input type="text"name="start_date" value="" ng-model="start_date" id="start_date">	
+		</div>
+		<div class="control">
+			<label>End Date</label>
+			<input type="text"name="end_date" value="" ng-model="end_date" id="end_date">	
+		</div>
+		<div class="button_control">
+			<p class="error_message">[[validate_error_msg]]</p>
+			<button  ng-click="view_admission()" >View</button>
+			<button  ng-click="get_admission_report()" >Generate PDF</button>
+		</div>
+	</form>
+	{% include 'pagination_div.html' %}
+</div>
+	<div class="form_container">
+		<table ng-show="admissions.length > 0" class="table list_table" style="width:90%;margin:auto">
+			<tr>
+				<th>#</th>
+				<th>Date of Admission</th>
+				<th>Name </th>
+				<th>Course</th>
+				<th>Batches</th>
+				
+				
+			</tr>
+			<tr ng-repeat="admission in visible_list">
+				<td>[[$index+1]]</td>
+				<td>[[admission.saved_date]]</td>
+				<td>[[admission.student_name]]</td>
+				<td>[[admission.course]]</td>
+				<td><span ng-repeat="batch in admission.batch">[[batch]], </span></td>
+				
+			</tr>
+			
+		</table>
+	</div>
+
+{% endblock content %}

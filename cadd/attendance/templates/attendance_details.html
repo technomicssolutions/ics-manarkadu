@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Details{% endblock title %}
+{% block body_id %}attendance_details{% endblock %}
+
+{% block controller %}
+	ng-controller="AttendanceDetailsController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+
+{% block content %}
+	<div id="main-title">
+        <div class="alert alert-info" align="Center">
+            <h4>View Attendance</h4>
+        </div>
+    </div>
+	<div class="attendance_form_container">		
+		<div class="form_contents_attendance">	
+			<div class="section_1_attendance">			
+					<div class="formrow_view_attendance">
+						<div class="formtext_attendance">
+							<label for="view">View By</label>
+						</div>
+						<div class="forminput">
+							<select ng-model="attendance_view" ng-change="attendance_view_by()">
+								<option value="">Select</option>
+								<option value="1">Monthly</option>
+								<option value="2">Daily</option>						
+								<option value="3">Student Wise</option>	
+							</select>
+						</div>						
+					</div>
+					
+					<div class="formrow_view_attendance" ng-show="monthly_attendance">
+
+						<div class="formtext_attendance">
+							<label for="month">Month</label>
+						</div>
+						<div class="forminput">
+							<select ng-model="batch_month" ng-change="get_attendance_details()">
+								<option value="">Select</option>
+								<option value="1" >January</option>
+								<option value="2" >February</option>
+								<option value="3" >March</option>
+								<option value="4" >April</option>
+								<option value="5" >May</option>
+								<option value="6" >June</option>
+								<option value="7" >July</option>
+								<option value="8" >August</option>
+								<option value="9" >September</option>
+								<option value="10" >October</option>
+								<option value="11" >November</option>
+								<option value="12" >December</option>
+							</select>
+						</div>
+						
+					</div>
+					<div class="formrow_view_attendance" ng-show="monthly_attendance">
+						<div class="formtext_attendance">
+							<label for="year">Year</label>
+						</div>
+						<div class="forminput">
+							<select ng-model="batch_year" ng-change="get_attendance_details()">
+								<option value="">Select</option>
+								<option value="[[yr]]" ng-repeat="yr in year" >[[yr]]</option>				
+							</select>
+						</div>						
+					</div>	
+					<div class="formrow_view_attendance" ng-show="daily_attendance">
+						<div class="formtext">
+							<label >Select Date</label> 			
+						</div>
+						<div class="forminput">							
+							<input type="text" name="attendance_date" ng-click="clear_batch()" ng-model="attendance_date" id="attendance_date"></text>
+						</div>
+					</div>
+					<div class="formrow_view_attendance" ng-show="show_batch_select">
+						<div class="formtext_attendance">
+							<label for="batch">Batch</label>
+						</div>
+						<div class="forminput">
+							<select ng-model="batch_id" >
+							<option value="">Select</option>
+							<option ng-repeat="batch in batches" value="[[batch.id]]" ng-click="get_attendance_details()">[[batch.batch_name]]</option>
+						</select>					
+						</div>	
+					</div>
+					<div class="formrow_view_attendance" ng-show="student_attendance">
+						<div class="formtext_attendance">
+							<label>Select Student</label>
+						</div>			
+						<div class="forminput">
+							<input type="text" ng-model="student_name" ng-change="student_search()" autocomplete="off">
+							<div ng-show="students_list.length > 0" class="search_list">
+								<div ng-repeat="student in students_list" class="search_list_item" ng-click="get_student_details(student)" ng-class="{'highlight': $index == focusIndex}">
+								<span>[[student.roll_number]]-[[student.name]]</span>
+								</div>
+							</div>
+							<p class="error_message"> [[no_student_msg]] </p>
+						</div>
+					</div>
+					<div class="view_flags" ng-show="view=='monthly'">
+						<div class="blue_box"></div>
+						<label class="flag_label">Coming Day</label>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div ng-show="show_data">
+					<div class="section_1_attendance" ng-show="view=='daily'">
+						<table border="0" class="table table-striped" cellpadding="0" cellspacing="0" ng-show="students.length > 0">
+						<tr>
+							<th>Roll No</th>
+							<th>Name</th>
+							<th>Absent/Present</th>
+						</tr>
+						<tr ng-repeat="student in students">
+							<td>[[ student.roll_number ]]</td>
+							<td>[[student.name]]</td>
+							<td><span ng-show="!is_edit">
+									<span class="red_font" ng-hide="student.status=='P'">[[ student.status ]]</span>
+									<span class="bold_font" ng-show="student.status=='P'">[[student.status]]</span>
+								</span>
+								<span ng-hide="!is_edit">
+									<input type="checkbox" ng-model="student.is_presented">
+								</span>
+							</td>
+						</tr>			                   
+						</table>
+
+						<div class="" ng-show="students.length > 0">
+							 <div class="form_text">
+			                    <label> Staff</label>
+			                </div>
+			                 <div class="form_input">
+			                    <input type="text" ng-model="batch.staff" readonly>
+			                </div>
+							<div class="form_text">
+			                    <label> Topics*</label>  
+			                </div>
+			                <div class="form_input">
+			                    <textarea ng-model="batch.topics" ng-disabled="!is_edit"></textarea>
+			                </div>
+			                <div class="form_text">
+			                    <label> Remarks</label>
+			                </div>
+			                 <div class="form_input">
+			                    <textarea ng-model="batch.remarks" ng-disabled="!is_edit"></textarea>
+			                </div>
+						</div>
+					</div>
+
+					<div class="section_1_attendance" ng-show="view=='monthly'">
+						<table border="0" class="table table-striped" cellpadding="0" cellspacing="0" ng-show="students.length > 0">
+							<tr>
+								<th class="days">Roll No</th>
+								<th class="days">Name</th>
+								<th class="days allign_center" ng-repeat="column in columns">[[column]]</th>
+							</tr>
+							<tr ng-repeat="student in students">
+								<td class="days">[[ student.roll_number ]]</td>
+								<td class="days">[[student.name]]</td>
+								<td class="days" ng-repeat="day in student.days" ng-class="appliedClass(day)"><span class="red_font" ng-hide="day.status=='P'">[[day.status]]</span><span class="bold_font" ng-show="day.status=='P'">[[day.status]]</span></td>
+								
+							</tr>			                        
+						</table>
+					</div>	
+
+					<div class="section_1_attendance" ng-show="view=='student'">
+						<table border="0" class="table table-striped" cellpadding="0" cellspacing="0" ng-show="attendance_list.length > 0">
+							<tr>
+								<th class="days">Date</th>
+								<th class="days">Status</th>
+								<th class="days">Topics Covered</th>
+							</tr>
+							<tr ng-repeat="attendance in attendance_list">
+								<td class="days">[[ attendance.date ]]</td>
+								<td class="days">
+									<span class="red_font" ng-hide="attendance.status=='P'">[[ attendance.status ]]</span>
+									<span class="bold_font" ng-show="attendance.status=='P'">[[attendance.status]]</span>
+								</td>
+								<td class="days">[[ attendance.topics_covered]] </td>				
+							</tr>			                        
+						</table>
+					</div>	
+
+				</div>
+
+				<div  align="Center">
+					<p class="error_message"> [[validation_error]] </p>
+					<div class="buttons" ng-show="show_buttons">						
+							<input type="button" value="Submit" ng-click="save_attendance();" class="btn btn-info"/>
+							<input type="button" value="Edit" ng-click="edit_attendance();" class="btn btn-info"/>							
+						<a href="{% url 'attendance_details' %}"><input type="button" value="Cancel" class="btn btn-info"></a>
+					</div>
+				</div>	
+			</div>
+		<div class="clear"></div>
+	</div>
+
+
+{% endblock content %}
