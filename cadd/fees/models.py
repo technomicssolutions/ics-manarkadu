@@ -32,6 +32,7 @@ class FeesPayment(models.Model):
 		verbose_name_plural = 'Fees Payment'
 class FeesPaid(models.Model):
 
+	receipt_no = models.CharField('Receipt No',max_length=200,null=True, blank=True)
 	fees_payment_installment = models.ForeignKey(FeesPaymentInstallment, null=True, blank=True)
 	paid_date = models.DateField('Paid Date', null=True, blank=True)
 	paid_amount = models.DecimalField('Amount', max_digits=14, decimal_places=2, default=0)

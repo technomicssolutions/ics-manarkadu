@@ -1,6 +1,7 @@
 function FeesPaymentController($scope, $element, $http, $timeout, share, $location)
 {
     $scope.payment_installment = {
+        'receipt_no': '',
         'installment_id': '',
         'course_id': '',
         'batch_id': '',

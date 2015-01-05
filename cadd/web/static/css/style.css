@@ -245,7 +245,7 @@ textarea{
 	width: 50%;
 }
 .form_container input[type="button"]{
-	width: auto;
+	width: 21%;
 }
 .form_container select{
 	float: left;

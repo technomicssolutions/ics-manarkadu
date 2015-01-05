@@ -62,6 +62,7 @@ class FeesPaymentSave(View):
                 fee_payment_installment.total_amount = fees_payment_details['total_amount']
                 fee_payment_installment.save()
                 fees_paid = FeesPaid()
+                fees_paid.receipt_no = fees_payment_details['receipt_no']
                 fees_paid.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
                 fees_paid.fees_payment_installment = fee_payment_installment
                 fees_paid.paid_amount = fees_payment_details['paid_amount']
@@ -415,7 +416,7 @@ class FeepaymentReport(View):
             elements.append(t)
             elements.append(Spacer(4, 5))
             data = []
-            data.append(['Student' , 'Installment','Installment Amount','Paid date','Paid Amount'])
+            data.append(['Receipt No','Student' ,'Paid Amount'])
             
             try:
                 fee_paids = FeesPaid.objects.filter(paid_date=date)
@@ -424,10 +425,10 @@ class FeepaymentReport(View):
                     print fee_payed.fees_payment_installment.id
                     fees_payment_installment = FeesPaymentInstallment.objects.get(id=fee_payed.fees_payment_installment.id)
                     # print fees_payment_installment
-                    data.append([Paragraph(fees_payment_installment.student.student_name, para_style), 'Installment' +str(fees_payment_installment.installment.id), fees_payment_installment.total_amount,fee_payed.paid_date.strftime('%d/%m/%Y'), fee_payed.paid_amount])
+                    data.append([fee_payed.receipt_no, Paragraph(fees_payment_installment.student.student_name, para_style),  fee_payed.paid_amount])
             except Exception as ex:
                 print str(ex)
-            table = Table(data, colWidths=(100, 100, 150,100,100),  style=style)
+            table = Table(data, colWidths=(100, 100, 100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
@@ -438,7 +439,7 @@ class FeepaymentReport(View):
                         ])   
             elements.append(table)  
             p.build(elements)      
-            return response      
+            return response       
         else:
             return render(request, 'fee_collected_report.html',{})            
 

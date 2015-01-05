@@ -13,7 +13,10 @@
 	<div class="form_container">
 		<form class="" name="payment" method="post" action="">
 			{% csrf_token %}
-			
+			<div class="control">
+				<label>Receipt No</label>
+				<input type="text" name="receipt_no" id="receipt_no" ng-model="payment_installment.receipt_no" /> 
+			</div>
 			<div class="control">
 				<label> Course</label> 
 				<select name="course" ng-model="course" ng-options="course.id as course.course_name for course in courses" ng-change="get_student_list()" >
