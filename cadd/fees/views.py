@@ -322,11 +322,10 @@ class PrintOutstandingFeesReport(View):
                 elements.append(t)
                 elements.append(Spacer(4, 5))
                 d = []
-                d.append(['',Paragraph(' Course Start Date',para_style), 'Due', 'Balance'])
-                table = Table(d, colWidths=(75, 75, 75, 75),rowHeights=25,  style=style)
+                d.append(['',Paragraph(' Course Start Date',para_style), 'Time', 'Due', 'Balance'])
+                table = Table(d, colWidths=(75, 120, 75, 75, 75),rowHeights=25,  style=style)
                 elements.append(table)
                 for student in students:
-                    
                     data_list = []
                     i = 0
                     is_not_paid = False
@@ -343,6 +342,7 @@ class PrintOutstandingFeesReport(View):
                                                 'id': installment.id,
                                                 'student_name':student.student_name,
                                                 'doj': student.doj.strftime('%d/%m/%Y'),
+                                                'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
                                                 'amount':installment.amount,
                                                 'name':'installment'+str(i + 1),
                                                 'paid_installment_amount': fees_payment_installments[0].paid_amount,
@@ -355,6 +355,7 @@ class PrintOutstandingFeesReport(View):
                                         'id': installment.id,
                                         'student_name':student.student_name,
                                         'doj': student.doj.strftime('%d/%m/%Y'),
+                                        'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
                                         'amount':installment.amount,
                                         'name':'installment'+str(i + 1),
                                         'paid_installment_amount': 0,
@@ -367,6 +368,7 @@ class PrintOutstandingFeesReport(View):
                                     'id': installment.id,
                                     'student_name':student.student_name,
                                     'doj': student.doj.strftime('%d/%m/%Y'),
+                                    'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
                                     'amount':installment.amount,
                                     'name':'installment'+str(i + 1),
                                     'paid_installment_amount': 0,
@@ -377,15 +379,16 @@ class PrintOutstandingFeesReport(View):
                     
                     if is_not_paid:
                         for data in data_list:
-                            d.append([data['student_name'], Paragraph(data['doj'],para_style), data['amount'], data['balance']])
-                        table = Table(d, colWidths=(75,75, 75,  75),  rowHeights=25, style=style)
-                        table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
-                                    ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
-                                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                                    ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
-                                     ('FONTSIZE', (0,0), (-1,-1), 12),
-                                    ])
-                        elements.append(table)
+                            d.append([data['student_name'], Paragraph(data['doj'], para_style), data['batch_time'] , data['amount'], data['balance']])
+                        if data_list:
+                            table = Table(d, colWidths=(75, 120, 75, 75,  75),  rowHeights=25, style=style)
+                            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                                         ('FONTSIZE', (0,0), (-1,-1), 12),
+                                        ])
+                            elements.append(table)
             p.build(elements)        
             return response
 
@@ -619,5 +622,22 @@ class AccountStatement(View):
             return response 
         return render(request, 'account_statement.html',{}) 
 
-    
+class ReceiptNo(View):
+
+    def get(self, request, *args, **kwargs):
+
+        if request.is_ajax():
+            try:
+                receipt_no = 'Rpt No-'+ str(FeesPaid.objects.latest('id').id + 1 )
+                res ={
+                    'result': 'ok',
+                    'receipt_no': receipt_no,
+                }
+            except:
+                res ={
+                    'result': 'Error',
+                }
+            status = 200
+            response = simplejson.dumps(res)
+            return HttpResponse(response, status=status, mimetype='application/json')
 

@@ -1,3 +1,11 @@
+
+function get_receipt_no($scope, $http){
+    $http.get('/fees/receipt_no/?ajax=true').success(function(data){
+        $scope.payment_installment.receipt_no = data.receipt_no;
+    }).error(function(data, status){
+        $scope.message = data.result;
+    })
+}
 function FeesPaymentController($scope, $element, $http, $timeout, share, $location)
 {
     $scope.payment_installment = {
@@ -30,6 +38,7 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
             format:'%d/%m/%Y',
         });
         get_course_list($scope, $http);
+        get_receipt_no($scope, $http);
     }
     $scope.get_student_list = function(){
         get_course_batch_student_list($scope, $http);
