@@ -7,6 +7,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, Table, TableStyle, SimpleDocTemplate, Spacer
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, A4
+from reportlab.pdfgen import canvas
 
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
@@ -232,39 +233,52 @@ class PrintOutstandingFeesReport(View):
         p = SimpleDocTemplate(response, pagesize=A4)
         current_date = datetime.now().date()
         elements = []
-        try:  
-            student = Student.objects.get(id=request.GET.get('student', ''))
-        except:
-            return render(request, 'list_outstanding_fees.html', {})
-        d = [['Outstanding fees details - '+ student.student_name]]
-        t = Table(d, colWidths=(450), rowHeights=25, style=style)
-        t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
-                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                    ('FONTSIZE', (0,0), (-1,-1), 17),
-                    ])   
-        elements.append(t)
-        elements.append(Spacer(4, 5))
-        data_list = []
-        i = 0
-        is_not_paid = False
-        for installment in student.installments.all():
-            try:
-                fees_payment = FeesPayment.objects.get(student__id=student.id)
-                fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
-                if fees_payment_installments.count() > 0:
-                    if current_date >= installment.due_date:
-                        if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
-                                is_not_paid = True
-                                data_list.append({
-                                    'id': installment.id,
-                                    'amount':installment.amount,
-                                    'due_date': installment.due_date.strftime('%d/%m/%Y'),
-                                    'fine_amount': installment.fine_amount,
-                                    'name':'installment'+str(i + 1),
-                                    'paid_installment_amount': fees_payment_installments[0].paid_amount,
-                                    'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
-                                })
-                elif fees_payment_installments.count() == 0:
+        if request.GET.get('student', ''):
+            try:  
+                student = Student.objects.get(id=request.GET.get('student', ''))
+            except:
+                return render(request, 'list_outstanding_fees.html', {})
+            d = [['Outstanding fees details - '+ student.student_name]]
+            t = Table(d, colWidths=(450), rowHeights=25, style=style)
+            t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('FONTSIZE', (0,0), (-1,-1), 17),
+                        ])   
+            elements.append(t)
+            elements.append(Spacer(4, 5))
+            data_list = []
+            i = 0
+            is_not_paid = False
+            for installment in student.installments.all():
+                try:
+                    fees_payment = FeesPayment.objects.get(student__id=student.id)
+                    fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
+                    if fees_payment_installments.count() > 0:
+                        if current_date >= installment.due_date:
+                            if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
+                                    is_not_paid = True
+                                    data_list.append({
+                                        'id': installment.id,
+                                        'amount':installment.amount,
+                                        'due_date': installment.due_date.strftime('%d/%m/%Y'),
+                                        'fine_amount': installment.fine_amount,
+                                        'name':'installment'+str(i + 1),
+                                        'paid_installment_amount': fees_payment_installments[0].paid_amount,
+                                        'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
+                                    })
+                    elif fees_payment_installments.count() == 0:
+                        if current_date >= installment.due_date:
+                            is_not_paid = True
+                            data_list.append({
+                                'id': installment.id,
+                                'amount':installment.amount,
+                                'due_date': installment.due_date.strftime('%d/%m/%Y'),
+                                'fine_amount': installment.fine_amount,
+                                'name':'installment'+str(i + 1),
+                                'paid_installment_amount': 0,
+                                'balance': float(installment.amount),
+                            })
+                except Exception as ex:
                     if current_date >= installment.due_date:
                         is_not_paid = True
                         data_list.append({
@@ -276,35 +290,104 @@ class PrintOutstandingFeesReport(View):
                             'paid_installment_amount': 0,
                             'balance': float(installment.amount),
                         })
-            except Exception as ex:
-                if current_date >= installment.due_date:
-                    is_not_paid = True
-                    data_list.append({
-                        'id': installment.id,
-                        'amount':installment.amount,
-                        'due_date': installment.due_date.strftime('%d/%m/%Y'),
-                        'fine_amount': installment.fine_amount,
-                        'name':'installment'+str(i + 1),
-                        'paid_installment_amount': 0,
-                        'balance': float(installment.amount),
-                    })
-            i = i + 1
-        d = []
-        d.append(['Name', 'Amount', 'Due Date', 'Fine', 'Paid', 'Balance'])
-        if is_not_paid:
-            for data in data_list:
-                d.append([data['name'], data['amount'], data['due_date'], data['fine_amount'], data['paid_installment_amount'], data['balance']])
-        table = Table(d, colWidths=(100, 100, 75, 100, 100,100),  style=style)
-        table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
-                    ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
-                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                    ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
-                    ])
-        elements.append(table)
-        p.build(elements)        
-        return response
+                i = i + 1
+            d = []
+            d.append(['Name', 'Amount', 'Due Date', 'Fine', 'Paid', 'Balance'])
+            if is_not_paid:
+                for data in data_list:
+                    d.append([data['name'], data['amount'], data['due_date'], data['fine_amount'], data['paid_installment_amount'], data['balance']])
+            table = Table(d, colWidths=(100, 100, 75, 100, 100,100),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])
+            elements.append(table)
+            p.build(elements)        
+            return response
+        else:
+            date = request.GET.get('date', '')
+            date = datetime.strptime(date, '%d/%m/%Y')
+            courses = Course.objects.all()
+            for course in courses: 
+                students = Student.objects.filter(course=course.id)
+                d = [['Outstanding fees details - '+ course.name]]
+                t = Table(d, colWidths=(450), rowHeights=25, style=style)
+                t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                            ('FONTSIZE', (0,0), (-1,-1), 17),
+                            ])   
+                elements.append(t)
+                elements.append(Spacer(4, 5))
+                d = []
+                d.append(['',Paragraph(' Course Start Date',para_style), 'Due', 'Balance'])
+                table = Table(d, colWidths=(75, 75, 75, 75),rowHeights=25,  style=style)
+                elements.append(table)
+                for student in students:
+                    
+                    data_list = []
+                    i = 0
+                    is_not_paid = False
+
+                    for installment in student.installments.all():
+                        try:
+                            fees_payment = FeesPayment.objects.get(student__id=student.id)
+                            fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
+                            if fees_payment_installments.count() > 0:
+                                if current_date >= installment.due_date:
+                                    if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
+                                            is_not_paid = True
+                                            data_list.append({
+                                                'id': installment.id,
+                                                'student_name':student.student_name,
+                                                'doj': student.doj.strftime('%d/%m/%Y'),
+                                                'amount':installment.amount,
+                                                'name':'installment'+str(i + 1),
+                                                'paid_installment_amount': fees_payment_installments[0].paid_amount,
+                                                'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
+                                            })
+                            elif fees_payment_installments.count() == 0:
+                                if current_date >= installment.due_date:
+                                    is_not_paid = True
+                                    data_list.append({
+                                        'id': installment.id,
+                                        'student_name':student.student_name,
+                                        'doj': student.doj.strftime('%d/%m/%Y'),
+                                        'amount':installment.amount,
+                                        'name':'installment'+str(i + 1),
+                                        'paid_installment_amount': 0,
+                                        'balance': float(installment.amount),
+                                    })
+                        except Exception as ex:
+                            if current_date >= installment.due_date:
+                                is_not_paid = True
+                                data_list.append({
+                                    'id': installment.id,
+                                    'student_name':student.student_name,
+                                    'doj': student.doj.strftime('%d/%m/%Y'),
+                                    'amount':installment.amount,
+                                    'name':'installment'+str(i + 1),
+                                    'paid_installment_amount': 0,
+                                    'balance': float(installment.amount),
+                                })
+                        i = i + 1
+                    d = []
+                    
+                    if is_not_paid:
+                        for data in data_list:
+                            d.append([data['student_name'], Paragraph(data['doj'],para_style), data['amount'], data['balance']])
+                        table = Table(d, colWidths=(75,75, 75,  75),  rowHeights=25, style=style)
+                        table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                                    ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                    ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                                     ('FONTSIZE', (0,0), (-1,-1), 12),
+                                    ])
+                        elements.append(table)
+            p.build(elements)        
+            return response
 
 class FeepaymentReport(View):
 
@@ -490,3 +573,51 @@ class RollStudent(View):
                 response = simplejson.dumps(res)
                 return HttpResponse(response, status=status, mimetype='application/json')
         return render(request, 'unroll_students.html',{})  
+
+class AccountStatement(View):
+
+    def get(self, request, *args, **kwargs):
+
+        student_id = request.GET.get('student_id')
+        if student_id:
+            student = Student.objects.get(id=student_id)
+            response = HttpResponse(content_type='application/pdf')
+            p = canvas.Canvas(response, pagesize=(1000, 1250))
+            y = 1150
+            balance = 0
+            p.setFont("Helvetica", 14)
+            p.drawCentredString(500, y - 60, 'Account Statement: '+student.student_name)
+            p.drawString(150, y-100, student.doj.strftime('%d/%m/%Y'))
+            p.drawString(250, y-100, 'Course Fee')
+            p.drawString(350, y-100, ' ')
+            p.drawString(450, y-100, str(student.fees)+'Dr')
+            p.drawString(150, y-150, student.doj.strftime('%d/%m/%Y'))
+            p.drawString(250, y-150, 'Discount')
+            p.drawString(350, y-150, str(student.discount)+'Cr')
+            p.drawString(450, y-150, ' ')
+            balance = float(student.fees) - float(student.discount)
+            y1 = y - 160
+            fees_payment = FeesPayment.objects.get(student=student)
+            if fees_payment.payment_installment.count > 0 :
+                for fee_payment_installment in fees_payment.payment_installment.all().order_by('-id'):
+                    for payment in fee_payment_installment.feespaid_set.all():
+                        y1 = y1 - 30
+                        if y1 <= 135:
+                            y1 = y - 110
+                            p.showPage()
+                            p = header(p, y)
+                        p.drawString(150, y1, payment.paid_date.strftime('%d/%m/%Y'))
+                        p.drawString(250, y1, payment.receipt_no if payment.receipt_no else '')
+                        p.drawString(350, y1, str(payment.paid_amount)+'Cr')
+                        p.drawString(450, y1, ' ')
+                        print balance
+                        balance = balance - float(payment.paid_amount)
+            print balance
+            p.drawString(150, y1-50, 'Balance:')            
+            p.drawString(450, y1-50, str(balance)+ 'Dr')
+            p.save()       
+            return response 
+        return render(request, 'account_statement.html',{}) 
+
+    
+

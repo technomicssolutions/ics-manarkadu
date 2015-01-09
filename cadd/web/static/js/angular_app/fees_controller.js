@@ -184,11 +184,22 @@ function FeesController($scope, $element, $http, $timeout, share, $location)
     $scope.fees_type = '';
     $scope.filtering_option = '';
     $scope.url = '';
+    $scope.date = '';
+    $scope.show_student_wise_report = false;
+    $scope.show_date_wise_report = false;
+
     $scope.init = function(csrf_token)
     {
         $scope.csrf_token = csrf_token;
         $scope.error_flag = false;
         $scope.popup = '';
+        var date = new Picker.Date($$('#date'), {
+            timePicker: false,
+            positionOffset: {x: 5, y: 0},
+            pickerClass: 'datepicker_bootstrap',
+            useFadeInOut: !Browser.ie,
+            format:'%d/%m/%Y',
+        });
         get_course_list($scope, $http);
     }
     $scope.get_batch = function(){
@@ -199,6 +210,15 @@ function FeesController($scope, $element, $http, $timeout, share, $location)
         $scope.fees_details = [];
         $scope.filtering_option = '';
         get_course_batch_student_list($scope, $http);
+    }
+    $scope.change_report_type = function(report_type){
+        if(report_type == 'date_wise') {
+            $scope.show_student_wise_report = false;
+            $scope.show_date_wise_report = true;
+        }else{
+            $scope.show_student_wise_report = true;
+            $scope.show_date_wise_report = false;
+        }
     }
     $scope.hide_popup_windows = function(){
         $('#fees_structure_details_view')[0].setStyle('display', 'none');
@@ -218,7 +238,9 @@ function FeesController($scope, $element, $http, $timeout, share, $location)
                 // } else {
                 //     $scope.url = '/fees/get_outstanding_fees_details/?course='+$scope.course+ '&batch='+ $scope.batch+ '&filtering_option='+$scope.filtering_option+'&fees_type='+$scope.fees_type;
                 // }
-                $scope.url = '/fees/get_outstanding_fees_details/?course='+$scope.course+'&student_id='+$scope.student_id;
+                if($scope.course != '' && $scope.student_id != '')
+                    $scope.url = '/fees/get_outstanding_fees_details/?course='+$scope.course+'&student_id='+$scope.student_id;
+
             }
         }
         $http.get($scope.url).success(function(data)
@@ -245,7 +267,11 @@ function FeesController($scope, $element, $http, $timeout, share, $location)
         $scope.popup.hide_popup();
     }   
     $scope.print_outstanding_fees_list = function() {
-        document.location.href = '/fees/print_outstanding_fees_details/?student='+$scope.student_id;
+        $scope.date = $$('#date')[0].get('value');
+        if ($scope.student_id)
+            document.location.href = '/fees/print_outstanding_fees_details/?student='+$scope.student_id;
+        else if($scope.date)
+           document.location.href = '/fees/print_outstanding_fees_details/?date='+$scope.date;
     }
 }
 
@@ -404,5 +430,52 @@ function UnRollController($scope, $http, $element) {
         {
             console.log(data || "Request failed");
         });
+    }
+}
+function AccountStatementController($scope, $http, $element) {
+    $scope.focusIndex = 0;
+    $scope.keys = [];
+    $scope.keys.push({ code: 13, action: function() { $scope.select_list_item( $scope.focusIndex ); }});
+    $scope.keys.push({ code: 38, action: function() { 
+        if($scope.focusIndex > 0){
+            $scope.focusIndex--; 
+        }
+    }});
+    $scope.keys.push({ code: 40, action: function() { 
+        if($scope.focusIndex < $scope.students_list.length-1){
+            $scope.focusIndex++; 
+        }
+    }});
+    $scope.$on('keydown', function( msg, code ) {
+        $scope.keys.forEach(function(o) {
+          if ( o.code !== code ) { return; }
+          o.action();
+          $scope.$apply();
+        });
+    });
+    $scope.init = function(csrf_token){
+        $scope.csrf_token = csrf_token;
+        $scope.error_flag = false;
+    }
+    $scope.select_list_item = function(index){
+        student = $scope.students_list[index];
+        $scope.get_student(student);
+    }
+    
+    $scope.student_search = function(){
+        if($scope.student_name.length > 0){
+            $scope.validation_error = "";
+            student_search($scope, $http);
+        }
+        else
+            $scope.students_list = ""
+    }
+    $scope.get_student = function(student){
+        $scope.student_name = student.name;
+        $scope.student = student.id;
+    }
+    $scope.get_report = function(){
+       
+        document.location.href = '/fees/account_statement/?&student_id='+$scope.student;
     }
 }

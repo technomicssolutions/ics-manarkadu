@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Account Statement{% endblock title %}
+{% block body_id %}account_statement{% endblock %}
+
+{% block controller %}
+	ng-controller="AccountStatementController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+	<div class="control">
+		<label>Search Student</label>
+		<input type="text" ng-model="student_name" ng-change="student_search()" autocomplete="off">
+		<div ng-show="students_list.length > 0" class="search_list">
+			<div ng-repeat="student in students_list" ng-class="{'highlight': $index == focusIndex}"class="search_list_item" ng-click="get_student(student)">
+			<span>[[student.roll_number]]-[[student.name]]</span>
+			</div>
+		</div>
+		<p class="error_msg">[[no_student_msg]]</p>
+		<div class="button_control">
+			<p class="error_message">[[message]]</p>
+			<input type="button"  ng-click="get_report()" value="Generate PDF" />
+		</div>
+	</div>
+{% endblock content %}

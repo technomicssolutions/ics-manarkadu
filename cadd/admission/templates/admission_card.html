@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Admission Card{% endblock title %}
+{% block body_id %}admission_card{% endblock %}
+
+{% block controller %}
+	ng-controller="AdmissionCardController" ng-init="init('{{csrf_token}}')"
+{% endblock controller %}
+{% block content %}
+<div class="form_container">
+	<div class="control">
+		<select name="course" ng-model="course" ng-change="get_student()" ng-options="course.id as course.course_name for course in courses">
+			<option value="">Course</option>
+		</select>
+	</div>
+	<div class="control" >
+		<select name="student" ng-model="student_id" ng-options="student.id as student.student for student in students">
+			<option value="">Student</option>
+			
+		</select>
+	</div>
+	<div class="section_1">
+		<div class="control buttons">
+			<input type="button" ng-click="get_admission_card(student)" value="Print">
+		</div>
+	</div>
+</div>
+{% endblock content %}

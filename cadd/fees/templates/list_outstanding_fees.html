@@ -7,13 +7,19 @@
 {% block content %}
 	<div class="main-title">
 		<div class="alert alert-info" align="Center">Outstanding Fees</div>
-		<div class="form_container">		
+		<div class="form_container">	
 			<div class="control">
+                <input type="radio" ng-model="report_type" value="student_wise" ng-click="change_report_type('student_wise')" />
+                <label>Student wise</label>
+                <input type="radio" ng-model="report_type" value="date_wise" ng-click="change_report_type('date_wise')" />
+                <label>Date wise</label>
+            </div>		
+			<div class="control" ng-show="show_student_wise_report">
 				<select name="course" ng-model="course" ng-change="get_student()" ng-options="course.id as course.course_name for course in courses">
 					<option value="">Course</option>
 				</select>
 			</div>
-			<div class="control">
+			<div class="control" ng-show="show_student_wise_report">
 				<select name="student" ng-model="student_id" ng-change="outstanding_fees_details()" ng-options="student.id as student.student for student in students">
 					<option value="">Student</option>
 					
@@ -22,7 +28,11 @@
 			
 		</div>
 	</div>
-	<div class="section_1">
+	<div class="control" ng-show="show_date_wise_report">
+		<label>Date</label>
+		<input type="text" name="date" id="date" ng-model="date" /> 
+	</div>
+	<div class="section_1" ng-show="show_student_wise_report">
 		<div class="search_staff">
 			<div class="control">
 				<label>Roll No:  [[fees_details.roll_no]]</label>

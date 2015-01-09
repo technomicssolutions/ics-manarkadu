@@ -7,6 +7,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, Table, TableStyle, SimpleDocTemplate, Spacer
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, A4
+from reportlab.pdfbase import pdfmetrics
 
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
@@ -970,3 +971,42 @@ class EnquiryToAdmission(View):
                 p.build(elements)        
                 return response
         return render(request, 'enquiry_to_admission.html', {})
+
+class AdmissionCardView(View):
+
+    def get(self, request, *args, **kwargs):
+        student_id = request.GET.get('student_id', '')
+        if student_id :
+            student = Student.objects.get(id=student_id)
+            response = HttpResponse(content_type='application/pdf')
+            current_date = datetime.now()
+            p = canvas.Canvas(response, pagesize=(1000, 1250))
+            y = 1150
+            time = student.batches.all()[0].start_time.strftime("%-I:%M%P") + ' to ' +student.batches.all()[0].end_time.strftime("%-I:%M%P")
+            p.setFont("Helvetica", 24)
+            p.drawCentredString(500, y - 60, 'Admission Card')
+            p.setFont("Helvetica", 14)
+            p.drawString(150, y-100 , 'Date...................')
+            p.drawString(150, y-150, 'Course..........................')
+            p.drawString(300, y-150,'Duration...........................')
+            p.drawString(150, y-200, 'Name Of Candidate..............................................')
+            p.drawString(150, y-250, 'Time....................................' )
+            p.drawString(150, y-300, 'Total Fee.....................')
+            p.drawString(150, y-350, 'Discount if any.......................')
+            p.drawString(150, y-400, 'Course Starting date......................')
+            p.drawString(150, y-450, 'No of Installments.................')
+            p.drawString(200, y-97 , current_date.strftime('%d/%m/%Y') )
+            p.drawString(200, y-147, student.course.name)
+            p.drawString(360, y-147, str(student.course.duration) + student.course.duration_unit)
+            p.drawString(350, y-197, student.student_name)
+            p.drawString(200, y-247, time)
+            p.drawString(210, y-297, str(student.fees))
+            p.drawString(300, y-347, str(student.discount))
+            p.drawString(300, y-397, student.doj.strftime('%d/%m/%Y') )
+            p.drawString(300, y-447, str(student.no_installments))
+            p.save()
+            return response
+        return render(request, 'admission_card.html', {})
+
+    
+

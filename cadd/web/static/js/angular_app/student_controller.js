@@ -1251,3 +1251,24 @@ function EnquiryToAdmissionController($scope, $http) {
         return new Array(n);
     }
 }
+function AdmissionCardController($scope, $http, $element) {
+    
+   
+    $scope.init = function(csrf_token){
+        $scope.csrf_token = csrf_token;
+        $scope.error_flag = false;
+        get_course_list($scope, $http);
+    }
+    $scope.get_batch = function(){
+        $scope.filtering_option = '';
+        get_course_batch_list($scope, $http);
+    }
+    $scope.get_student = function(){
+        $scope.fees_details = [];
+        $scope.filtering_option = '';
+        get_course_batch_student_list($scope, $http);
+    }
+    $scope.get_admission_card = function(){
+        document.location.href = '/admission/admission_card/?student_id='+$scope.student_id;
+    }
+}
