@@ -18,13 +18,14 @@
 	                <label>Date wise</label>
 	            </div>		
 				<div class="control" ng-show="show_course_wise_report">
+					<label>Course</label>
 					<select name="course" ng-model="course"  ng-options="course.id as course.course_name for course in courses">
 						<option value="">Course</option>
 					</select>
-					<div class="button_control">
-						<p class="error_message">[[message]]</p>
-						<input type="button"  ng-click="get_report('course_wise','')" value="Generate PDF" />
-					</div>
+					
+					<p class="error_message">[[message]]</p>
+					<input type="button"  ng-click="get_report('course_wise','')" value="Generate PDF" />
+					
 				</div>
 				<div class="control" ng-show="show_student_wise_report">
 					<label>Search Student</label>
@@ -39,10 +40,10 @@
 				<div class="control" ng-show="show_date_wise_report">
 					<label>Date</label>
 					<input type="text" name="date" id="date" ng-model="date" /> 
-					<div class="button_control">
-						<p class="error_message">[[message]]</p>
-						<input type="button"  ng-click="get_report('date_wise','')" value="Generate PDF" />
-					</div>
+				
+					<p class="error_message">[[message]]</p>
+					<input type="button"  ng-click="get_report('date_wise','')" value="Generate PDF" />
+					
 				</div>
 			</form>
 		</div>

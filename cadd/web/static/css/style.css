@@ -217,7 +217,7 @@ textarea{
 .form_container label{
 	display: block !important;
     float: left;
-    width: 45%;
+    width: 30%;
 }
 #letter .form_container {
 	margin: auto;
