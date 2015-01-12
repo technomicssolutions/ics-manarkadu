@@ -17,6 +17,7 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         'head_id': '',
         'paid_date': '',
         'total_amount': '',
+        'old_balance': 0,
         'paid_amount': 0,
         'paid_installment_amount': '',
         'balance': '',
@@ -103,6 +104,8 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         $('#installment_balance_amount').val($scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount);
         $scope.payment_installment.total_balance = installment.course_balance;
         $scope.payment_installment.total_balance_amount = installment.course_balance;
+        console.log($scope.payment_installment.total_balance,$scope.payment_installment.amount)
+        $('#old_balance').val(parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.amount));
         calculate_total_fee_amount();
     }
     $scope.calculate_balance = function() {
@@ -110,6 +113,7 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         $('#installment_balance').val(parseFloat($('#installment_balance').val()) - parseFloat($scope.payment_installment.fee_waiver));
         $scope.payment_installment.total_balance = parseFloat($scope.payment_installment.total_balance_amount) - (parseFloat($scope.payment_installment.paid_amount));
         $scope.payment_installment.total_balance = parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.fee_waiver)
+        
     }
     $scope.validate_fees_payment = function() {
         $scope.validation_error = '';

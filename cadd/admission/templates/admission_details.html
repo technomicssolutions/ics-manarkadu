@@ -147,6 +147,10 @@
                     <input type="text" name="fees_after_discount" ng-model="fees_after_discount" >
                 </div>
                 <div class="control">
+                    <label> Fine</label>
+                    <input type="text" name="fine" ng-model="fine" >
+                </div>
+                <div class="control">
                     <label> No of Installmets</label>
                     <input type="text" name="no_installments" value="" ng-model="no_installments" ng-change="load_installments()" />
                 </div>
@@ -158,7 +162,7 @@
                             <th>Fine(Daily)</th>
                         </tr>
                         <tr ng-repeat="installment in installments">
-                            <td><input type="text" ng-model="installment.amount" /></td>
+                            <td><input type="text" id="amount" ng-model="installment.amount" /></td>
                             <td><input type="text" ng-model="installment.due_date" id="[[installment.due_date_id]]"ng-click="attach_date_picker(installment)" /></td>
                             <td><input type="text" ng-model="installment.fine" /></td>
                         </tr>

@@ -52,6 +52,7 @@
 				<label>Total Fee Amount</label>
 				<input type="text" name="amount" ng-model="payment_installment.student_fee_amount"  readonly/>
 			</div>
+			
 			<div class="control">
 				<label>Installment Amount</label>
 				<input type="text" name="amount" id="fee_amount" ng-model="payment_installment.amount"  readonly/>
@@ -59,6 +60,9 @@
 			<div class="control">
 				<label>Fine</label>
 				<input type="text" name="fine" id="fine_amount" ng-model="payment_installment.fine" readonly /> 
+			</div>
+			<div class="control">
+				
 			</div>
 			<div class="control">
 				<label>Installment + Fine</label>
@@ -84,10 +88,15 @@
 				<label>Paying Fine Amount</label>
 				<input type="text" name="paid_amount" ng-model="payment_installment.paid_fine_amount" ng-change="calculate_balance()" autocomplete="off"/> 
 			</div>
+
 			<div class="control">
 				<label>Installment Balance</label>
 				<input type="text" name="installment_balance" ng-model="payment_installment.installment_balance" readonly id="installment_balance"/>
 				<input type="hidden" name="installment_balance" ng-model="payment_installment.installment_balance" readonly id="installment_balance_amount"/>
+			</div>
+			<div class="control">
+				<label>Old Installment Balance</label>
+				<input type="text" name="amount" id="old_balance" ng-model="payment_installment.old_balance"  readonly/>
 			</div>
 			<div class="control">
 				<label>Total Balance</label>

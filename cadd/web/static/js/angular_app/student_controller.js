@@ -712,6 +712,7 @@ function AdmissionController($scope, $http) {
     $scope.qualifications = '';
     $scope.dob = '';
     $scope.address = '';
+    $scope.no_installments = 0;
     $scope.mobile_number = '';
     $scope.email = '';
     $scope.blood_group = '';
@@ -806,16 +807,33 @@ function AdmissionController($scope, $http) {
         save_new_student($http, $scope);
     }
     $scope.load_installments = function() {
+        $scope.installments = [];
         $scope.temp_installments = $scope.installments;
         if ($scope.no_installments.length > 0) {
             if ($scope.no_installments > $scope.installments.length) {
+                diff = 0;
                 diff = $scope.no_installments - $scope.installments.length;
+
                 for (var i=0; i<diff; i++) {
                     due_date_id = 'due_date_'+$scope.installments.length;
+                    amount = 0
+                    var x,y,z
+                    date = new Date();
+                    y = date.getMonth() + i + 1;
+                    x = 1;
+                    if (y <= 12){
+                        z = date.getFullYear();
+                    }
+                    else{
+                        y = y - 12;
+                        z = date.getFullYear() + 1;
+                    }
+                    console.log(y,z)
+                    amount = $scope.fees_after_discount / $scope.no_installments ;
                     $scope.installments.push({
-                        'amount': '',
-                        'fine': '',
-                        'due_date': '',
+                        'amount': amount,
+                        'fine': $scope.fine,
+                        'due_date': x+ '/' + y + '/' +z,
                         'due_date_id': due_date_id,
                     })
                 }

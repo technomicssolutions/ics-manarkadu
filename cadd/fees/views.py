@@ -622,6 +622,7 @@ class AccountStatement(View):
             return response 
         return render(request, 'account_statement.html',{}) 
 
+
 class ReceiptNo(View):
 
     def get(self, request, *args, **kwargs):
