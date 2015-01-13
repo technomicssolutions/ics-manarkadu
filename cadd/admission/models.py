@@ -74,6 +74,7 @@ class Student(models.Model):
 	guardian_mobile_number= models.CharField('Guardian Mobile Number',null=True, blank=True, max_length=200)
 	is_rolled = models.BooleanField('Is Rolled',default=False)
 	fees = models.DecimalField('Fees', max_digits=14, decimal_places=2, default=0)
+	balance = models.DecimalField('Balance', max_digits=14, decimal_places=2, default=0)
 	discount = models.DecimalField('Discount', max_digits=14, decimal_places=2, default=0)
 	no_installments = models.IntegerField('No of Installments', default=0)
 	installments = models.ManyToManyField(Installment, null=True, blank=True)

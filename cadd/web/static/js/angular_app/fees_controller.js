@@ -104,8 +104,10 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         $('#installment_balance_amount').val($scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount);
         $scope.payment_installment.total_balance = installment.course_balance;
         $scope.payment_installment.total_balance_amount = installment.course_balance;
-        console.log($scope.payment_installment.total_balance,$scope.payment_installment.amount)
-        $('#old_balance').val(parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.amount));
+        if ((parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.amount))>0)
+            $('#old_balance').val(parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.amount));
+        else
+            $('#old_balance').val(0);
         calculate_total_fee_amount();
     }
     $scope.calculate_balance = function() {

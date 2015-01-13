@@ -69,6 +69,8 @@ class FeesPaymentSave(View):
                 fees_paid.paid_amount = fees_payment_details['paid_amount']
                 #fees_paid.fee_waiver_amount = fees_payment_details['fee_waiver']
                 fees_paid.paid_fine_amount = fees_payment_details['paid_fine_amount']
+                student.balance = float(student.balance) - float(fees_payment_details['paid_amount']) - float(fees_payment_details['paid_fine_amount'])
+                student.save()
                 fees_paid.save()
                 fees_payment.payment_installment.add(fee_payment_installment)
                 res = {
@@ -309,7 +311,7 @@ class PrintOutstandingFeesReport(View):
             return response
         else:
             date = request.GET.get('date', '')
-            date = datetime.strptime(date, '%d/%m/%Y')
+            date = datetime.strptime(date, '%d/%m/%Y').date()
             courses = Course.objects.all()
             for course in courses: 
                 students = Student.objects.filter(course=course.id)
@@ -343,10 +345,10 @@ class PrintOutstandingFeesReport(View):
                                                 'student_name':student.student_name,
                                                 'doj': student.doj.strftime('%d/%m/%Y'),
                                                 'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
-                                                'amount':installment.amount,
+                                                'amount':float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
                                                 'name':'installment'+str(i + 1),
                                                 'paid_installment_amount': fees_payment_installments[0].paid_amount,
-                                                'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
+                                                'balance': student.balance,
                                             })
                             elif fees_payment_installments.count() == 0:
                                 if current_date >= installment.due_date:
@@ -359,7 +361,7 @@ class PrintOutstandingFeesReport(View):
                                         'amount':installment.amount,
                                         'name':'installment'+str(i + 1),
                                         'paid_installment_amount': 0,
-                                        'balance': float(installment.amount),
+                                        'balance': student.balance,
                                     })
                         except Exception as ex:
                             if current_date >= installment.due_date:
@@ -372,7 +374,7 @@ class PrintOutstandingFeesReport(View):
                                     'amount':installment.amount,
                                     'name':'installment'+str(i + 1),
                                     'paid_installment_amount': 0,
-                                    'balance': float(installment.amount),
+                                    'balance': student.balance,
                                 })
                         i = i + 1
                     d = []
@@ -391,7 +393,6 @@ class PrintOutstandingFeesReport(View):
                             elements.append(table)
             p.build(elements)        
             return response
-
 class FeepaymentReport(View):
 
     def get(self, request, *args, **kwargs):
@@ -635,8 +636,10 @@ class ReceiptNo(View):
                     'receipt_no': receipt_no,
                 }
             except:
+                receipt_no = 'Rpt No-'+  str(1)
                 res ={
-                    'result': 'Error',
+                    'result': 'ok',
+                    'receipt_no': receipt_no,
                 }
             status = 200
             response = simplejson.dumps(res)

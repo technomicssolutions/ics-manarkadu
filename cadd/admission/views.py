@@ -80,6 +80,7 @@ class AddStudent(View):
                         student.relationship = request.POST['relationship']
                         student.guardian_mobile_number = request.POST['guardian_mobile_number']
                         student.fees = request.POST['fees'] 
+                        student.balance = request.POST['fees']
                         student.discount = request.POST['discount']          
                         student.no_installments = request.POST['no_installments']
                         installments = ast.literal_eval(request.POST['installments'])
@@ -305,6 +306,7 @@ class EditStudentDetails(View):
             student.relationship = student_data['relationship']
             student.guardian_mobile_number = student_data['guardian_mobile_number']
             student.fees = student_data['fees_after_discount']
+            student.balance = student_data['fees_after_discount']
             if student_data['discount']:
                 student.discount = student_data['discount']
             student.no_installments = student_data['no_installments']
