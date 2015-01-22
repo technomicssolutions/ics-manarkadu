@@ -10,7 +10,7 @@ class Course(models.Model):
 	name = models.CharField('Course Name', null=True, blank=True, max_length=200, unique=True)
 	software = models.ManyToManyField(Software)
 	amount = models.DecimalField('Amount', null=True, blank=True, decimal_places=2, max_digits=10)
-	duration = models.IntegerField('Duration', null=True, blank=True, max_length=200)
+	duration = models.DecimalField('Duration', null=True, blank=True, decimal_places=2, max_digits=10)
 	duration_unit = models.CharField('Duration Unit', null=True, blank=True, max_length=200)
 
 	def __unicode__(self):
