@@ -185,10 +185,10 @@ validate_new_student = function($scope) {
             } else if($scope.installments[i].due_date == ''){
                 $scope.validation_error = "Please enter the due date for installment";
                 return false;
-            } else if($scope.installments[i].fine != 0 && parseFloat($scope.installments[i].fine) != Number($scope.installments[i].fine)){
-                $scope.validation_error = "Please enter a valid fine amount for installment";
-                return false;
-            } 
+            } //else if($scope.installments[i].fine != 0 && parseFloat($scope.installments[i].fine) != Number($scope.installments[i].fine)){
+            //     $scope.validation_error = "Please enter a valid fine amount for installment";
+            //     return false;
+            // } 
             for(var j = i+1; j < $scope.installments.length; j++){
                 id_name = '#'+$scope.installments[j].due_date_id;
                 $scope.installments[j].due_date = $$(id_name)[0].get('value');
@@ -246,6 +246,7 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
             useFadeInOut: !Browser.ie,
             format:'%d/%m/%Y',
         });
+        
         get_course_list($scope, $http);
         get_batches($scope, $http, 'edit_student');
         
