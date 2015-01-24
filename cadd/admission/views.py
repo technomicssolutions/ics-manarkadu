@@ -984,7 +984,7 @@ class AdmissionCardView(View):
             current_date = datetime.now()
             p = canvas.Canvas(response, pagesize=(1000, 1250))
             y = 1150
-            time = student.batches.all()[0].start_time.strftime("%-I:%M%P") + ' to ' +student.batches.all()[0].end_time.strftime("%-I:%M%P")
+            time = str(student.batches.all()[0].start_time.strftime("%-I:%M%P")) + ' to ' + str(student.batches.all()[0].end_time.strftime("%-I:%M%P"))
             p.setFont("Helvetica", 24)
             p.drawCentredString(500, y - 60, 'Admission Card')
             p.setFont("Helvetica", 14)
