@@ -62,8 +62,8 @@ function LetterController($scope, $element, $http, $timeout, share, $location) {
             'height': 'auto',
             'content_div': '#new_letter'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
 	}
 	$scope.new_letter = function(){

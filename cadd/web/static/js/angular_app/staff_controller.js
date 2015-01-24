@@ -185,8 +185,8 @@ function StaffController($scope, $element, $http, $timeout, share, $location) {
             'height': 'auto',
             'content_div': '#add_staff_details'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.is_username_exists = function() {
@@ -217,8 +217,8 @@ function StaffController($scope, $element, $http, $timeout, share, $location) {
             'height': 'auto',
             'content_div': '#add_staff_details'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
         $scope.staff = staff;
     }
@@ -409,8 +409,8 @@ function PermissionController($scope, $http) {
             'height': 'auto',
             'content_div': '#add_staff_details'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.save_new_staff = function() {

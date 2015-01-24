@@ -181,8 +181,8 @@ function CollegeController($scope, $element, $http, $timeout, share, $location)
             'height': 'auto',
             'content_div': '#add_software'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.close_software_popup = function(){
@@ -212,8 +212,8 @@ function CollegeController($scope, $element, $http, $timeout, share, $location)
             'height': 'auto',
             'content_div': '#add_course'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
         if($scope.course.id == '')
             get_software_list($scope, $http);
@@ -394,8 +394,8 @@ function BatchController($scope, $element, $http, $timeout, share, $location)
             'height': 'auto',
             'content_div': '#add_batch'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
         $scope.branch = '';
     }

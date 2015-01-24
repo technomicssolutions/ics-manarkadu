@@ -312,7 +312,7 @@ form {
   background:url(../images/overlay.png) repeat 0 0;
   opacity: 0.9;
   z-index: 1;
-  position: absolute;
+  position: fixed;
   width: 100%;
 }
 #dialogue_popup_container {

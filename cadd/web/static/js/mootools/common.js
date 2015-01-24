@@ -43,8 +43,8 @@ var DialogueModelWindow = new Class({
         this.message = ""
         this.overlay = $$(this.options.overlay);
         this.pop_window = $$(this.options.pop_window);
-        var height = $(document).height();
-        this.set_overlay_height(height);
+        // var height = $(document).height();
+        // this.set_overlay_height(height);
         this.set_message(this.message);
         this.hide_popup();
         this.close_pop_up = this.pop_window.getElement('.close_pop');       

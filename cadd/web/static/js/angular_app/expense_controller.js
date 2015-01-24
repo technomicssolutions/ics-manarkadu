@@ -88,8 +88,8 @@ function ExpenseController($scope, $element, $http, $timeout, $location) {
             'height': 'auto',
             'content_div': '#add_expense_head'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.close_popup = function(){

@@ -13,8 +13,8 @@ function add_new_student($http, $scope){
         'height': 'auto',
         'content_div': '#add_student_details'
     });
-    var height = $(document).height();
-    $scope.popup.set_overlay_height(height);
+    // var height = $(document).height();
+    // $scope.popup.set_overlay_height(height);
     $scope.popup.show_content();
 }
 
@@ -522,8 +522,8 @@ function StudentListController($scope, $http, $element, $location, $timeout) {
             'content_div': '#student_details_view'
         });
         
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.close_popup = function(){
@@ -1045,8 +1045,8 @@ function EnquiryListController($scope, $http) {
             'content_div': '#enquiry_details_view'
         });
         
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.select_page = function(page){
@@ -1066,8 +1066,8 @@ function EnquiryListController($scope, $http) {
             'height': 'auto',
             'content_div': '#followup_details_view'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     
@@ -1117,8 +1117,8 @@ function FollowUpReportController($scope, $http) {
             'height': 'auto',
             'content_div': '#followup_details_view'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.view_follow_ups = function(){
@@ -1161,8 +1161,8 @@ function FollowUpReportController($scope, $http) {
             'content_div': '#enquiry_details_view'
         });
         
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.select_page = function(page){
@@ -1203,8 +1203,8 @@ function EnquiryToAdmissionController($scope, $http) {
             'height': 'auto',
             'content_div': '#followup_details_view'
         });
-        var height = $(document).height();
-        $scope.popup.set_overlay_height(height);
+        // var height = $(document).height();
+        // $scope.popup.set_overlay_height(height);
         $scope.popup.show_content();
     }
     $scope.view_enquiry_to_admission = function(){
