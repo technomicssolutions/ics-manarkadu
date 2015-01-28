@@ -2,6 +2,7 @@
 import simplejson
 import ast
 from datetime import datetime
+from time import gmtime, strftime
 from reportlab.pdfgen import canvas
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, Table, TableStyle, SimpleDocTemplate, Spacer
@@ -16,7 +17,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from admission.models import Student, Enquiry, Installment, FollowUp
 from college.models import Course, Batch
-from datetime import datetime
 from fees.models import FeesPayment
 
 style = [
