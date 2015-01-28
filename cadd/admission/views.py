@@ -999,7 +999,7 @@ class AdmissionCardView(View):
             p.drawString(150, y-450, 'No of Installments.................')
             p.drawString(200, y-97 , current_date.strftime('%d/%m/%Y') )
             p.drawString(200, y-147, student.course.name)
-            p.drawString(360, y-147, str(student.course.duration) + student.course.duration_unit)
+            p.drawString(360, y-147, str(student.course.duration if student.course else '') + str(student.course.duration_unit if student.course else ''))
             p.drawString(350, y-197, student.student_name)
             p.drawString(200, y-247, time)
             p.drawString(210, y-297, str(student.fees))
