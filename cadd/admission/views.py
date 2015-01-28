@@ -984,7 +984,7 @@ class AdmissionCardView(View):
             current_date = datetime.now()
             p = canvas.Canvas(response, pagesize=(1000, 1250))
             y = 1150
-            time = str(student.batches.all()[0].start_time.strftime("%-I:%M%P")) + ' to ' + str(student.batches.all()[0].end_time.strftime("%-I:%M%P"))
+            time = str(student.batches.all()[0].start_time.strftime("%-I:%M%P") if student.batches.all() else '') + ' to ' + str(student.batches.all()[0].end_time.strftime("%-I:%M%P")if student.batches.all() else '')
             p.setFont("Helvetica", 24)
             p.drawCentredString(500, y - 60, 'Admission Card')
             p.setFont("Helvetica", 14)
@@ -1001,7 +1001,7 @@ class AdmissionCardView(View):
             p.drawString(200, y-147, student.course.name)
             p.drawString(360, y-147, str(student.course.duration if student.course else '') + str(student.course.duration_unit if student.course else ''))
             p.drawString(350, y-197, student.student_name)
-            p.drawString(200, y-247, time)
+            p.drawString(200, y-247, str(time))
             p.drawString(210, y-297, str(student.fees))
             p.drawString(300, y-347, str(student.discount))
             p.drawString(300, y-397, student.doj.strftime('%d/%m/%Y') )
