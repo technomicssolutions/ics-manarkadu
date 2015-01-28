@@ -986,7 +986,7 @@ class AdmissionCardView(View):
             y = 1150
             time = ''
             print student.batches.all()[0].start_time
-            time = str(student.batches.all()[0].start_time.strftime("%-I:%M%p") if student.batches.all() else '') + ' to ' + str(student.batches.all()[0].end_time.strftime("%-I:%M%p")if student.batches.all() else '')
+            time = str(student.batches.all()[0].start_time.strftime("%I:%M%p") if student.batches.all() else '') + ' to ' + str(student.batches.all()[0].end_time.strftime("%I:%M%p")if student.batches.all() else '')
             print time
             p.setFont("Helvetica", 24)
             p.drawCentredString(500, y - 60, 'Admission Card')
