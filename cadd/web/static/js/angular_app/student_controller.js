@@ -345,7 +345,7 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
         } else if($scope.student.mobile_number.length < 9 || $scope.student.mobile_number.length > 15) {            
             $scope.validation_error = "Please enter a Valid Mobile Number";
             return false;
-        } else if(($scope.student.email != '' && $scope.student.email != undefined) && (!(validateEmail($scope.student.email)))){
+        } else if(!(validateEmail($scope.student.email))){
             $scope.validation_error = "Please enter a Valid Email Id";
             return false;
         } else if($scope.student.blood_group == '' || $scope.student.blood_group == undefined) {
