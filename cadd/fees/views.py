@@ -357,7 +357,7 @@ class PrintOutstandingFeesReport(View):
                                         'id': installment.id,
                                         'student_name':student.student_name,
                                         'doj': student.doj.strftime('%d/%m/%Y'),
-                                        'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
+                                        'batch_time': student.batches.all()[0].start_time.strftime("%I:%M%p"),
                                         'amount':installment.amount,
                                         'name':'installment'+str(i + 1),
                                         'paid_installment_amount': 0,
@@ -434,7 +434,8 @@ class FeepaymentReport(View):
                         ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                         ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
-                        ])   
+                        ])  
+            data = [[]] 
             elements.append(table)  
             p.build(elements)      
             return response
