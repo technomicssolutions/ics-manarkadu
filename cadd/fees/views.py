@@ -370,7 +370,7 @@ class PrintOutstandingFeesReport(View):
                                     'id': installment.id,
                                     'student_name':student.student_name,
                                     'doj': student.doj.strftime('%d/%m/%Y'),
-                                    'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
+                                    'batch_time': student.batches.all()[0].start_time.strftime("%I:%M%p"),
                                     'amount':installment.amount,
                                     'name':'installment'+str(i + 1),
                                     'paid_installment_amount': 0,
