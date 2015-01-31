@@ -382,7 +382,7 @@ class PrintOutstandingFeesReport(View):
                     
                     if is_not_paid:
                         for data in data_list:
-                            d.append([data['student_name'], Paragraph(data['doj'], para_style), data['batch_time'] , data['amount'], data['balance']])
+                            d.append([Paragraph(data['student_name'],para_style), Paragraph(data['doj'], para_style), data['batch_time'] , data['amount'], data['balance']])
                         if data_list:
                             table = Table(d, colWidths=(75, 120, 75, 75,  75),  rowHeights=25, style=style)
                             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
