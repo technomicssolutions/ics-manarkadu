@@ -505,19 +505,20 @@ class FeepaymentReport(View):
             elements.append(t)
             elements.append(Spacer(4, 5))
             data = []
-            data.append(['Receipt No','Student' ,'Paid Amount'])
-            
+            data.append(['Receipt No','Course' ,'Student' ,'Paid Amount'])
+            total = 0
             try:
                 fee_paids = FeesPaid.objects.filter(paid_date=date)
                 print fee_paids
                 for fee_payed in fee_paids:
                     print fee_payed.fees_payment_installment.id
+                    total = total + fee_payed.paid_amount
                     fees_payment_installment = FeesPaymentInstallment.objects.get(id=fee_payed.fees_payment_installment.id)
                     # print fees_payment_installment
-                    data.append([fee_payed.receipt_no, Paragraph(fees_payment_installment.student.student_name, para_style),  fee_payed.paid_amount])
+                    data.append([fee_payed.receipt_no, Paragraph( fees_payment_installment.student.course.name,para_style),Paragraph(fees_payment_installment.student.student_name, para_style),  fee_payed.paid_amount])
             except Exception as ex:
                 print str(ex)
-            table = Table(data, colWidths=(100, 100, 100),  style=style)
+            table = Table(data, colWidths=(100, 100, 100,100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
@@ -527,6 +528,19 @@ class FeepaymentReport(View):
                         ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
                         ])   
             elements.append(table)  
+            data = []
+            data.append(['Total',total])
+            table = Table(data, colWidths=(300, 100),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('BACKGROUND',(0, 0),(-1,-1),colors.white),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])   
+            elements.append(table)  
+
             p.build(elements)      
             return response       
         else:
