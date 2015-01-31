@@ -488,6 +488,7 @@ function AccountStatementController($scope, $http, $element) {
     $scope.get_student = function(student){
         $scope.student_name = student.name;
         $scope.student = student.id;
+        $scope.students_list = {};
     }
     $scope.get_report = function(){
        

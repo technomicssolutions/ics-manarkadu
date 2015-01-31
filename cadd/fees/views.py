@@ -316,7 +316,7 @@ class PrintOutstandingFeesReport(View):
             for course in courses: 
                 students = Student.objects.filter(course=course.id)
                 if students:
-                    d = [['Outstanding fees details - '+ course.name]]
+                    d = [['Outstanding fees details - '+ course.name + ' ' +date.strftime('%d/%m/%Y')]]
                     t = Table(d, colWidths=(450), rowHeights=25, style=style)
                     t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                                 ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
@@ -328,6 +328,7 @@ class PrintOutstandingFeesReport(View):
                     d.append(['',Paragraph(' Course Start Date',para_style), 'Time', 'Due', 'Balance'])
                     table = Table(d, colWidths=(75, 120, 75, 75, 75),rowHeights=25,  style=style)
                     elements.append(table)
+                total = 0
                 for student in students:
                     data_list = []
                     i = 0
@@ -379,9 +380,9 @@ class PrintOutstandingFeesReport(View):
                                 })
                         i = i + 1
                     d = []
-                    
                     if is_not_paid:
                         for data in data_list:
+                            total = float(total) + float(data['balance'])
                             d.append([Paragraph(data['student_name'],para_style), Paragraph(data['doj'], para_style), data['batch_time'] , data['amount'], data['balance']])
                         if data_list:
                             table = Table(d, colWidths=(75, 120, 75, 75,  75),  rowHeights=25, style=style)
@@ -392,6 +393,16 @@ class PrintOutstandingFeesReport(View):
                                          ('FONTSIZE', (0,0), (-1,-1), 12),
                                         ])
                             elements.append(table)
+                if students:
+                    data = [['Total:',total]]
+                    table = Table(data, colWidths=(345,  75),  rowHeights=25, style=style)
+                    table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                                 ('FONTSIZE', (0,0), (-1,-1), 12),
+                                ])
+                    elements.append(table)
             p.build(elements)        
             return response
 class FeepaymentReport(View):
@@ -493,7 +504,7 @@ class FeepaymentReport(View):
             response = HttpResponse(content_type='application/pdf')
             p = SimpleDocTemplate(response, pagesize=A4)
             elements = []        
-            d = [['FeesPayment Report']]
+            d = [['FeesPayment Report'],[date.strftime('%d/%m/%Y')]]
 
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -601,38 +612,41 @@ class AccountStatement(View):
         student_id = request.GET.get('student_id')
         if student_id:
             student = Student.objects.get(id=student_id)
+            date = datetime.now()
             response = HttpResponse(content_type='application/pdf')
             p = canvas.Canvas(response, pagesize=(1000, 1250))
             y = 1150
             balance = 0
             p.setFont("Helvetica", 14)
-            p.drawCentredString(500, y - 60, 'Account Statement: '+student.student_name)
-            p.drawString(150, y-100, student.doj.strftime('%d/%m/%Y'))
-            p.drawString(250, y-100, 'Course Fee')
-            p.drawString(350, y-100, ' ')
-            p.drawString(450, y-100, str(student.fees)+'Dr')
+            p.drawCentredString(500, y - 60, 'Account Statement: '+student.student_name+ ' ' +date.strftime('%d/%m/%Y'))
+            p.drawCentredString(500, y - 80, 'Course: '+student.course.name)
+            p.drawString(150, y-120, student.doj.strftime('%d/%m/%Y'))
+            p.drawString(250, y-120, 'Course Fee')
+            p.drawString(350, y-120, ' ')
+            p.drawString(450, y-120, str(student.fees)+'Dr')
             p.drawString(150, y-150, student.doj.strftime('%d/%m/%Y'))
             p.drawString(250, y-150, 'Discount')
             p.drawString(350, y-150, str(student.discount)+'Cr')
             p.drawString(450, y-150, ' ')
             balance = float(student.fees) - float(student.discount)
             y1 = y - 160
-            fees_payment = FeesPayment.objects.get(student=student)
-            if fees_payment.payment_installment.count > 0 :
-                for fee_payment_installment in fees_payment.payment_installment.all().order_by('-id'):
-                    for payment in fee_payment_installment.feespaid_set.all():
-                        y1 = y1 - 30
-                        if y1 <= 135:
-                            y1 = y - 110
-                            p.showPage()
-                            p = header(p, y)
-                        p.drawString(150, y1, payment.paid_date.strftime('%d/%m/%Y'))
-                        p.drawString(250, y1, payment.receipt_no if payment.receipt_no else '')
-                        p.drawString(350, y1, str(payment.paid_amount)+'Cr')
-                        p.drawString(450, y1, ' ')
-                        print balance
-                        balance = balance - float(payment.paid_amount)
-            print balance
+            try:
+                fees_payment = FeesPayment.objects.get(student=student)
+                if fees_payment.payment_installment.count > 0 :
+                    for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
+                        for payment in fee_payment_installment.feespaid_set.all():
+                            y1 = y1 - 30
+                            if y1 <= 135:
+                                y1 = y - 110
+                                p.showPage()
+                                p = header(p, y)
+                            p.drawString(150, y1, payment.paid_date.strftime('%d/%m/%Y'))
+                            p.drawString(250, y1, payment.receipt_no if payment.receipt_no else '')
+                            p.drawString(350, y1, str(payment.paid_amount)+'Cr')
+                            p.drawString(450, y1, ' ')
+                            balance = balance - float(payment.paid_amount)
+            except Exception as ex:
+                print ex
             p.drawString(150, y1-50, 'Balance:')            
             p.drawString(450, y1-50, str(balance)+ 'Dr')
             p.save()       
