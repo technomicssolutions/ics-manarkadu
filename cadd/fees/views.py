@@ -315,18 +315,19 @@ class PrintOutstandingFeesReport(View):
             courses = Course.objects.all()
             for course in courses: 
                 students = Student.objects.filter(course=course.id)
-                d = [['Outstanding fees details - '+ course.name]]
-                t = Table(d, colWidths=(450), rowHeights=25, style=style)
-                t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
-                            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                            ('FONTSIZE', (0,0), (-1,-1), 17),
-                            ])   
-                elements.append(t)
-                elements.append(Spacer(4, 5))
-                d = []
-                d.append(['',Paragraph(' Course Start Date',para_style), 'Time', 'Due', 'Balance'])
-                table = Table(d, colWidths=(75, 120, 75, 75, 75),rowHeights=25,  style=style)
-                elements.append(table)
+                if students:
+                    d = [['Outstanding fees details - '+ course.name]]
+                    t = Table(d, colWidths=(450), rowHeights=25, style=style)
+                    t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                ('FONTSIZE', (0,0), (-1,-1), 17),
+                                ])   
+                    elements.append(t)
+                    elements.append(Spacer(4, 5))
+                    d = []
+                    d.append(['',Paragraph(' Course Start Date',para_style), 'Time', 'Due', 'Balance'])
+                    table = Table(d, colWidths=(75, 120, 75, 75, 75),rowHeights=25,  style=style)
+                    elements.append(table)
                 for student in students:
                     data_list = []
                     i = 0
