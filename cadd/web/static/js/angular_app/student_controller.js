@@ -259,7 +259,7 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
         }
     }
     $scope.calculate_actual_fees = function(){
-        $scope.student.fees_after_discount = parseFloat($scope.student.fees) -  parseFloat($scope.student.discount);
+        $scope.student.fees_after_discount = parseFloat($scope.student.fees) -  parseFloat($scope.student.discount) - parseFloat($scope.student.intial_payment);
     }
     $scope.get_student_details  = function(student_id){
         $scope.url = '/admission/edit_student_details/' + student_id+ '/';
@@ -860,7 +860,7 @@ function AdmissionController($scope, $http) {
         });
     }
     $scope.calculate_actual_fees = function(){
-        $scope.fees_after_discount = $scope.fees - $scope.discount;
+        $scope.fees_after_discount = $scope.fees - $scope.discount  - parseFloat($scope.intial_payment);
     }
     $scope.get_fees = function() {
         for(var i=0; i<$scope.courses.length; i++) {
