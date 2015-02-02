@@ -429,13 +429,16 @@ class FeepaymentReport(View):
             elements.append(Spacer(4, 5))
             data = []
             data.append(['Student' , 'Installment','Installment Amount','Paid date','Paid Amount'])
+            i= 0
             for student in students:
                 try:
                     fees_payment = FeesPayment.objects.get(student=student)
                     if fees_payment.payment_installment.count > 0 :
-                        for fee_payment_installment in fees_payment.payment_installment.all().order_by('-id'):
+                        i = 0
+                        for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
+                            i = i + 1
                             for payment in fee_payment_installment.feespaid_set.all():
-                                data.append([Paragraph(student.student_name, para_style), 'Installment' +str(fee_payment_installment.installment.id), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'), payment.paid_amount])
+                                data.append([Paragraph(student.student_name, para_style), 'Installment' +str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'), payment.paid_amount])
                 except Exception as ex:
                     print str(ex)
             table = Table(data, colWidths=(100, 100, 150,100,100),  style=style)
@@ -479,11 +482,13 @@ class FeepaymentReport(View):
             try:
                 fees_payment = FeesPayment.objects.get(student=student)
                 data = []
+                i = 0
                 data.append(['Installment' ,'Installment Amount','Paid date','Paid Amount'])
                 if fees_payment.payment_installment.count > 0 :
-                    for fee_payment_installment in fees_payment.payment_installment.all().order_by('-id'):
+                    for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
+                        i = i + 1
                         for payment in fee_payment_installment.feespaid_set.all():
-                            data.append(['Installment'+str(fee_payment_installment.installment.id), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'),payment.paid_amount])
+                            data.append(['Installment'+str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'),payment.paid_amount])
                 table = Table(data, colWidths=(100,150,100,100),  style=style)
                 table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                             ('TEXTCOLOR',(0,0),(-1,-1),colors.black),

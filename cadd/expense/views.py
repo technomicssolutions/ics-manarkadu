@@ -259,9 +259,22 @@ class ExpenseReport(View):
             elements.append(Spacer(4, 5))
             data = []
             data.append(['Date', 'Expense Head', 'Voucher No', 'Amount'])
+            total = 0
             for expense in expenses:
+                total = total + expense.amount 
                 data.append([expense.date.strftime('%d/%m/%Y'), Paragraph(expense.expense_head.expense_head, para_style), expense.voucher_no, expense.amount ])
             table = Table(data, colWidths=(70, 150, 75, 100),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])
+            elements.append(table)
+            data = []
+            data.append(['Total Amount:',total])
+            table = Table(data, colWidths=(295, 100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
