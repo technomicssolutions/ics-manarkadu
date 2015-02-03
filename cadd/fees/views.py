@@ -64,6 +64,7 @@ class FeesPaymentSave(View):
                     
                     for next_installment in student.installments.all().order_by('order'):
                         if next_installment.order == int(installment.order + 1):
+                            print "jsj"
                             # try:
                             next_fee_payment_installment = FeesPaymentInstallment.objects.create(installment=next_installment, student=student)
                             
@@ -77,12 +78,15 @@ class FeesPaymentSave(View):
                             fees_paid_to_next_installment.receipt_no = fees_payment_details['receipt_no']
                             fees_paid_to_next_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
                             fees_paid_to_next_installment.fees_payment_installment = next_fee_payment_installment
-                            fees_paid_to_next_installment.paid_amount = balance
+                            if balance > 0:
+                                fees_paid_to_next_installment.paid_amount = balance
+                            else:
+                                fees_paid_to_next_installment.paid_amount = 0
                             # except Exception as Ex:
-                            #     res = {
-                            #         'result': 'error: '+str(Ex),
-                            #         'message': ' There is no next installment',
-                            #     }
+                        res = {
+                            'result': 'error',
+                            'message': ' There is no next installment',
+                        }
 
                     fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
                     fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
