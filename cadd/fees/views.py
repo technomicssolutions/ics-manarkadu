@@ -49,18 +49,49 @@ class FeesPaymentSave(View):
                 fees_payment, created = FeesPayment.objects.get_or_create(student=student)
                 installment = Installment.objects.get(id=fees_payment_details['installment_id'])
                 fee_payment_installment, installment_created = FeesPaymentInstallment.objects.get_or_create(installment=installment, student=student)
+                # fee_payment_installment = FeesPaymentInstallment.objects.create(installment=installment, student=student)
                 fee_payment_installment.installment_amount = installment.amount
-                
+                balance = 0
                 if installment_created:
                     fee_payment_installment.paid_amount = fees_payment_details['paid_amount']
+                    print "sjsk"
+                    # if fees_payment_details['paid_amount'] > fee_payment_installment.installment_amount:
+                    #     print "balance"
+                    #     balance = float(fees_payment_details['paid_amount']) - float(fee_payment_installment.installment_amount)
+                    #     print balance
+                    # else:
+                    balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paid_amount'] )
+                    
+                    for next_installment in student.installments.all().order_by('order'):
+                        if next_installment.order == int(installment.order + 1):
+                            # try:
+                            next_fee_payment_installment = FeesPaymentInstallment.objects.create(installment=next_installment, student=student)
+                            
+                            next_installment.amount = float(next_installment.amount) + float(abs(balance))
+                            if balance > 0:
+                                installment.amount = float(installment.amount) - float(abs(balance))
+                            next_fee_payment_installment.paid_amount = abs(balance)
+                            next_fee_payment_installment.total_amount = float(fees_payment_details['total_amount']) + float(abs(balance))
+                            next_fee_payment_installment.save()
+                            fees_paid_to_next_installment = FeesPaid()
+                            fees_paid_to_next_installment.receipt_no = fees_payment_details['receipt_no']
+                            fees_paid_to_next_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
+                            fees_paid_to_next_installment.fees_payment_installment = next_fee_payment_installment
+                            fees_paid_to_next_installment.paid_amount = balance
+                            # except Exception as Ex:
+                            #     res = {
+                            #         'result': 'error: '+str(Ex),
+                            #         'message': ' There is no next installment',
+                            #     }
+
                     fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
                     fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
                 else:
                     fee_payment_installment.paid_amount = float(fee_payment_installment.paid_amount) + float(fees_payment_details['paid_amount'])
                     fee_payment_installment.installment_fine = float(fee_payment_installment.installment_fine) + float(fees_payment_details['paid_fine_amount'])
                     fee_payment_installment.fee_waiver_amount = float(fee_payment_installment.fee_waiver_amount)  + float(fees_payment_details['fee_waiver'])
-                # fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
-                fee_payment_installment.total_amount = fees_payment_details['total_amount']
+                fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
+                fee_payment_installment.total_amount = float(fees_payment_details['total_amount']) - float(abs(balance))
                 fee_payment_installment.save()
                 fees_paid = FeesPaid()
                 fees_paid.receipt_no = fees_payment_details['receipt_no']
@@ -73,6 +104,7 @@ class FeesPaymentSave(View):
                 student.save()
                 fees_paid.save()
                 fees_payment.payment_installment.add(fee_payment_installment)
+                fees_payment.payment_installment.add(next_fee_payment_installment)
                 res = {
                     'result': 'ok',
                 }
@@ -240,7 +272,7 @@ class PrintOutstandingFeesReport(View):
                 student = Student.objects.get(id=request.GET.get('student', ''))
             except:
                 return render(request, 'list_outstanding_fees.html', {})
-            d = [['Outstanding fees details - '+ student.student_name]]
+            d = [['Outstanding fees details - '+ student.student_name + '' +current_date.strftime('%d/%m/%Y')]]
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
@@ -296,9 +328,22 @@ class PrintOutstandingFeesReport(View):
             d = []
             d.append(['Name', 'Amount', 'Due Date', 'Fine', 'Paid', 'Balance'])
             if is_not_paid:
+                total = 0
                 for data in data_list:
+                    total = total + data['balance']
                     d.append([data['name'], data['amount'], data['due_date'], data['fine_amount'], data['paid_installment_amount'], data['balance']])
             table = Table(d, colWidths=(100, 100, 75, 100, 100,100),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])
+            elements.append(table)
+            d = []
+            d.append(['Total ',total])
+            table = Table(d, colWidths=(475,100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
@@ -416,7 +461,7 @@ class FeepaymentReport(View):
             response = HttpResponse(content_type='application/pdf')
             p = SimpleDocTemplate(response, pagesize=A4)
             elements = []        
-            d = [['FeesPayment Report']]
+            d = [['FeesPayment Report' + '' +date.strftime('%d/%m/%Y')]]
 
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -430,6 +475,7 @@ class FeepaymentReport(View):
             data = []
             data.append(['Student' , 'Installment','Installment Amount','Paid date','Paid Amount'])
             i= 0
+            total = 0
             for student in students:
                 try:
                     fees_payment = FeesPayment.objects.get(student=student)
@@ -438,6 +484,7 @@ class FeepaymentReport(View):
                         for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
                             i = i + 1
                             for payment in fee_payment_installment.feespaid_set.all():
+                                total = total + payment.paid_amount
                                 data.append([Paragraph(student.student_name, para_style), 'Installment' +str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'), payment.paid_amount])
                 except Exception as ex:
                     print str(ex)
@@ -450,7 +497,18 @@ class FeepaymentReport(View):
                         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                         ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
                         ])  
-            data = [[]] 
+            elements.append(table)
+            data = []
+            data.append(['Total', total]) 
+            table = Table(data, colWidths=(450,100),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('BACKGROUND',(0, 0),(-1,-1),colors.white),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])  
             elements.append(table)  
             p.build(elements)      
             return response
@@ -483,11 +541,13 @@ class FeepaymentReport(View):
                 fees_payment = FeesPayment.objects.get(student=student)
                 data = []
                 i = 0
+                total = 0
                 data.append(['Installment' ,'Installment Amount','Paid date','Paid Amount'])
                 if fees_payment.payment_installment.count > 0 :
                     for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
                         i = i + 1
                         for payment in fee_payment_installment.feespaid_set.all():
+                            total = total + payment.paid_amount
                             data.append(['Installment'+str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'),payment.paid_amount])
                 table = Table(data, colWidths=(100,150,100,100),  style=style)
                 table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
@@ -499,6 +559,18 @@ class FeepaymentReport(View):
                             ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
                         ])   
                 elements.append(table)
+                data = []
+                data.append(['Total', total]) 
+                table = Table(data, colWidths=(350,100),  style=style)
+                table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                            ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                            ('BACKGROUND',(0, 0),(-1,-1),colors.white),
+                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                            ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                            ])  
+                elements.append(table)  
             except Exception as ex:
                 print str(ex) 
             p.build(elements)        

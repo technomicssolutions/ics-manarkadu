@@ -6,6 +6,7 @@ from college.models import Course, Batch
 class Installment(models.Model):
 
 	due_date = models.DateField('Due Date', null=True, blank=True)
+	order = models.IntegerField('Order', null=True, blank=True, default=0)
 	amount = models.DecimalField('Amount',max_digits=14, decimal_places=2, default=0)
 	fine_amount = models.DecimalField('Fine Amount',max_digits=14, decimal_places=2, default=0)
 	

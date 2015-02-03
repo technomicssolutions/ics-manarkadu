@@ -718,6 +718,7 @@ function AdmissionController($scope, $http) {
     $scope.email = '';
     $scope.blood_group = '';
     $scope.doj = '';
+    $scope.intial_payment = 0;
     $scope.certificates_submitted = '';
     $scope.id_proof = '';
     $scope.guardian_name = '';
@@ -809,6 +810,7 @@ function AdmissionController($scope, $http) {
     }
     $scope.load_installments = function() {
         $scope.installments = [];
+        $scope.doj = $$('#doj')[0].get('value');
         $scope.temp_installments = $scope.installments;
         if ($scope.no_installments.length > 0) {
             if ($scope.no_installments > $scope.installments.length) {
@@ -819,9 +821,11 @@ function AdmissionController($scope, $http) {
                     due_date_id = 'due_date_'+$scope.installments.length;
                     amount = 0
                     var x,y,z
-                    date = new Date();
+                    // date = new Date();
+                    var date = new Date($scope.doj);
+                    x = date.getDate();
                     y = date.getMonth() + i + 1;
-                    x = 1;
+                   
                     if (y <= 12){
                         z = date.getFullYear();
                     }
@@ -830,6 +834,7 @@ function AdmissionController($scope, $http) {
                         z = date.getFullYear() + 1;
                     }
                     console.log(y,z)
+                    console.log($scope.fees_after_discount)
                     amount = $scope.fees_after_discount / $scope.no_installments ;
                     $scope.installments.push({
                         'amount': amount,
@@ -860,7 +865,7 @@ function AdmissionController($scope, $http) {
         });
     }
     $scope.calculate_actual_fees = function(){
-        $scope.fees_after_discount = $scope.fees - $scope.discount  - parseFloat($scope.intial_payment);
+        $scope.fees_after_discount = parseFloat($scope.fees) - parseFloat($scope.discount)  - parseFloat($scope.intial_payment);
     }
     $scope.get_fees = function() {
         for(var i=0; i<$scope.courses.length; i++) {

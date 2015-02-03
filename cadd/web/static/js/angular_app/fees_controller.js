@@ -100,7 +100,11 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         $('#fine_amount').val(installment.fine_amount);
         $('#fee_amount').val(installment.amount);
         $('#balance').val(installment.balance);
-        $('#installment_balance').val($scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount);
+        balance = 0;
+        balance = $scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount;
+        if (balance<0)
+            balance = 0;
+        $('#installment_balance').val(balance);
         $('#installment_balance_amount').val($scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount);
         $scope.payment_installment.total_balance = installment.course_balance;
         $scope.payment_installment.total_balance_amount = installment.course_balance;
@@ -111,8 +115,15 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         calculate_total_fee_amount();
     }
     $scope.calculate_balance = function() {
-        $('#installment_balance').val(parseFloat($('#total_fee_amount').val()) - (parseFloat($scope.payment_installment.paid_amount) + parseFloat($scope.payment_installment.paid_installment_amount) + parseFloat($scope.payment_installment.paid_fine_amount)));
-        $('#installment_balance').val(parseFloat($('#installment_balance').val()) - parseFloat($scope.payment_installment.fee_waiver));
+        balance = 0;
+        balance = parseFloat($('#total_fee_amount').val()) - (parseFloat($scope.payment_installment.paid_amount) + parseFloat($scope.payment_installment.paid_installment_amount) + parseFloat($scope.payment_installment.paid_fine_amount));
+        if (balance < 0)
+            balance =0;
+        $('#installment_balance').val(balance);
+        balance = parseFloat($('#installment_balance').val()) - parseFloat($scope.payment_installment.fee_waiver);
+        if (balance < 0)
+            balance =0;
+        $('#installment_balance').val(balance);
         $scope.payment_installment.total_balance = parseFloat($scope.payment_installment.total_balance_amount) - (parseFloat($scope.payment_installment.paid_amount));
         $scope.payment_installment.total_balance = parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.fee_waiver)
         

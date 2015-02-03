@@ -311,12 +311,14 @@ class EditStudentDetails(View):
                 student.discount = student_data['discount']
             student.no_installments = student_data['no_installments']
             installments = student_data['installments']
+            i = 0
             for installment in installments:
                 try:
                     installment_obj = Installment.objects.get(id=installment['id'])
                 except:
                     installment_obj = Installment()
                 installment_obj.amount = installment['amount']
+                installment_obj.order = i + 1
                 installment_obj.due_date = datetime.strptime(installment['due_date'], '%d/%m/%Y')
                 if installment.get('fine', ''):
                     installment_obj.fine_amount = installment['fine']
