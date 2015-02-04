@@ -84,9 +84,11 @@ class AddStudent(View):
                         student.discount = request.POST['discount']          
                         student.no_installments = request.POST['no_installments']
                         installments = ast.literal_eval(request.POST['installments'])
+                        i = 0
                         for installment in installments:
                             installmet = Installment()
                             installmet.amount = installment['amount']
+                            installment.order = i + 1
                             if installment.get('fine', ''):
                                 installmet.fine_amount = installment['fine']
                             installmet.due_date = datetime.strptime(installment['due_date'], '%d/%m/%Y')
@@ -318,6 +320,7 @@ class EditStudentDetails(View):
                 except:
                     installment_obj = Installment()
                 installment_obj.amount = installment['amount']
+                print"i",i
                 installment_obj.order = i + 1
                 installment_obj.due_date = datetime.strptime(installment['due_date'], '%d/%m/%Y')
                 if installment.get('fine', ''):

@@ -41,82 +41,89 @@ class FeesPaymentSave(View):
 
         if request.is_ajax():
             status_code = 200 
-            try:
-                fees_payment_details = ast.literal_eval(request.POST['fees_payment'])
-                student = Student.objects.get(id=fees_payment_details['student'])
-                if student.is_rolled:
-                    student.is_rolled = False
-                fees_payment, created = FeesPayment.objects.get_or_create(student=student)
-                installment = Installment.objects.get(id=fees_payment_details['installment_id'])
-                fee_payment_installment, installment_created = FeesPaymentInstallment.objects.get_or_create(installment=installment, student=student)
-                # fee_payment_installment = FeesPaymentInstallment.objects.create(installment=installment, student=student)
-                fee_payment_installment.installment_amount = installment.amount
-                balance = 0
-                if installment_created:
-                    fee_payment_installment.paid_amount = fees_payment_details['paid_amount']
-                    print "sjsk"
-                    # if fees_payment_details['paid_amount'] > fee_payment_installment.installment_amount:
-                    #     print "balance"
-                    #     balance = float(fees_payment_details['paid_amount']) - float(fee_payment_installment.installment_amount)
-                    #     print balance
-                    # else:
-                    balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paid_amount'] )
-                    
-                    for next_installment in student.installments.all().order_by('order'):
-                        if next_installment.order == int(installment.order + 1):
-                            print "jsj"
-                            # try:
+            # try:
+            fees_payment_details = ast.literal_eval(request.POST['fees_payment'])
+            student = Student.objects.get(id=fees_payment_details['student'])
+            if student.is_rolled:
+                student.is_rolled = False
+            fees_payment, created = FeesPayment.objects.get_or_create(student=student)
+            installment = Installment.objects.get(id=fees_payment_details['installment_id'])
+            fee_payment_installment, installment_created = FeesPaymentInstallment.objects.get_or_create(installment=installment, student=student)
+            # fee_payment_installment = FeesPaymentInstallment.objects.create(installment=installment, student=student)
+            fee_payment_installment.installment_amount = installment.amount
+            balance = 0
+            if installment_created:
+                fee_payment_installment.paid_amount = fees_payment_details['paid_amount']
+                
+                balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paid_amount'] )
+                
+                for next_installment in student.installments.all().order_by('order'):
+                    if next_installment.order == int(installment.order + 1):
+                        # try:
+                        print "shs"
+                        
+                        
+                        next_installment.amount = float(next_installment.amount) + float(abs(balance))
+                        
+                        installment.amount = float(installment.amount) - float(abs(balance))
+                        next_installment.save()
+                        installment.save()
+                        fee_payment_installment.total_amount = fees_payment_details['paid_amount']
+                        if balance < 0 :
                             next_fee_payment_installment = FeesPaymentInstallment.objects.create(installment=next_installment, student=student)
-                            
-                            next_installment.amount = float(next_installment.amount) + float(abs(balance))
-                            if balance > 0:
-                                installment.amount = float(installment.amount) - float(abs(balance))
-                            next_fee_payment_installment.paid_amount = abs(balance)
-                            next_fee_payment_installment.total_amount = float(fees_payment_details['total_amount']) + float(abs(balance))
-                            next_fee_payment_installment.save()
+                            next_fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
+                        
+                            next_fee_payment_installment.paid_amount = float(next_fee_payment_installment.paid_amount) + float(abs(balance))
+                        
+                            next_fee_payment_installment.installment_amount = next_installment.amount
+                            next_fee_payment_installment.total_amount = float(next_installment.amount)
+                        
                             fees_paid_to_next_installment = FeesPaid()
                             fees_paid_to_next_installment.receipt_no = fees_payment_details['receipt_no']
                             fees_paid_to_next_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
                             fees_paid_to_next_installment.fees_payment_installment = next_fee_payment_installment
-                            if balance > 0:
-                                fees_paid_to_next_installment.paid_amount = balance
-                            else:
-                                fees_paid_to_next_installment.paid_amount = 0
-                            # except Exception as Ex:
-                        res = {
-                            'result': 'error',
-                            'message': ' There is no next installment',
-                        }
+                            
+                            fees_paid_to_next_installment.paid_amount = abs(balance)
+                            
+                            fee_payment_installment.installment_amount = fees_payment_details['paid_amount']
+                            fees_paid_to_next_installment.save()
+                            next_fee_payment_installment.save()
+                        # except Exception as Ex:
+                    res = {
+                        'result': 'error',
+                        'message': ' There is no next installment',
+                    }
 
-                    fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
-                    fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
-                else:
-                    fee_payment_installment.paid_amount = float(fee_payment_installment.paid_amount) + float(fees_payment_details['paid_amount'])
-                    fee_payment_installment.installment_fine = float(fee_payment_installment.installment_fine) + float(fees_payment_details['paid_fine_amount'])
-                    fee_payment_installment.fee_waiver_amount = float(fee_payment_installment.fee_waiver_amount)  + float(fees_payment_details['fee_waiver'])
-                fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
-                fee_payment_installment.total_amount = float(fees_payment_details['total_amount']) - float(abs(balance))
-                fee_payment_installment.save()
-                fees_paid = FeesPaid()
-                fees_paid.receipt_no = fees_payment_details['receipt_no']
-                fees_paid.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
-                fees_paid.fees_payment_installment = fee_payment_installment
-                fees_paid.paid_amount = fees_payment_details['paid_amount']
-                #fees_paid.fee_waiver_amount = fees_payment_details['fee_waiver']
-                fees_paid.paid_fine_amount = fees_payment_details['paid_fine_amount']
-                student.balance = float(student.balance) - float(fees_payment_details['paid_amount']) - float(fees_payment_details['paid_fine_amount'])
-                student.save()
-                fees_paid.save()
-                fees_payment.payment_installment.add(fee_payment_installment)
+                fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
+                fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
+            else:
+                fee_payment_installment.paid_amount = float(fee_payment_installment.paid_amount) + float(fees_payment_details['paid_amount'])
+                fee_payment_installment.installment_fine = float(fee_payment_installment.installment_fine) + float(fees_payment_details['paid_fine_amount'])
+                fee_payment_installment.fee_waiver_amount = float(fee_payment_installment.fee_waiver_amount)  + float(fees_payment_details['fee_waiver'])
+            fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
+            
+            fee_payment_installment.save()
+            fees_paid = FeesPaid()
+            fees_paid.receipt_no = fees_payment_details['receipt_no']
+            fees_paid.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
+            fees_paid.fees_payment_installment = fee_payment_installment
+            fees_paid.paid_amount = fees_payment_details['paid_amount']
+            #fees_paid.fee_waiver_amount = fees_payment_details['fee_waiver']
+            fees_paid.paid_fine_amount = fees_payment_details['paid_fine_amount']
+            student.balance = float(student.balance) - float(fees_payment_details['paid_amount']) - float(fees_payment_details['paid_fine_amount'])
+            student.save()
+            fees_paid.save()
+            fees_payment.payment_installment.add(fee_payment_installment)
+            if next_fee_payment_installment:
                 fees_payment.payment_installment.add(next_fee_payment_installment)
-                res = {
-                    'result': 'ok',
-                }
-            except Exception as Ex:
-                res = {
-                    'result': 'error: '+str(Ex),
-                    'message': 'Already Paid',
-                }
+            res = {
+                'result': 'ok',
+            }
+            # except Exception as Ex:
+            #     res = {
+            #         'result': 'error: '+str(Ex),
+            #         'message': 'Already Paid',
+            #     }
             response = simplejson.dumps(res)
             return HttpResponse(response, status = status_code, mimetype="application/json")
 
