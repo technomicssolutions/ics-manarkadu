@@ -79,8 +79,8 @@ class AddStudent(View):
                 student.guardian_name = request.POST['guardian_name']
                 student.relationship = request.POST['relationship']
                 student.guardian_mobile_number = request.POST['guardian_mobile_number']
-                student.fees = request.POST['fees'] 
-                student.balance = request.POST['fees']
+                student.fees = float(request.POST['fees']) + float(request.POST['intial_payment'])
+                student.balance = float(request.POST['fees']) + float(request.POST['intial_payment'])
                 student.discount = request.POST['discount']          
                 student.no_installments = request.POST['no_installments']
                 installments = ast.literal_eval(request.POST['installments'])
@@ -770,7 +770,7 @@ class GetInstallmentDetails(View):
         ctx_installments = []
         i = 0
         total_amount_paid = 0
-        for installment in student.installments.all():
+        for installment in student.installments.all().order_by('order'):
             try:
                 fees_payment = FeesPayment.objects.get(student__id=student.id)
                 fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)

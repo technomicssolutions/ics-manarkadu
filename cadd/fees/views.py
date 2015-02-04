@@ -88,6 +88,8 @@ class FeesPaymentSave(View):
                             fee_payment_installment.installment_amount = fees_payment_details['paid_amount']
                             fees_paid_to_next_installment.save()
                             next_fee_payment_installment.save()
+                            if next_fee_payment_installment:
+                                fees_payment.payment_installment.add(next_fee_payment_installment)
                         # except Exception as Ex:
                     res = {
                         'result': 'error',
@@ -114,8 +116,7 @@ class FeesPaymentSave(View):
             student.save()
             fees_paid.save()
             fees_payment.payment_installment.add(fee_payment_installment)
-            if next_fee_payment_installment:
-                fees_payment.payment_installment.add(next_fee_payment_installment)
+            
             res = {
                 'result': 'ok',
             }
