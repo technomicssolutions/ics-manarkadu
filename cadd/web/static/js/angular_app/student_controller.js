@@ -40,6 +40,7 @@ function save_new_student($http, $scope) {
             'email':$scope.email,
             'blood_group': $scope.blood_group,
             'doj': $scope.doj,
+            'intial_payment': $scope.intial_payment,
             'certificates_submitted': $scope.certificates_submitted,
             'id_proofs_submitted': $scope.id_proof,
             'guardian_name': $scope.guardian_name,
@@ -92,6 +93,7 @@ function reset_student($scope) {
     $scope.email = '';
     $scope.blood_group = '';
     $scope.doj = '';
+    $scope.intial_payment = 0;
     $scope.certificates_submitted = '';
     $scope.id_proof = '';
     $scope.guardian_name = '';

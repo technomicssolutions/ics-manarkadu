@@ -31,84 +31,93 @@ para_style.fontName = 'Helvetica'
 class AddStudent(View):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            try:
-                course = Course.objects.get(id = request.POST['course'])
-                enquiry = None
-                if request.POST.get('enquiry', ''):
-                    if request.POST.get('enquiry', '') != 'undefined':
-                        enquiry = Enquiry.objects.get(id=request.POST['enquiry'])
+            # try:
+            course = Course.objects.get(id = request.POST['course'])
+            enquiry = None
+            if request.POST.get('enquiry', ''):
+                if request.POST.get('enquiry', '') != 'undefined':
+                    enquiry = Enquiry.objects.get(id=request.POST['enquiry'])
 
-                student, created = Student.objects.get_or_create(roll_number = request.POST['roll_number'], course=course)
-                if not created:
-                    res = {
-                        'result': 'error',
-                        'message': 'Student with this roll no already existing'
-                    }
-                else:
-                    try:
-                        batches = request.POST['batch'].split(',')
-                        for batch in batches:
-                            batch_obj = Batch.objects.get(id = batch)
-                            if batch_obj.no_of_students == None:
-                                batch_obj.no_of_students = 1
-                            else:
-                                batch_obj.no_of_students = batch_obj.no_of_students + 1
-                            batch_obj.save()
-                            student.batches.add(batch_obj)
-                        student.student_name = request.POST['student_name']
-                        if enquiry is not None:
-                            student.enquiry = enquiry
-                            enquiry.is_admitted = True;
-                            enquiry.save()
-                        student.roll_number = request.POST['roll_number']
-                        student.address = request.POST['address']
-                        if request.POST['qualifications'] != 'undefined':
-                            student.qualifications = request.POST['qualifications']
-                        student.course=course
-                        student.batch=batch
-                        student.dob = datetime.strptime(request.POST['dob'], '%d/%m/%Y')
-                        student.address = request.POST['address']
-                        student.mobile_number = request.POST['mobile_number']
-                        if request.POST['email'] != 'undefined':
-                            student.email = request.POST['email']
-                        student.blood_group = request.POST['blood_group']
-                        student.doj = datetime.strptime(request.POST['doj'], '%d/%m/%Y')
-                        student.photo = request.FILES.get('photo_img', '')                       
-                        student.certificates_submitted = request.POST['certificates_submitted']
-                        student.id_proofs_submitted = request.POST['id_proofs_submitted']
-                        student.guardian_name = request.POST['guardian_name']
-                        student.relationship = request.POST['relationship']
-                        student.guardian_mobile_number = request.POST['guardian_mobile_number']
-                        student.fees = request.POST['fees'] 
-                        student.balance = request.POST['fees']
-                        student.discount = request.POST['discount']          
-                        student.no_installments = request.POST['no_installments']
-                        installments = ast.literal_eval(request.POST['installments'])
-                        i = 0
-                        for installment in installments:
-                            installmet = Installment()
-                            installmet.amount = installment['amount']
-                            installment.order = i + 1
-                            if installment.get('fine', ''):
-                                installmet.fine_amount = installment['fine']
-                            installmet.due_date = datetime.strptime(installment['due_date'], '%d/%m/%Y')
-                            installmet.save()
-                            student.installments.add(installmet)
-                            student.save()
-                    except Exception as ex:
-                        res = {
-                            'result': 'error',
-                            'message': str(ex)
-                        }
-                    student.save()
-                    res = {
-                        'result': 'ok',
-                    }                     
-            except Exception as ex:
+            student, created = Student.objects.get_or_create(roll_number = request.POST['roll_number'], course=course)
+            if not created:
                 res = {
                     'result': 'error',
-                    'message': str(ex)
+                    'message': 'Student with this roll no already existing'
                 }
+            else:
+                # try:
+                batches = request.POST['batch'].split(',')
+                for batch in batches:
+                    batch_obj = Batch.objects.get(id = batch)
+                    if batch_obj.no_of_students == None:
+                        batch_obj.no_of_students = 1
+                    else:
+                        batch_obj.no_of_students = batch_obj.no_of_students + 1
+                    batch_obj.save()
+                    student.batches.add(batch_obj)
+                student.student_name = request.POST['student_name']
+                if enquiry is not None:
+                    student.enquiry = enquiry
+                    enquiry.is_admitted = True;
+                    enquiry.save()
+                student.roll_number = request.POST['roll_number']
+                student.address = request.POST['address']
+                if request.POST['qualifications'] != 'undefined':
+                    student.qualifications = request.POST['qualifications']
+                student.course=course
+                student.batch=batch
+                student.dob = datetime.strptime(request.POST['dob'], '%d/%m/%Y')
+                student.address = request.POST['address']
+                student.mobile_number = request.POST['mobile_number']
+                if request.POST['email'] != 'undefined':
+                    student.email = request.POST['email']
+                student.blood_group = request.POST['blood_group']
+                student.doj = datetime.strptime(request.POST['doj'], '%d/%m/%Y')
+                student.photo = request.FILES.get('photo_img', '')                       
+                student.certificates_submitted = request.POST['certificates_submitted']
+                student.id_proofs_submitted = request.POST['id_proofs_submitted']
+                student.guardian_name = request.POST['guardian_name']
+                student.relationship = request.POST['relationship']
+                student.guardian_mobile_number = request.POST['guardian_mobile_number']
+                student.fees = request.POST['fees'] 
+                student.balance = request.POST['fees']
+                student.discount = request.POST['discount']          
+                student.no_installments = request.POST['no_installments']
+                installments = ast.literal_eval(request.POST['installments'])
+                i = 0
+                if request.POST['intial_payment']:
+                    installmet = Installment()
+                    installmet.amount =request.POST['intial_payment']
+                    installmet.order = 0
+                    installmet.due_date = datetime.strptime(request.POST['doj'], '%d/%m/%Y')
+                    installmet.save()
+                    student.installments.add(installmet)
+                    student.save()
+                for installment in installments:
+                    installmet = Installment()
+                    installmet.amount = installment['amount']
+                    i = i + 1
+                    installmet.order = i
+                    if installment.get('fine', ''):
+                        installmet.fine_amount = installment['fine']
+                    installmet.due_date = datetime.strptime(installment['due_date'], '%d/%m/%Y')
+                    installmet.save()
+                    student.installments.add(installmet)
+                    student.save()
+                # except Exception as ex:
+                #     res = {
+                #         'result': 'error',
+                #         'message': str(ex)
+                #     }
+                student.save()
+                res = {
+                    'result': 'ok',
+                }                     
+            # except Exception as ex:
+            #     res = {
+            #         'result': 'error',
+            #         'message': str(ex)
+            #     }
             status_code = 200 
             response = simplejson.dumps(res)
             return HttpResponse(response, status = status_code, mimetype="application/json")
@@ -773,7 +782,7 @@ class GetInstallmentDetails(View):
                             'amount':installment.amount,
                             'due_date': installment.due_date.strftime('%d/%m/%Y'),
                             'fine_amount': installment.fine_amount,
-                            'name':'installment'+str(i + 1),
+                            'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
                             'paid_installment_amount': float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount),
                             'balance': float(installment.amount) - float(fees_payment_installments[0].paid_amount),
                         })
@@ -783,7 +792,7 @@ class GetInstallmentDetails(View):
                         'amount':installment.amount,
                         'due_date': installment.due_date.strftime('%d/%m/%Y'),
                         'fine_amount': installment.fine_amount,
-                        'name':'installment'+str(i + 1),
+                        'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
                         'paid_installment_amount': 0,
                         'balance': float(installment.amount),
                     })
@@ -793,7 +802,7 @@ class GetInstallmentDetails(View):
                     'amount':installment.amount,
                     'due_date': installment.due_date.strftime('%d/%m/%Y'),
                     'fine_amount': installment.fine_amount,
-                    'name':'installment'+str(i + 1),
+                    'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
                     'paid_installment_amount': 0,
                     'balance': float(installment.amount),
                 })
