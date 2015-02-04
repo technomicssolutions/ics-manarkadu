@@ -823,10 +823,12 @@ function AdmissionController($scope, $http) {
                     due_date_id = 'due_date_'+$scope.installments.length;
                     amount = 0
                     var x,y,z
-                    // date = new Date();
-                    var date = new Date($scope.doj);
-                    x = date.getDate();
-                    y = date.getMonth() + i + 1;
+                    date = new Date();
+                    var mydate = new Date($scope.doj);
+                    x = mydate.getDay();
+                    console.log(x)
+                    y = date.getMonth() + i + 2;
+                    console.log(y)
                    
                     if (y <= 12){
                         z = date.getFullYear();
