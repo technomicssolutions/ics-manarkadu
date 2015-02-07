@@ -708,8 +708,8 @@ class AdmissionReport(View):
                             ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
                             ('BACKGROUND',(0, 0),(-1,-1),colors.white),
-                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                            # ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                            # ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                             ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
                             ])   
                 elements.append(table)
@@ -810,7 +810,7 @@ class GetInstallmentDetails(View):
         for installment in ctx_installments:
             installment.update({
                 'total_amount_paid': total_amount_paid,
-                'course_balance': float(student.fees) - float(total_amount_paid),
+                'course_balance': student.balance,
             })
         res = {
             'result': 'ok',

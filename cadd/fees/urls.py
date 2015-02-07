@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
 from fees.views import FeesPaymentSave, ListOutStandingFees, GetOutStandingFeesDetails, PrintOutstandingFeesReport, FeepaymentReport,\
- UnRollStudent, RollStudent, AccountStatement, ReceiptNo
+ UnRollStudent, RollStudent, AccountStatement, ReceiptNo, EditFeePayment, FeePaymentDetails
 
 urlpatterns = patterns('',
 	
@@ -17,4 +17,7 @@ urlpatterns = patterns('',
 	url(r'^roll_students/$',login_required(RollStudent.as_view()), name='roll_students'),
 	url(r'^account_statement/$',login_required(AccountStatement.as_view()), name='account_statement'),
 	url(r'^receipt_no/$',login_required(ReceiptNo.as_view()), name='receipt_no'),
+	url(r'^get_fees_payment/$',login_required(FeePaymentDetails.as_view()), name='get_fees_payment'),
+	url(r'^edit_fees/$',login_required(EditFeePayment.as_view()), name='edit_fees'),
+
 )
