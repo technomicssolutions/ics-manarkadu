@@ -789,43 +789,122 @@ class AccountStatement(View):
         if student_id:
             student = Student.objects.get(id=student_id)
             date = datetime.now()
+            style = [
+                    ('FONTNAME',(0,0),(-1,-1),'Helvetica') 
+                ]
             response = HttpResponse(content_type='application/pdf')
-            p = canvas.Canvas(response, pagesize=(1000, 1250))
-            y = 1150
-            balance = 0
-            p.setFont("Helvetica", 14)
-            p.drawCentredString(500, y - 60, 'Account Statement: '+student.student_name+ ' ' +date.strftime('%d/%m/%Y'))
-            p.drawCentredString(500, y - 80, 'Course: '+student.course.name)
-            p.drawString(150, y-120, student.doj.strftime('%d/%m/%Y'))
-            p.drawString(250, y-120, 'Course Fee')
-            p.drawString(350, y-120, ' ')
-            p.drawString(450, y-120, str(student.fees)+'Dr')
-            p.drawString(150, y-150, student.doj.strftime('%d/%m/%Y'))
-            p.drawString(250, y-150, 'Discount')
-            p.drawString(350, y-150, str(student.discount)+'Cr')
-            p.drawString(450, y-150, ' ')
+            p = SimpleDocTemplate(response, pagesize=A4)
+            elements = []
+            d = [['Account Statements :'+student.student_name+ ' ' +date.strftime('%d/%m/%Y')]]
+            t = Table(d, colWidths=(450), rowHeights=25, style=style)
+            t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('FONTSIZE', (0,0), (-1,-1), 12),
+                ])   
+            elements.append(t)
+            d = [['Course :'+student.course.name]]
+            t = Table(d, colWidths=(450), rowHeights=25, style=style)
+            t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('FONTSIZE', (0,0), (-1,-1), 12),
+                ])   
+            elements.append(t)
+            
+            data = []
+            para_style = ParagraphStyle('fancy')
+            para_style.fontSize = 10
+            para_style.fontName = 'Helvetica'
+            data.append(['Date', 'NO', 'Credit', 'Debit'])
+            table = Table(data, colWidths=(80, 60, 80, 130), style=style)
+            table.setStyle([
+                        ('ALIGN',(0,-1),(0,-1),'LEFT'),
+                        ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                ])  
+            elements.append(table)
+            
+            data = []
+            data=[[student.doj.strftime('%d/%m/%Y'),'Course Fee' ,'',str(student.fees)+'Dr'],[student.doj.strftime('%d/%m/%Y'),'Discount', str(student.discount)+'Cr','']]
+            table = Table(data, colWidths=(80, 60, 80, 130), style=style)
+
+            table.setStyle([
+                    ('ALIGN',(0,-1),(0,-1),'LEFT'),
+                    ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                    ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                    ])   
+            elements.append(table)
             balance = float(student.fees) - float(student.discount)
-            y1 = y - 160
-            try:
-                fees_payment = FeesPayment.objects.get(student=student)
-                if fees_payment.payment_installment.count > 0 :
-                    for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
-                        for payment in fee_payment_installment.feespaid_set.all():
-                            y1 = y1 - 30
-                            if y1 <= 135:
-                                y1 = y - 110
-                                p.showPage()
-                                p = header(p, y)
-                            p.drawString(150, y1, payment.paid_date.strftime('%d/%m/%Y'))
-                            p.drawString(250, y1, payment.receipt_no if payment.receipt_no else '')
-                            p.drawString(350, y1, str(payment.paid_amount)+'Cr')
-                            p.drawString(450, y1, ' ')
-                            balance = balance - float(payment.paid_amount)
-            except Exception as ex:
-                print ex
-            p.drawString(150, y1-50, 'Balance:')            
-            p.drawString(450, y1-50, str(balance)+ 'Dr')
-            p.save()       
+            fees_payment = FeesPayment.objects.get(student=student)
+            if fees_payment.payment_installment.count > 0 :
+                for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
+                    for payment in fee_payment_installment.feespaid_set.all():
+                        
+                        data=[[payment.paid_date.strftime('%d/%m/%Y'),payment.receipt_no if payment.receipt_no else '' ,str(payment.paid_amount)+'Cr','']]
+                        balance = balance - float(payment.paid_amount)
+                    table = Table(data, colWidths=(80, 60, 80, 130), style=style)
+                    table.setStyle([
+                                ('ALIGN',(0,-1),(0,-1),'LEFT'),
+                                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                                ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                            ])   
+                    elements.append(table)
+                elements.append(Spacer(2,20 ))
+                        
+            data = []
+            data.append(['Balance:', str(balance)+ 'Dr'])
+            table = Table(data, colWidths=(100, 100), style=style)
+            table.setStyle([
+                        ('FONTSIZE', (0,0), (-1,-1), 10),
+                        ])
+            elements.append(table)
+            p.build(elements)  
+            # p = canvas.Canvas(response, pagesize=(1000, 1250))
+            # y = 1150
+            # balance = 0
+            # p.setFont("Helvetica", 14)
+            # p.drawCentredString(500, y - 60, 'Account Statement: '+student.student_name+ ' ' +date.strftime('%d/%m/%Y'))
+            # p.drawCentredString(500, y - 80, 'Course: '+student.course.name)
+            # p.drawString(150, y-120, student.doj.strftime('%d/%m/%Y'))
+            # p.drawString(250, y-120, 'Course Fee')
+            # p.drawString(350, y-120, ' ')
+            # p.drawString(450, y-120, str(student.fees)+'Dr')
+            # p.drawString(150, y-150, student.doj.strftime('%d/%m/%Y'))
+            # p.drawString(250, y-150, 'Discount')
+            # p.drawString(350, y-150, str(student.discount)+'Cr')
+            # p.drawString(450, y-150, ' ')
+            # balance = float(student.fees) - float(student.discount)
+            # y1 = y - 160
+            # try:
+            #     fees_payment = FeesPayment.objects.get(student=student)
+            #     if fees_payment.payment_installment.count > 0 :
+            #         for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
+            #             for payment in fee_payment_installment.feespaid_set.all():
+            #                 y1 = y1 - 30
+            #                 if y1 <= 135:
+            #                     y1 = y - 110
+            #                     p.showPage()
+            #                     p = header(p, y)
+            #                 p.drawString(150, y1, payment.paid_date.strftime('%d/%m/%Y'))
+            #                 p.drawString(250, y1, payment.receipt_no if payment.receipt_no else '')
+            #                 p.drawString(350, y1, str(payment.paid_amount)+'Cr')
+            #                 p.drawString(450, y1, ' ')
+            #                 balance = balance - float(payment.paid_amount)
+            # except Exception as ex:
+            #     print ex
+            # p.drawString(150, y1-50, 'Balance:')            
+            # p.drawString(450, y1-50, str(balance)+ 'Dr')
+            # p.save()       
             return response 
         return render(request, 'account_statement.html',{}) 
 
