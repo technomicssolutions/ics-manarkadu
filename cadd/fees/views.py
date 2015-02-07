@@ -62,9 +62,6 @@ class FeesPaymentSave(View):
                         if next_installment.order == int(installment.order + 1):
                             # try:
                             print "shs"
-                            
-                            
-                            
                             if balance < 0 :
                                 print "hi"
                                 fee_payment_installment.total_amount = float(fees_payment_details['paid_amount']) + float(balance)
@@ -199,22 +196,33 @@ class EditFeePayment(View):
             fees_payment = FeesPayment.objects.get(id=fees_payment_details['fees_payment_id'])
             installment = Installment.objects.get(id=fees_payment_details['installment_id'])
             fees_payment_installment = FeesPaymentInstallment.objects.get(id=fees_payment_details['fees_payment_installment_id'])
+            
+            fees_paid = FeesPaid.objects.get(fees_payment_installment=fees_payment_installment)
             balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paying_amount'] )
             if fees_payment_details['paying_amount'] < fee_payment_installment.total_amount:
                 fees_payment_installment.paid_amount = fees_payment_details['paying_amount']
                 fees_payment_installment.total_amount = fees_payment_details['paying_amount']
                 fees_payment_installment.paid_date = fees_payment_details['paid_date']
-                fees_paid = FeesPaid.objects.get(fees_payment_installment=fees_payment_installment)
                 fees_paid.paid_amount = fees_payment_details['paying_amount']
                 fees_paid.save()
                 for next_installment in student.installments.all().order_by('order'):
                     if next_installment.order !=0 :
                         if next_installment.order == int(installment.order + 1):
                             next_installment.amount = float(next_installment.amount) + float(abs(balance))
-                            
                             installment.amount = float(installment.amount) - float(abs(balance))
+                            next_fees_payment_installment ,created = FeesPaymentInstallment.objects.get_or_create(id=fees_payment_installment.next_fees_payment_installment.id)
+                            next_fees_payment_installment.total_amount = next_installment.amount
+                            next_fees_payment_installment.save()
                             next_installment.save()
                             installment.save()
+                        else:
+                            res = {
+                                'result': 'error',
+                                'message': ' There is no next installment',
+                            }
+            elif fees_payment_details['paying_amount'] > fee_payment_installment.total_amount:
+
+
             response = simplejson.dumps(res)
             return HttpResponse(response, status = 200, mimetype="application/json")
 
