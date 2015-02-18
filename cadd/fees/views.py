@@ -201,7 +201,7 @@ class EditFeePayment(View):
                 fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
                 fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
             fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
-            
+            fee_payment_installment.paid_amount = fees_payment_details['paid_amount']
             fee_payment_installment.save()
             fees_paid.fees_payment = fees_payment
             fees_paid.receipt_no = fees_payment_details['receipt_no']
