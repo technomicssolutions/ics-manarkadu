@@ -295,35 +295,23 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
     $scope.validate_fees_payment = function() {
         $scope.validation_error = '';
 
-        var fine_balance = parseFloat($('#total_fee_amount').val()) - parseFloat($scope.payment_installment.amount);
-        if($scope.course == '' || $scope.course == undefined) {
-            $scope.validation_error = "Please Select a course " ;
-            return false
-        } else if($scope.payment_installment.student == '' || $scope.payment_installment.student == undefined) {
-            $scope.validation_error = "Please select a student" ;
-            return false;
-        } else if($scope.installments.length == 0) {
-            $scope.validation_error = "Payment completed" ;
-            return false;
-        } else if($scope.installment == '' || $scope.installment == undefined) {
-            $scope.validation_error = "Please choose an installment" ;
-            return false;
-        } else if ($scope.payment_installment.paid_amount == '' || $scope.payment_installment.paid_amount == undefined) {
+        var fine_balance = parseFloat($('#total_fee_amount').val()) - parseFloat($scope.payment_details.amount);
+        if ($scope.payment_details.paid_amount == '' || $scope.payment_details.paid_amount == undefined) {
             $scope.validation_error = "Please enter paid amount" ;
             return false;
-        } else if($scope.payment_installment.fee_waiver == ''){
+        } else if($scope.payment_details.fee_waiver == ''){
             $scope.validation_error = "Please enter a valid amount in fee waiver" ;
             return false;
-        } else if ($scope.payment_installment.paid_amount != Number($scope.payment_installment.paid_amount)) {
+        } else if ($scope.payment_details.paid_amount != Number($scope.payment_details.paid_amount)) {
             $scope.validation_error = "Please enter valid paid amount" ;
             return false;
-        } else if (fine_balance < $scope.payment_installment.paid_fine_amount ) {
+        } else if (fine_balance < $scope.payment_details.paid_fine_amount ) {
             $scope.validation_error = "Please check the Paying Fine amount";
             return false;
-        } else if ($scope.payment_installment.installment_balance < 0 ) {
+        } else if ($scope.payment_details.installment_balance < 0 ) {
             $scope.validation_error = "Please check the Paying amount";
             return false;
-        } else if($scope.payment_installment.paid_fine_amount == ''){
+        } else if($scope.payment_details.paid_fine_amount == ''){
             $scope.validation_error = "Please enter a valid amount in fine amount" ;
             return false;
         } return true; 
@@ -334,20 +322,20 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
     }
     $scope.save_fees_payment = function() {
 
-        $scope.payment_installment.course_id = $scope.course;
-        $scope.payment_installment.installment_id = $scope.installment;
-        $scope.payment_installment.paid_date = $$('#paid_date')[0].get('value');
+        // $scope.payment_details.course_id = $scope.course;
+        // $scope.payment_details.installment_id = $scope.installment;
+        $scope.payment_details.paid_date = $$('#paid_date')[0].get('value');
         // $scope.payment_installment.total_amount = $$('#total_fee_amount')[0].get('value');
-        $scope.payment_installment.total_amount = $$('#fee_amount')[0].get('value');
-        $scope.payment_installment.installment_balance = $$('#installment_balance')[0].get('value');
+        $scope.payment_details.total_amount = $$('#fee_amount')[0].get('value');
+        $scope.payment_details.installment_balance = $$('#installment_balance')[0].get('value');
         if($scope.validate_fees_payment()) {
             params = { 
-                'fees_payment': angular.toJson($scope.payment_installment),
+                'fees_payment': angular.toJson($scope.payment_details),
                 "csrfmiddlewaretoken" : $scope.csrf_token,
             }
             $http({
                 method: 'post',
-                url: "/fees/fees_payment/",
+                url: "/fees/edit_fees/",
                 data: $.param(params),
                 headers: {
                     'Content-Type' : 'application/x-www-form-urlencoded'
@@ -357,7 +345,7 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
                 if (data.result == 'error'){
                     $scope.validation_error = data.message;
                 } else {              
-                    document.location.href ="/fees/fees_payment/";
+                    document.location.href ="/fees/edit_fees/";
                 }
             }).error(function(data, success){
                 $scope.error_flag=true;

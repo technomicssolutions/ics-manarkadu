@@ -286,10 +286,29 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
                 diff = $scope.student.no_installments - $scope.installments.length;
                 for (var i=0; i<diff; i++) {
                     due_date_id = 'due_date_'+$scope.installments.length;
+                    amount = 0
+                    var x,y,z
+                    date = new Date();
+                    var mydate = new Date($scope.student.doj);
+                    x = mydate.getDay();
+                    console.log(x,i)
+                    y = date.getMonth() + i + 2;
+                    console.log(y)
+                   
+                    if (y <= 12){
+                        z = date.getFullYear();
+                    }
+                    else{
+                        y = y - 12;
+                        z = date.getFullYear() + 1;
+                    }
+                    console.log(y,z)
+                    console.log($scope.student.fine)
+                    amount = $scope.student.fees_after_discount / $scope.student.no_installments ;
                     $scope.installments.push({
-                        'amount': '',
-                        'fine': '',
-                        'due_date': '',
+                        'amount': amount,
+                        'fine': $scope.student.fine,
+                        'due_date': x+ '/' + y + '/' +z,
                         'due_date_id': due_date_id,
                     })
                 }
@@ -347,10 +366,7 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
         } else if($scope.student.mobile_number.length < 9 || $scope.student.mobile_number.length > 15) {            
             $scope.validation_error = "Please enter a Valid Mobile Number";
             return false;
-        } else if(!(validateEmail($scope.student.email))){
-            $scope.validation_error = "Please enter a Valid Email Id";
-            return false;
-        } else if($scope.student.blood_group == '' || $scope.student.blood_group == undefined) {
+        }  else if($scope.student.blood_group == '' || $scope.student.blood_group == undefined) {
             $scope.validation_error = "Please Enter Blood Group";
             return false; 
         } else if($scope.student.doj == '' || $scope.student.doj == undefined) {

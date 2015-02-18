@@ -7,7 +7,7 @@ class FeesPaymentInstallment(models.Model):
 	total_amount = models.DecimalField('Total Amount', max_digits=14, decimal_places=2, default=0)
 	next_fees_payment_installment = models.ForeignKey('self', null=True, blank=True)
 	installment = models.ForeignKey(Installment, null=True, blank=True)
-	paid_amount = models.DecimalField('Amount', max_digits=14, decimal_places=2, default=0)
+	paid_amount = models.DecimalField('Paid Amount', max_digits=14, decimal_places=2, default=0)
 	installment_amount = models.DecimalField('Installment Amount', max_digits=14, decimal_places=2, default=0)
 	installment_fine = models.DecimalField('Installment Fine Amount', max_digits=14, decimal_places=2, default=0)
 	fee_waiver_amount = models.DecimalField('Fee Waiver Amount', max_digits=14, decimal_places=2, default=0)

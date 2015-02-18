@@ -111,13 +111,21 @@
                     <label>Actual Fees</label>
                     <input type="text" name="fees" value="" ng-model="student.fees" readonly>
                 </div>
-                 <div class="control">
+                <div class="control">
                     <label> Discount</label>
                     <input type="text" name="fees" value="" ng-model="student.discount" ng-change="calculate_actual_fees()">
                 </div>
                 <div class="control">
+                    <label> Intial Payment</label>
+                    <input type="text" name="fees" value="" ng-model="student.intial_payment" ng-change="calculate_actual_fees()">
+                </div>
+                <div class="control">
                     <label> Fees*</label>
                     <input type="text" name="fees" value="" ng-model="student.fees_after_discount">
+                </div>
+                <div class="control">
+                    <label> Fine</label>
+                    <input type="text" name="fees" value="" ng-model="student.fine">
                 </div>
                 <div class="control">
                     <label> No of Installmets*</label>

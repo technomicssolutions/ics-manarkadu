@@ -106,6 +106,7 @@ function date_conversion(date_val) {
 
 function calculate_total_fee_amount() {
     if($('#fees_payment').length > 0) {
+        console.log("hii")
         var due_date = date_conversion($$('#due_date')[0].get('value'));
         var paid_date = date_conversion($$('#paid_date')[0].get('value'));
         if (paid_date > due_date) {

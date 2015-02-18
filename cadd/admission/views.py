@@ -272,6 +272,7 @@ class EditStudentDetails(View):
                 'no_installments': student.no_installments if student.no_installments else '',
                 'installments': installment_list,
                 })
+            print batch_details
             res = {
                 'result': 'ok',
                 'student': ctx_student_data,
@@ -684,7 +685,7 @@ class AdmissionReport(View):
                 response = HttpResponse(content_type='application/pdf')
                 p = SimpleDocTemplate(response, pagesize=A4)
                 elements = []        
-                d = [['Admission Report as at '+date.strftime('%d %B %Y')]]
+                d = [['Admission Report from '+str(start_date.strftime('%d/%m/%Y'))+' To '+str(end_date.strftime('%d/%m/%Y'))]]
                 t = Table(d, colWidths=(450), rowHeights=25, style=style)
                 t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                             ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
@@ -699,9 +700,10 @@ class AdmissionReport(View):
                 batches_name = ''
                 data.append(['Date of Admission','Name','Course','Batches'])
                 for admission in admissions:
+                    batches_name = ''
                     if admission.batches.all().count() > 0:
                         for batch in admission.batches.all().order_by('-id'):
-                            batches_name = batches_name + batch.name + ','
+                            batches_name = batches_name + batch.name+ ' ' + str(batch.start_time.strftime("%I:%M%p"))+ '-' + str(batch.end_time.strftime("%I:%M%p")) + ','
                     data.append([admission.doj.strftime('%d/%m/%Y') ,Paragraph(admission.student_name,para_style),Paragraph(admission.course.name,para_style),Paragraph(batches_name,para_style)])
                 table = Table(data, colWidths=(100,100,100,100),  style=style)
                 table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
@@ -996,34 +998,43 @@ class AdmissionCardView(View):
             student = Student.objects.get(id=student_id)
             response = HttpResponse(content_type='application/pdf')
             current_date = datetime.now()
-            p = canvas.Canvas(response, pagesize=(1000, 1250))
-            y = 1150
+            p = SimpleDocTemplate(response, pagesize=A4)
+            elements = [] 
             time = ''
-            print student.batches.all()[0].start_time
             time = str(student.batches.all()[0].start_time.strftime("%I:%M%p") if student.batches.all() else '') + ' to ' + str(student.batches.all()[0].end_time.strftime("%I:%M%p")if student.batches.all() else '')
-            print time
-            p.setFont("Helvetica", 24)
-            p.drawCentredString(500, y - 60, 'Admission Card')
-            p.setFont("Helvetica", 14)
-            p.drawString(150, y-100 , 'Date...................')
-            p.drawString(150, y-150, 'Course..........................')
-            p.drawString(300, y-150,'Duration...........................')
-            p.drawString(150, y-200, 'Name Of Candidate..............................................')
-            p.drawString(150, y-250, 'Time....................................' )
-            p.drawString(150, y-300, 'Total Fee.....................')
-            p.drawString(150, y-350, 'Discount if any.......................')
-            p.drawString(150, y-400, 'Course Starting date......................')
-            p.drawString(150, y-450, 'No of Installments.................')
-            p.drawString(200, y-97 , current_date.strftime('%d/%m/%Y') )
-            p.drawString(200, y-147, student.course.name)
-            p.drawString(360, y-147, str(student.course.duration if student.course else '') + str(student.course.duration_unit if student.course else ''))
-            p.drawString(350, y-197, student.student_name)
-            p.drawString(200, y-247, str(time))
-            p.drawString(210, y-297, str(student.fees))
-            p.drawString(300, y-347, str(student.discount))
-            p.drawString(300, y-397, student.doj.strftime('%d/%m/%Y') )
-            p.drawString(300, y-447, str(student.no_installments))
-            p.save()
+           
+            data = [['Admission Card']]
+            table = Table(data, colWidths=(450), rowHeights=40,  style=style)
+            table.setStyle(
+                [('ALIGN',(0,0),(-1,-1),'CENTER'),
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('FONTSIZE', (0,0), (0,0), 20),
+                ]) 
+            elements.append(table)
+            data = [
+                ['Date',current_date.strftime('%d/%m/%Y')],
+                ['Course',student.course.name],
+                ['Duration',str(student.course.duration if student.course else '') + str(student.course.duration_unit if student.course else '')],      
+                ['Name Of Candidate',student.student_name],
+                ['Time',str(time)],
+                ['Total Fee',str(student.fees)],
+                ['Discount if any',str(student.discount)],
+                ['Course Starting Date',student.doj.strftime('%d/%m/%Y')],
+                ['No of Installments',str(student.no_installments)]
+            ]
+            table = Table(data, colWidths=(150,150),  style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('BACKGROUND',(0, 0),(-1,-1),colors.white),
+                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                
+                ])   
+            elements.append(table)
+            p.build(elements)  
             return response
         return render(request, 'admission_card.html', {})
 
