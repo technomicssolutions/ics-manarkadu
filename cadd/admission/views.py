@@ -1015,7 +1015,7 @@ class AdmissionCardView(View):
             data = [
                 ['Date',current_date.strftime('%d/%m/%Y')],
                 ['Course',student.course.name],
-                ['Duration',str(student.course.duration if student.course else '') + str(student.course.duration_unit if student.course else '')],      
+                ['Duration',str(student.course.duration if student.course else '') + ' ' +str(student.course.duration_unit if student.course else '')],      
                 ['Name Of Candidate',student.student_name],
                 ['Time',str(time)],
                 ['Total Fee',str(student.fees)],

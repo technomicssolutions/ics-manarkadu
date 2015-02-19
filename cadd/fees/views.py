@@ -57,27 +57,41 @@ class FeesPaymentSave(View):
                 fee_payment_installment.paid_amount = fees_payment_details['paid_amount']
                 
                 balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paid_amount'] )
+                if balance < 0:
+                    installment.amount = float(installment.amount) + float(abs(balance))
+                else:
+                    installment.amount = float(installment.amount) - float(abs(balance))
+                installment.save()
                 print balance
+                next_installment_order = int(installment.order + 1)
                 for next_installment in student.installments.all().order_by('order'):
                     if next_installment.order !=0 :
-                        if next_installment.order == int(installment.order + 1):
+                        if next_installment.order == next_installment_order:
                             # try:
                             if balance < 0 :
-                                next_installment.amount = float(next_installment.amount) - float(abs(balance))
-                                installment.amount = float(installment.amount) + float(abs(balance))
+                                if (float(next_installment.amount) - float(abs(balance))) < 0:
+                                    print "<0"
+                                    balance = float(balance) + float(next_installment.amount)
+                                    next_installment.amount = 0
+                                    next_installment_order = int(next_installment_order + 1)
+                                else:
+                                    next_installment.amount = float(next_installment.amount) - float(abs(balance))
+                                    print ">0"
+                                 
+                                print balance,"balance"
                             else:
                                 next_installment.amount = float(next_installment.amount) + float(abs(balance))
-                                installment.amount = float(installment.amount) - float(abs(balance))
+                                
                             next_installment.save()
-                            installment.save()
-                            fee_payment_installment.total_amount = fees_payment_details['paid_amount']
-                            fee_payment_installment.installment_amount = installment.amount
+                            
 
                             # except Exception as Ex:
                         res = {
                             'result': 'error',
                             'message': ' There is no next installment',
                         }
+                fee_payment_installment.total_amount = fees_payment_details['paid_amount']
+                fee_payment_installment.installment_amount = installment.amount
                 fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
                 fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
             else:
@@ -176,28 +190,37 @@ class EditFeePayment(View):
             
             fees_paid = FeesPaid.objects.get(fees_payment_installment=fee_payment_installment)
             balance = float(fee_payment_installment.installment_amount) - float(fees_payment_details['paid_amount'] )
-            print balance
+            
+            if balance < 0:
+                    installment.amount = float(installment.amount) + float(abs(balance))
+            else:
+                installment.amount = float(installment.amount) - float(abs(balance))
+            installment.save()
+            next_installment_order = int(installment.order + 1)
             for next_installment in student.installments.all().order_by('order'):
                 if next_installment.order !=0 :
-                    if next_installment.order == int(installment.order + 1):
+                    if next_installment.order == next_installment_order:
                         #try:
                         if balance < 0 :
-                            next_installment.amount = float(next_installment.amount) - float(abs(balance))
-                            installment.amount = float(installment.amount) + float(abs(balance))
+                            if (float(next_installment.amount) - float(abs(balance))) < 0:
+                                balance = float(balance) + float(next_installment.amount)
+                                next_installment.amount = 0
+                                next_installment_order = int(next_installment_order + 1)
+                            else:
+                                next_installment.amount = float(next_installment.amount) - float(abs(balance))
                         else:
                             next_installment.amount = float(next_installment.amount) + float(abs(balance))
                         
-                            installment.amount = float(installment.amount) - float(abs(balance))
                         next_installment.save()
-                        installment.save()
-                        fee_payment_installment.installment_amount = installment.amount
-                        fee_payment_installment.total_amount = fees_payment_details['paid_amount']
-
+                        
                         # except Exception as Ex:
                     res = {
                         'result': 'error',
                         'message': ' There is no next installment',
                     }
+                fee_payment_installment.installment_amount = installment.amount
+                fee_payment_installment.total_amount = fees_payment_details['paid_amount']
+
                 fee_payment_installment.installment_fine = fees_payment_details['paid_fine_amount']
                 fee_payment_installment.fee_waiver_amount = fees_payment_details['fee_waiver']
             fee_payment_installment.paid_date = datetime.strptime(fees_payment_details['paid_date'], '%d/%m/%Y')
@@ -800,7 +823,7 @@ class AccountStatement(View):
             response = HttpResponse(content_type='application/pdf')
             p = SimpleDocTemplate(response, pagesize=A4)
             elements = []
-            d = [['Account Statements :'+student.student_name+ ' ' +date.strftime('%d/%m/%Y')]]
+            d = [['Account Statement : '+student.student_name+ ' ' +date.strftime('%d/%m/%Y')]]
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                 ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
@@ -808,7 +831,7 @@ class AccountStatement(View):
                 ('FONTSIZE', (0,0), (-1,-1), 12),
                 ])   
             elements.append(t)
-            d = [['Course :'+student.course.name]]
+            d = [['Course : '+student.course.name]]
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                 ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
