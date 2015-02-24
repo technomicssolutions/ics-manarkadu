@@ -17,7 +17,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from admission.models import Student, Enquiry, Installment, FollowUp
 from college.models import Course, Batch
-from fees.models import FeesPayment
+from fees.models import FeesPaymentInstallment
 
 style = [
     ('FONTSIZE', (0,0), (-1, -1), 12),
@@ -769,37 +769,51 @@ class GetInstallmentDetails(View):
     def get(self, request, *args, **kwargs):
 
         student = Student.objects.get(id=request.GET.get('student', ''))
-        ctx_installments = []
+        print student
+        installments_details = []
         i = 0
+        try:
+            fees_payment_installments = FeesPaymentInstallment.objects.filter(student__id=student.id)
+            if fees_payment_installments.count() > 0:
+                print fees_payment_installments.count(),"count"
+                latest_fee_payment = fees_payment_installments.count() - 1
+                print latest_fee_payment
+        except:
+            pass
         total_amount_paid = 0
         for installment in student.installments.all().order_by('order'):
-            try:
-                fees_payment = FeesPayment.objects.get(student__id=student.id)
-                fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
-                if fees_payment_installments.count() > 0:
-                    total_amount_paid = float(total_amount_paid) + float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)
-                    if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
-                        ctx_installments.append({
+            print"installment",installment   
+            if fees_payment_installments:
+                print "hii"
+                total_amount_paid = float(total_amount_paid) + float(fees_payment_installments[latest_fee_payment].paid_amount) + float(fees_payment_installments[latest_fee_payment].fee_waiver_amount)
+                # if (float(fees_payment_installments.paid_amount) + float(fees_payment_installments.fee_waiver_amount)) < installment.amount:
+                if installment.amount > 0:
+                    paid_installments = float(student.balance)/float(installment.amount)
+                    remaining_installments = float(student.no_installments) - float(paid_installments)
+                    print installment.order,remaining_installments
+                    if float(installment.order) > float(remaining_installments):
+                        print"hjchs"
+                        balance = 0
+                        paid_installment_amount = 0
+                        if (float(installment.order)-float(remaining_installments)) > 0:
+                            balance = (float(installment.order)-float(remaining_installments)) * float(installment.amount)
+                            print balance,"balance"
+                            paid_installment_amount = float(installment.amount) - float(balance)
+                        else:
+                            balance = installment.amount
+                            paid_installment_amount = installment.amount
+                        installments_details.append({
                             'id': installment.id,
                             'amount':installment.amount,
                             'due_date': installment.due_date.strftime('%d/%m/%Y'),
                             'fine_amount': installment.fine_amount,
                             'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
-                            'paid_installment_amount': float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount),
-                            'balance': float(installment.amount) - float(fees_payment_installments[0].paid_amount),
+                            'paid_installment_amount': round(paid_installment_amount),
+                            'balance': round(balance),
                         })
-                elif fees_payment_installments.count() == 0:
-                    ctx_installments.append({
-                        'id': installment.id,
-                        'amount':installment.amount,
-                        'due_date': installment.due_date.strftime('%d/%m/%Y'),
-                        'fine_amount': installment.fine_amount,
-                        'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
-                        'paid_installment_amount': 0,
-                        'balance': float(installment.amount),
-                    })
-            except Exception as ex:
-                ctx_installments.append({
+            else:
+
+                installments_details.append({
                     'id': installment.id,
                     'amount':installment.amount,
                     'due_date': installment.due_date.strftime('%d/%m/%Y'),
@@ -808,15 +822,26 @@ class GetInstallmentDetails(View):
                     'paid_installment_amount': 0,
                     'balance': float(installment.amount),
                 })
+            # except Exception as ex:
+            #     print str(ex)
+            #     installments_details.append({
+            #         'id': installment.id,
+            #         'amount':installment.amount,
+            #         'due_date': installment.due_date.strftime('%d/%m/%Y'),
+            #         'fine_amount': installment.fine_amount,
+            #         'name':'Intial Payment'if installment.order==0 else 'installment'+str(installment.order),
+            #         'paid_installment_amount': 0,
+            #         'balance': float(installment.amount),
+            #     })
             i = i + 1
-        for installment in ctx_installments:
+        for installment in installments_details:
             installment.update({
                 'total_amount_paid': total_amount_paid,
                 'course_balance': student.balance,
             })
         res = {
             'result': 'ok',
-            'installments': ctx_installments,
+            'installments': installments_details,
         }
         response = simplejson.dumps(res)
         return HttpResponse(response, status=200, mimetype='application/json')

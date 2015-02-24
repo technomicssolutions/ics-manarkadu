@@ -11,6 +11,9 @@ class FeesPaymentInstallment(models.Model):
 	installment_amount = models.DecimalField('Installment Amount', max_digits=14, decimal_places=2, default=0)
 	installment_fine = models.DecimalField('Installment Fine Amount', max_digits=14, decimal_places=2, default=0)
 	fee_waiver_amount = models.DecimalField('Fee Waiver Amount', max_digits=14, decimal_places=2, default=0)
+	receipt_no = models.CharField('Receipt No',max_length=200,null=True, blank=True)
+	paid_date = models.DateField('Paid Date', null=True, blank=True)
+	paid_fine_amount = models.DecimalField('Fine Amount', max_digits=14, decimal_places=2, default=0)
 
 	def __unicode__(self):
 
@@ -20,29 +23,3 @@ class FeesPaymentInstallment(models.Model):
 
 		verbose_name_plural = 'Fees Payment Installment'
 
-class FeesPayment(models.Model):
-	
-	student = models.ForeignKey(Student, null=True, blank=True)
-	payment_installment = models.ManyToManyField(FeesPaymentInstallment, null=True, blank=True)
-	
-	def __unicode__(self):
-		return str(self.student)
-
-	class Meta:
-
-		verbose_name_plural = 'Fees Payment'
-class FeesPaid(models.Model):
-
-	receipt_no = models.CharField('Receipt No',max_length=200,null=True, blank=True)
-	fees_payment = models.ForeignKey(FeesPayment, null=True, blank=True)
-	fees_payment_installment = models.ForeignKey(FeesPaymentInstallment, null=True, blank=True)
-	paid_date = models.DateField('Paid Date', null=True, blank=True)
-	paid_amount = models.DecimalField('Amount', max_digits=14, decimal_places=2, default=0)
-	paid_fine_amount = models.DecimalField('Fine Amount', max_digits=14, decimal_places=2, default=0)
-
-	def __unicode__(self):
-		return str(self.fees_payment_installment.student)
-
-	class Meta:
-
-		verbose_name_plural = 'Fees Paid'

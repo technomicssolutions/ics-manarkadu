@@ -326,8 +326,8 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
         // $scope.payment_details.installment_id = $scope.installment;
         $scope.payment_details.paid_date = $$('#paid_date')[0].get('value');
         // $scope.payment_installment.total_amount = $$('#total_fee_amount')[0].get('value');
-        $scope.payment_details.total_amount = $$('#fee_amount')[0].get('value');
-        $scope.payment_details.installment_balance = $$('#installment_balance')[0].get('value');
+        // $scope.payment_details.total_amount = $$('#fee_amount')[0].get('value');
+        // $scope.payment_details.installment_balance = $$('#installment_balance')[0].get('value');
         if($scope.validate_fees_payment()) {
             params = { 
                 'fees_payment': angular.toJson($scope.payment_details),
