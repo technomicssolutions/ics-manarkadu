@@ -44,19 +44,19 @@
 				<input type="text" name="amount" id="fee_amount" ng-model="payment_details.installment_amount"  readonly/>
 			</div> -->
 			<div class="control">
-				<label>Fine</label>
+				<label>Fine for a day</label>
 				<input type="text" name="fine" id="fine_amount" ng-model="payment_details.fine" readonly /> 
 			</div>
-			<div class="control">
+			<!-- <div class="control">
 				
 			</div>
-<!-- 			<div class="control">
+			<div class="control">
 				<label>Installment + Fine</label>
 				<input type="text" name="total_amount" id="total_fee_amount" ng-model="payment_details.total_installment_amount"  readonly/> 
 			</div> -->
 			<div class="control">
 				<label>Paid Date</label>
-				<input type="text" name="paid_date" id="paid_date" value="[[payment_details.paid_date]]" onSelect="calculate_total_amount()"/> 
+				<input type="text" name="paid_date" id="paid_date"ng-model="payment_details.paid_date" onSelect="calculate_total_amount()"/> 
 			</div>
 			<div class="control">
 				<label>Paid Installment Amount</label>

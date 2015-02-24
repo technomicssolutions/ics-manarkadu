@@ -104,23 +104,48 @@ function date_conversion(date_val) {
     return converted_date;
 }
 
-function calculate_total_fee_amount() {
-    if($('#fees_payment').length > 0) {
-        console.log("hii")
-        var due_date = date_conversion($$('#due_date')[0].get('value'));
-        var paid_date = date_conversion($$('#paid_date')[0].get('value'));
-        if (paid_date > due_date) {
-            diff = paid_date - due_date;
-            diff = parseInt(diff/(24*60*60*1000), 10)
-            fine = parseFloat($('#fine_amount').val())*diff;
-            $('#total_fee_amount').val(parseFloat($('#fee_amount').val()) + parseFloat(fine));
-            $('#balance').val(parseFloat($('#fee_amount').val()) + parseFloat(fine));
-            var installment_balance = parseFloat($('#installment_balance_amount').val()) + parseFloat(fine);
-            $('#installment_balance').val(installment_balance);
-        } else {
-            $('#total_fee_amount').val(parseFloat($$('#fee_amount')[0].get('value')));
-            $('#balance').val(parseFloat($$('#fee_amount')[0].get('value')));
-            $('#installment_balance').val($('#installment_balance_amount').val());
+function calculate_total_fee_amount(from) {
+    console.log("hii",$('#fees_payment'),$('#edit_fees_payment'))
+    if (from == 'create'){
+        if($('#fees_payment').length > 0) {
+            
+            var due_date = date_conversion($$('#due_date')[0].get('value'));
+            var paid_date = date_conversion($$('#paid_date')[0].get('value'));
+            if (paid_date > due_date) {
+                diff = paid_date - due_date;
+                diff = parseInt(diff/(24*60*60*1000), 10)
+                fine = parseFloat($('#fine_amount').val())*diff;
+                $('#total_fee_amount').val(parseFloat($('#fee_amount').val()) + parseFloat(fine));
+                $('#balance').val(parseFloat($('#fee_amount').val()) + parseFloat(fine));
+                var installment_balance = parseFloat($('#installment_balance_amount').val()) + parseFloat(fine);
+                $('#installment_balance').val(installment_balance);
+            } else {
+                $('#total_fee_amount').val(parseFloat($$('#fee_amount')[0].get('value')));
+                $('#balance').val(parseFloat($$('#fee_amount')[0].get('value')));
+                $('#installment_balance').val($('#installment_balance_amount').val());
+            }
+        }
+    }else{
+         if($('#edit_fees_payment').length > 0) {
+            
+            var due_date = date_conversion($$('#due_date')[0].get('value'));
+            var paid_date = date_conversion($$('#paid_date')[0].get('value'));
+            console.log(paid_date,due_date,paid_date > due_date)
+            if (paid_date > due_date) {
+                diff = paid_date - due_date;
+                diff = parseInt(diff/(24*60*60*1000), 10)
+                fine = parseFloat($('#fine_amount').val())*diff;
+                console.log(fine)
+                $('#total_installment_amount').val(parseFloat($$('#edit_fees_payment')[0].get('value')) + parseFloat(fine));
+                $('#total_fee_amount').val(parseFloat($('#edit_fees_payment').val()) + parseFloat(fine));
+                $('#balance').val(parseFloat($('#edit_fees_payment').val()) + parseFloat(fine));
+                
+            } else {
+                $('#total_installment_amount').val(parseFloat($$('#edit_fees_payment')[0].get('value')));
+                $('#total_fee_amount').val(parseFloat($$('#edit_fees_payment')[0].get('value')));
+                $('#balance').val(parseFloat($$('#edit_fees_payment')[0].get('value')));
+                
+            }
         }
     }
 }

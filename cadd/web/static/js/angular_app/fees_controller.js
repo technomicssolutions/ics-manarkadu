@@ -85,7 +85,8 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
         })
     }
     $scope.calculate_total_amount = function() {
-        calculate_total_fee_amount();
+        console.log("hsahii")
+        calculate_total_fee_amount('create');
     }
     $scope.get_fees = function(installment) {
         $scope.payment_installment.paid_date = installment.paid_date;
@@ -112,7 +113,7 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
             $('#old_balance').val(parseFloat($scope.payment_installment.total_balance) - parseFloat($scope.payment_installment.amount));
         else
             $('#old_balance').val(0);
-        calculate_total_fee_amount();
+        calculate_total_fee_amount('create');
     }
     $scope.calculate_balance = function() {
         balance = 0;
@@ -234,7 +235,9 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
             pickerClass: 'datepicker_bootstrap',
             useFadeInOut: !Browser.ie,
             format:'%d/%m/%Y',
+            onSelect: $scope.calculate_total_amount('edit'),
         });
+        $scope.calculate_total_amount('edit');
         
     }
     $scope.get_fees_payment_details = function(){
@@ -256,11 +259,13 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
     }
     
     $scope.calculate_total_amount = function() {
-        calculate_total_fee_amount();
+        console.log('Hiisss')
+        calculate_total_fee_amount('edit');
     }
     $scope.get_fees = function() {
         // $scope.payment_installment.installment_balance = $scope.payment_installment.amount - $scope.payment_installment.paid_installment_amount;
         $('#due_date').val($scope.payment_details.due_date);
+        $('#paid_date').val($scope.payment_details.paid_date);
         $('#fine_amount').val($scope.payment_details.fine_amount);
         $('#fee_amount').val($scope.payment_details.installment_amount);
         $('#balance').val($scope.payment_details.balance);
@@ -273,8 +278,8 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
         $scope.payment_details.total_balance = $scope.payment_details.balance;
         $scope.payment_details.total_balance_amount = $scope.payment_details.balance;
         $scope.payment_details.paying_amount = $scope.payment_details.paid_amount;
-        $scope.payment_details.total_installment_amount = $scope.payment_details.installment_amount + $scope.payment_details.fine;
-        calculate_total_fee_amount();
+        // $scope.payment_details.total_installment_amount = $scope.payment_details.paid_amount + $scope.payment_details.fine;
+        calculate_total_fee_amount('edit');
     }
     $scope.calculate_balance = function() {
         balance = 0;
