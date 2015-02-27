@@ -179,8 +179,7 @@ class GetOutStandingFeesDetails(View):
                 ctx_installments = []
                 for installment in student.installments.all():
                     try:
-                        fees_payment = FeesPayment.objects.get(student__id=student_id)
-                        fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
+                        fees_payment_installments = FeesPaymentInstallment.objects.filter(student__id=student_id)
                         if current_date >= installment.due_date:
                             if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
                                 if fees_payment_installments[0].paid_amount < installment.amount:
@@ -241,8 +240,7 @@ class GetOutStandingFeesDetails(View):
                     ctx_installments = []
                     for installment in student.installments.all():
                         try:
-                            fees_payment = FeesPayment.objects.get(student__id=student.id)
-                            fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
+                            fees_payment_installments = FeesPaymentInstallment.objects.get(student__id=student.id)
                             if fees_payment_installments.count() > 0:
                                 if current_date >= installment.due_date:
                                     if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
@@ -368,9 +366,11 @@ class PrintOutstandingFeesReport(View):
                 i = i + 1
             d = []
             d.append(['Name', 'Amount', 'Due Date', 'Fine', 'Paid', 'Balance'])
+
+            total = 0
             if is_not_paid:
-                total = 0
                 for data in data_list:
+                    print data['balance']
                     total = total + data['balance']
                     d.append([data['name'], data['amount'], data['due_date'], data['fine_amount'], data['paid_installment_amount'], data['balance']])
             table = Table(d, colWidths=(100, 100, 75, 100, 100,100),  style=style)
