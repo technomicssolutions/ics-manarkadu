@@ -327,21 +327,20 @@ class PrintOutstandingFeesReport(View):
             is_not_paid = False
             for installment in student.installments.all():
                 try:
-                    fees_payment = FeesPayment.objects.get(student__id=student.id)
-                    fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
-                    if fees_payment_installments.count() > 0:
-                        if current_date >= installment.due_date:
-                            if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
-                                    is_not_paid = True
-                                    data_list.append({
-                                        'id': installment.id,
-                                        'amount':installment.amount,
-                                        'due_date': installment.due_date.strftime('%d/%m/%Y'),
-                                        'fine_amount': installment.fine_amount,
-                                        'name':'installment'+str(i + 1),
-                                        'paid_installment_amount': fees_payment_installments[0].paid_amount,
-                                        'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
-                                    })
+                    fees_payment_installments = FeesPaymentInstallment.objects.filter(student__id=student.id)
+                    
+                    if current_date >= installment.due_date:
+                        if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
+                            is_not_paid = True
+                            data_list.append({
+                                'id': installment.id,
+                                'amount':installment.amount,
+                                'due_date': installment.due_date.strftime('%d/%m/%Y'),
+                                'fine_amount': installment.fine_amount,
+                                'name':'installment'+str(i + 1),
+                                'paid_installment_amount': fees_payment_installments[0].paid_amount,
+                                'balance': float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
+                            })
                     elif fees_payment_installments.count() == 0:
                         if current_date >= installment.due_date:
                             is_not_paid = True
@@ -423,8 +422,7 @@ class PrintOutstandingFeesReport(View):
 
                     for installment in student.installments.all():
                         try:
-                            fees_payment = FeesPayment.objects.get(student__id=student.id)
-                            fees_payment_installments = fees_payment.payment_installment.filter(installment=installment)
+                            fees_payment_installments = FeesPayment.objects.get(student__id=student.id)
                             if fees_payment_installments.count() > 0:
                                 if current_date >= installment.due_date:
                                     if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
@@ -520,14 +518,12 @@ class FeepaymentReport(View):
             total = 0
             for student in students:
                 try:
-                    fees_payment = FeesPayment.objects.get(student=student)
-                    if fees_payment.payment_installment.count > 0 :
-                        i = 0
-                        for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
-                            i = i + 1
-                            for payment in fee_payment_installment.feespaid_set.all():
-                                total = total + payment.paid_amount
-                                data.append([Paragraph(student.student_name, para_style), 'Installment' +str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'), payment.paid_amount])
+                    fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
+                   
+                    for fee_payment_installment in fee_payment_installments:
+                        i = i + 1
+                        total = total + fee_payment_installment.paid_amount
+                        data.append([Paragraph(student.student_name, para_style), 'Installment' +str(i), fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'), fee_payment_installment.paid_amount])
                 except Exception as ex:
                     print str(ex)
             table = Table(data, colWidths=(100, 100, 150,100,100),  style=style)
@@ -580,17 +576,16 @@ class FeepaymentReport(View):
             elements.append(t)
             elements.append(Spacer(4, 5))
             try:
-                fees_payment = FeesPayment.objects.get(student=student)
+                fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
                 data = []
                 i = 0
                 total = 0
                 data.append(['Installment' ,'Installment Amount','Paid date','Paid Amount'])
-                if fees_payment.payment_installment.count > 0 :
-                    for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
-                        i = i + 1
-                        for payment in fee_payment_installment.feespaid_set.all():
-                            total = total + payment.paid_amount
-                            data.append(['Installment'+str(i), fee_payment_installment.total_amount,payment.paid_date.strftime('%d/%m/%Y'),payment.paid_amount])
+                
+                for fee_payment_installment in fee_payment_installments:
+                    i = i + 1
+                    total = total + fee_payment_installment.paid_amount
+                    data.append(['Installment'+str(i), fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'),fee_payment_installment.paid_amount])
                 table = Table(data, colWidths=(100,150,100,100),  style=style)
                 table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                             ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
@@ -638,14 +633,12 @@ class FeepaymentReport(View):
             data.append(['Receipt No','Course' ,'Student' ,'Paid Amount'])
             total = 0
             try:
-                fee_paids = FeesPaid.objects.filter(paid_date=date)
-                print fee_paids
-                for fee_payed in fee_paids:
-                    print fee_payed.fees_payment_installment.id
-                    total = total + fee_payed.paid_amount
-                    fees_payment_installment = FeesPaymentInstallment.objects.get(id=fee_payed.fees_payment_installment.id)
+                fee_payment_installments = FeesPaymentInstallment.objects.filter(paid_date=date)
+                
+                for fee_payment_installment in fee_payment_installments:
+                    total = total + fee_payment_installment.paid_amount
                     # print fees_payment_installment
-                    data.append([fee_payed.receipt_no, Paragraph( fees_payment_installment.student.course.name,para_style),Paragraph(fees_payment_installment.student.student_name, para_style),  fee_payed.paid_amount])
+                    data.append([fee_payment_installment.receipt_no, Paragraph( fee_payment_installment.student.course.name,para_style),Paragraph(fee_payment_installment.student.student_name, para_style),  fee_payment_installment.paid_amount])
             except Exception as ex:
                 print str(ex)
             table = Table(data, colWidths=(100, 100, 100,100),  style=style)
@@ -785,24 +778,23 @@ class AccountStatement(View):
                     ])   
             elements.append(table)
             balance = float(student.fees) - float(student.discount)
-            fees_payment = FeesPayment.objects.get(student=student)
-            if fees_payment.payment_installment.count > 0 :
-                for fee_payment_installment in fees_payment.payment_installment.all().order_by('id'):
-                    for payment in fee_payment_installment.feespaid_set.all():
-                        
-                        data=[[payment.paid_date.strftime('%d/%m/%Y'),payment.receipt_no if payment.receipt_no else '' ,str(payment.paid_amount)+'Cr','']]
-                        balance = balance - float(payment.paid_amount)
-                    table = Table(data, colWidths=(80, 60, 80, 130), style=style)
-                    table.setStyle([
-                                ('ALIGN',(0,-1),(0,-1),'LEFT'),
-                                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
-                                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                                ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
-                            ])   
-                    elements.append(table)
-                elements.append(Spacer(2,20 ))
+            fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
+            
+            for fee_payment_installment in fee_payment_installments:
+                    
+                data=[[fee_payment_installment.paid_date.strftime('%d/%m/%Y'),fee_payment_installment.receipt_no if fee_payment_installment.receipt_no else '' ,str(fee_payment_installment.paid_amount)+'Cr','']]
+                balance = balance - float(fee_payment_installment.paid_amount)
+                table = Table(data, colWidths=(80, 60, 80, 130), style=style)
+                table.setStyle([
+                            ('ALIGN',(0,-1),(0,-1),'LEFT'),
+                            ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                            ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                        ])   
+                elements.append(table)
+            elements.append(Spacer(2,20 ))
                         
             data = []
             data.append(['Balance:', str(balance)+ 'Dr'])
