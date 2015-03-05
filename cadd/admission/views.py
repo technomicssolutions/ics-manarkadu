@@ -5,10 +5,12 @@ from datetime import datetime
 from time import gmtime, strftime
 from reportlab.pdfgen import canvas
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import Paragraph, Table, TableStyle, SimpleDocTemplate, Spacer
+from reportlab.platypus import Image,Paragraph, Table, TableStyle, SimpleDocTemplate, Spacer
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.pagesizes import letter, A4,inch
 from reportlab.pdfbase import pdfmetrics
+from reportlab.lib.utils import ImageReader
+
 
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
@@ -1027,7 +1029,11 @@ class AdmissionCardView(View):
             elements = [] 
             time = ''
             time = str(student.batches.all()[0].start_time.strftime("%I:%M%p") if student.batches.all() else '') + ' to ' + str(student.batches.all()[0].end_time.strftime("%I:%M%p")if student.batches.all() else '')
-           
+            print student.photo
+            if student.photo:
+                image = Image(student.photo,width=2*inch,height=1*inch,kind='proportional')
+            # else:
+            #     image = Image('/web/static/images/profile_pic.jpeg',width=2*inch,height=1*inch,kind='proportional')
             data = [['Admission Card']]
             table = Table(data, colWidths=(450), rowHeights=40,  style=style)
             table.setStyle(
@@ -1038,22 +1044,53 @@ class AdmissionCardView(View):
                 ]) 
             elements.append(table)
             data = [
-                ['Date',current_date.strftime('%d/%m/%Y')],
-                ['Course',student.course.name],
-                ['Duration',str(student.course.duration if student.course else '') + ' ' +str(student.course.duration_unit if student.course else '')],      
-                ['Name Of Candidate',student.student_name],
-                ['Time',str(time)],
-                ['Total Fee',str(student.fees)],
-                ['Discount if any',str(student.discount)],
-                ['Course Starting Date',student.doj.strftime('%d/%m/%Y')],
-                ['No of Installments',str(student.no_installments)]
+                ['Roll No: ',str(student.roll_number),'Date Of Joining: ',str(student.doj.strftime('%d/%m/%Y'))],
+                ['Course: ',student.course.name, '', '']    
             ]
-            table = Table(data, colWidths=(150,150),  style=style)
+            table = Table(data, colWidths=(120,120,120,120), rowHeights=40,  style=style)
+            table.setStyle(
+                [
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('FONTSIZE', (0,0), (0,0), 16),
+                ]) 
+            elements.append(table)
+            data = [
+                ['Name',student.student_name, '',image if student.photo else ''],
+                ['Address',student.address, '', ''],
+                ['Mobile Number',str(student.mobile_number),'' , ''],      
+                ['Blood Group',student.blood_group,'' , ''],
+                ['Certificates',student.certificates_submitted, '', ''],
+                ['Guardian Name',str(student.guardian_name), 'Guardian Mobile Number', str(student.guardian_mobile_number)],
+                ['Relationship',str(student.relationship), '', ''],
+                ['Qualification',student.qualifications, '', ''],
+                ['Id Proof',str(student.id_proofs_submitted), '', ''],
+                ['Date Of Birth', student.dob.strftime('%d/%m/%Y'), '', ''],
+                ['Email', student.email, '', '']
+            ]
+            table = Table(data, colWidths=(120, 120, 140, 120),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                 ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
                 ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
                 ('BACKGROUND',(0, 0),(-1,-1),colors.white),
-                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                # ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
+                
+                ])   
+            elements.append(table)
+            data = [
+                ['Batch: ',student.batches.all()[0].name, 'Discount: ', str(student.discount)],
+                ['Fee: ',str(student.fees), 'Intial Amount: ', str(student.installments.all()[0].amount)],
+                ['Fine: ',str(student.installments.all()[0].fine_amount),'Number Of Installments: ' , str(student.no_installments)]      
+            
+            ]
+            table = Table(data, colWidths=(120, 120, 140, 120), style=style)
+            table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
+                ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
+                ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                ('BACKGROUND',(0, 0),(-1,-1),colors.white),
+                # ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                 ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                 ('FONTNAME', (0, -1), (-1,-1), 'Helvetica'),
                 
