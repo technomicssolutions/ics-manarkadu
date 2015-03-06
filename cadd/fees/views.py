@@ -441,7 +441,7 @@ class PrintOutstandingFeesReport(View):
                     # if is_not_paid:
                         # for data in data_list:
                     total = float(total) + float(student.balance)
-                    d.append([Paragraph(student.student_name,para_style), Paragraph(student.doj.strftime('%d/%m/%Y'), para_style), student.batches.all()[0].start_time.strftime("%I:%M%p") , str(due), str(student.balance)])
+                    d.append([Paragraph(student.student_name,para_style), Paragraph(student.doj.strftime('%d/%m/%Y'), para_style), student.batches.all()[0].start_time.strftime("%I:%M%p") , str(format(due,'.2f')), str(student.balance)])
                         # if data_list:
                     table = Table(d, colWidths=(75, 120, 75, 75,  75),  rowHeights=25, style=style)
                     table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
@@ -452,7 +452,7 @@ class PrintOutstandingFeesReport(View):
                                 ])
                     elements.append(table)
                 if students:
-                    data = [['Total:',total]]
+                    data = [['Total:',format(total,'.2f')]]
                     table = Table(data, colWidths=(345,  75),  rowHeights=25, style=style)
                     table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                                 ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
