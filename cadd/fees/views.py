@@ -422,58 +422,21 @@ class PrintOutstandingFeesReport(View):
                     is_not_paid = False
                     due = 0
                     for installment in student.installments.all(): 
-                        # try:
-                        #     fees_payment_installments = FeesPayment.objects.get(student__id=student.id)
-                        #     if fees_payment_installments.count() > 0:
-                        #         if installment.amount != 0:
-                        #             if date >= installment.due_date:
-                        #                 due = due + installment.amount
-                        #                 if (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)) < installment.amount:
-                        #                         is_not_paid = True
-                        #                         data_list.append({
-                        #                             'id': installment.id,
-                        #                             'student_name':student.student_name,
-                        #                             'doj': student.doj.strftime('%d/%m/%Y'),
-                        #                             'batch_time': student.batches.all()[0].start_time.strftime("%-I:%M%P"),
-                        #                             'amount':float(installment.amount) - (float(fees_payment_installments[0].paid_amount) + float(fees_payment_installments[0].fee_waiver_amount)),
-                        #                             'name':'installment'+str(i + 1),
-                        #                             'paid_installment_amount': fees_payment_installments[0].paid_amount,
-                        #                             'balance': student.balance,
-                        #                         })
-                        #     elif fees_payment_installments.count() == 0:
-                        #         if installment.amount != 0:
-                        #             if date >= installment.due_date:
-                        #                 due = due + installment.amount
-                        #                 is_not_paid = True
-                        #                 data_list.append({
-                        #                     'id': installment.id,
-                        #                     'student_name':student.student_name,
-                        #                     'doj': student.doj.strftime('%d/%m/%Y'),
-                        #                     'batch_time': student.batches.all()[0].start_time.strftime("%I:%M%p"),
-                        #                     'amount':installment.amount,
-                        #                     'name':'installment'+str(i + 1),
-                        #                     'paid_installment_amount': 0,
-                        #                     'balance': student.balance,
-                        #                 })
-                        # except Exception as ex:
-                        #     if installment.amount != 0:
-                        #         if date >= installment.due_date:
-                        #             due = due + installment.amount
-                        #             print due,"due"
-                        #             is_not_paid = True
-                        #             data_list.append({
-                        #                 'id': installment.id,
-                        #                 'student_name':student.student_name,
-                        #                 'doj': student.doj.strftime('%d/%m/%Y'),
-                        #                 'batch_time': student.batches.all()[0].start_time.strftime("%I:%M%p"),
-                        #                 'amount':installment.amount,
-                        #                 'name':'installment'+str(i + 1),
-                        #                 'paid_installment_amount': 0,
-                        #                 'balance': student.balance,
-                        #             })
+                        if installment.amount != 0:
+                            if date >= installment.due_date:  
+                                due = float(due) + float(installment.amount) 
+                    try:
+                        fees_payment_installments = FeesPaymentInstallment.objects.filter(student__id=student.id)
+                        # print fees_payment_installments
+                        if fees_payment_installments.count() > 0:
+                            due = float(due) - (float(student.fees) - float(student.balance))
+                            print due,student.fees,student.balance 
+                    except Exception as ex:
+                        pass
+                                    
                         i = i + 1
-                        if date >= installment.due_date:
-                            due = due + installment.amount
+                        # if date >= installment.due_date:
+                        #     due = due + installment.amount
                     d = []
                     # if is_not_paid:
                         # for data in data_list:
