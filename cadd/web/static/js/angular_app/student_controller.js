@@ -845,7 +845,7 @@ function AdmissionController($scope, $http) {
                     var mydate = new Date($scope.doj);
                     x = mydate.getDate();
                     console.log(x)
-                    y = mydate.getMonth() + i + 1;
+                    y = mydate.getMonth() + i + 2;
                     // console.log(y)
                    
                     if (y <= 12){
