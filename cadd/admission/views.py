@@ -1033,7 +1033,7 @@ class AdmissionCardView(View):
             if student.photo:
                 image = Image(student.photo,width=2*inch,height=1*inch,kind='proportional')
             # else:
-            #     image = Image('/web/static/images/profile_pic.jpeg',width=2*inch,height=1*inch,kind='proportional')
+            #     image = Image('uploads/photos/profile_pic.jpeg',width=2*inch,height=1*inch,kind='proportional')
             data = [['Admission Card']]
             table = Table(data, colWidths=(450), rowHeights=40,  style=style)
             table.setStyle(
@@ -1080,7 +1080,7 @@ class AdmissionCardView(View):
                 ])   
             elements.append(table)
             data = [
-                ['Batch: ',student.batches.all()[0].name, 'Discount: ', str(student.discount)],
+                ['Batch: ',Paragraph(student.batches.all()[0].name + ' ' + time,para_style), 'Discount: ', str(student.discount)],
                 ['Fee: ',str(student.fees), 'Intial Amount: ', str(student.installments.all()[0].amount)],
                 ['Fine: ',str(student.installments.all()[0].fine_amount),'Number Of Installments: ' , str(student.no_installments)]      
             

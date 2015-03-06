@@ -291,19 +291,21 @@ function EditStudentController($scope, $http, $element, $location, $timeout) {
                     date = new Date();
                     var mydate = new Date($scope.student.doj);
                     x = mydate.getDay();
-                    console.log(x,i)
-                    y = date.getMonth() + i + 2;
+                    // console.log(x,i)
+                    console.log(mydate.getDay())
+                    y = mydate.getMonth() + i + 1;
+
                     console.log(y)
                    
                     if (y <= 12){
-                        z = date.getFullYear();
+                        z = mydate.getFullYear();
                     }
                     else{
                         y = y - 12;
-                        z = date.getFullYear() + 1;
+                        z = mydate.getFullYear() + 1;
                     }
-                    console.log(y,z)
-                    console.log($scope.student.fine)
+                    // console.log(y,z)
+                    // console.log($scope.student.fine)
                     amount = $scope.student.fees_after_discount / $scope.student.no_installments ;
                     $scope.installments.push({
                         'amount': amount,
@@ -841,20 +843,20 @@ function AdmissionController($scope, $http) {
                     var x,y,z
                     date = new Date();
                     var mydate = new Date($scope.doj);
-                    x = mydate.getDay();
+                    x = mydate.getDate();
                     console.log(x)
-                    y = date.getMonth() + i + 2;
-                    console.log(y)
+                    y = mydate.getMonth() + i + 1;
+                    // console.log(y)
                    
                     if (y <= 12){
-                        z = date.getFullYear();
+                        z = mydate.getFullYear();
                     }
                     else{
                         y = y - 12;
-                        z = date.getFullYear() + 1;
+                        z = mydate.getFullYear() + 1;
                     }
-                    console.log(y,z)
-                    console.log($scope.fees_after_discount)
+                    // console.log(y,z)
+                    // console.log($scope.fees_after_discount)
                     amount = $scope.fees_after_discount / $scope.no_installments ;
                     $scope.installments.push({
                         'amount': amount,
