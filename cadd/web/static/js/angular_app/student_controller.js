@@ -842,21 +842,25 @@ function AdmissionController($scope, $http) {
                     amount = 0
                     var x,y,z
                     date = new Date();
-                    console.log(date)
-                    var mydate = $scope.doj;
-                    x = 5;
-                    console.log(mydate.MONTH)
+                    // console.log(date)
+
+                    // var mydate = $scope.doj;
+                    var newdate = $scope.doj.split("/").reverse().join("-");
+                    var numbers = newdate.match(/\d+/g); 
+                    var mydate = new Date(numbers);
+                    console.log(mydate)
+                    x = numbers[2];
                     // console.log(x)
-                    // console.log(mydate,mydate.getMonth())
-                    y = date.getMonth() + i + 2;
-                    console.log(y)
+                    console.log(mydate.getMonth())
+                    y = mydate.getMonth() + i + 2;
+                    // console.log(y)
                    
                     if (y <= 12){
-                        z = date.getFullYear();
+                        z = mydate.getFullYear();
                     }
                     else{
                         y = y - 12;
-                        z = date.getFullYear() + 1;
+                        z = mydate.getFullYear() + 1;
                     }
                     // console.log(y,z)
                     // console.log($scope.fees_after_discount)
