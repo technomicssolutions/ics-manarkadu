@@ -49,12 +49,14 @@ class FeesPaymentSave(View):
             installment = Installment.objects.get(id=fees_payment_details['installment_id'])
             # fee_payment_installment, installment_created = FeesPaymentInstallment.objects.get_or_create(installment=installment, student=student)
             try:
-                fee_payment_installment = FeesPaymentInstallment.objects.get(installment=installment, student=student, receipt_no= fees_payment_details['receipt_no'])
+                fee_payment_installment = FeesPaymentInstallment.objects.get(receipt_no= fees_payment_details['receipt_no'])
+                print "hii"
                 res = {
                     'result': 'error',
                     'message': 'ReceiptNo Already exits',
                 }
-            except:
+            except Exception as ex:
+                print str(ex)
                 fee_payment_installment = FeesPaymentInstallment.objects.create(installment=installment, student=student, receipt_no= fees_payment_details['receipt_no'])
                 fee_payment_installment.installment_amount = installment.amount
 
