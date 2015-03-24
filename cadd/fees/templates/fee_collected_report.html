@@ -22,7 +22,10 @@
 					<select name="course" ng-model="course"  ng-options="course.id as course.course_name for course in courses">
 						<option value="">Course</option>
 					</select>
-					
+					<label>Start Date</label>
+					<input type="text" name="start_date" id="course_start_date" ng-model="course_start_date" />
+					<label>End Date</label> 
+					<input type="text" name="end_date" id="course_end_date" ng-model="course_end_date" /> 
 					<p class="error_message">[[message]]</p>
 					<input type="button"  ng-click="get_report('course_wise','')" value="Generate PDF" />
 					
@@ -38,9 +41,10 @@
 					<p class="error_msg">[[no_student_msg]]</p>
 				</div>
 				<div class="control" ng-show="show_date_wise_report">
-					<label>Date</label>
-					<input type="text" name="date" id="date" ng-model="date" /> 
-				
+					<label>Start Date</label>
+					<input type="text" name="start_date" id="start_date" ng-model="start_date" />
+					<label>End Date</label> 
+					<input type="text" name="end_date" id="end_date" ng-model="end_date" /> 
 					<p class="error_message">[[message]]</p>
 					<input type="button"  ng-click="get_report('date_wise','')" value="Generate PDF" />
 					

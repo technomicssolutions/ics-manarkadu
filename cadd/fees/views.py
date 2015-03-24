@@ -478,6 +478,11 @@ class FeepaymentReport(View):
         date = datetime.now().date()
         report_type = request.GET.get('report_type')
         if report_type == 'course_wise' :
+            if request.GET.get('start_date', '') and request.GET.get('end_date', ''):
+                start_date = request.GET.get('start_date', '')
+                start_date = datetime.strptime(start_date, '%d/%m/%Y')
+                end_date = request.GET.get('end_date', '')
+                end_date = datetime.strptime(end_date, '%d/%m/%Y')
             course =  request.GET.get('course')
             students = Student.objects.filter(course=course)
             response = HttpResponse(content_type='application/pdf')
@@ -500,14 +505,21 @@ class FeepaymentReport(View):
             total = 0
             for student in students:
                 try:
-                    fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
+                    fee_payment_installments = FeesPaymentInstallment.objects.filter(paid_date__range=[start_date,end_date],student=student)
                    
                     for fee_payment_installment in fee_payment_installments:
                         i = i + 1
                         total = total + fee_payment_installment.paid_amount
-                        data.append([Paragraph(student.student_name, para_style), 'Installment' +str(i), fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'), fee_payment_installment.paid_amount])
+                        data.append([Paragraph(student.student_name, para_style), 'Installment'+ str(fee_payment_installment.installment.order) if fee_payment_installment.installment.order>0 else 'Intial Payment', fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'), fee_payment_installment.paid_amount])
                 except Exception as ex:
                     print str(ex)
+                    fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
+                   
+                    for fee_payment_installment in fee_payment_installments:
+                        print fee_payment_installment.paid_date
+                        i = i + 1
+                        total = total + fee_payment_installment.paid_amount
+                        data.append([Paragraph(student.student_name, para_style), 'Installment'+ str(fee_payment_installment.installment.order) if fee_payment_installment.installment.order>0 else 'Intial Payment', fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y') if fee_payment_installment.paid_date else '', fee_payment_installment.paid_amount])
             table = Table(data, colWidths=(100, 100, 150,100,100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
@@ -595,12 +607,14 @@ class FeepaymentReport(View):
             p.build(elements)        
             return response 
         elif report_type == 'date_wise':
-            date = request.GET.get('date', '')
-            date = datetime.strptime(date, '%d/%m/%Y')
+            start_date = request.GET.get('start_date', '')
+            start_date = datetime.strptime(start_date, '%d/%m/%Y')
+            end_date = request.GET.get('end_date', '')
+            end_date = datetime.strptime(end_date, '%d/%m/%Y')
             response = HttpResponse(content_type='application/pdf')
             p = SimpleDocTemplate(response, pagesize=A4)
             elements = []        
-            d = [['FeesPayment Report'],[date.strftime('%d/%m/%Y')]]
+            d = [['FeesPayment Report'],[start_date.strftime('%d/%m/%Y')+ '-'+end_date.strftime('%d/%m/%Y')]]
 
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -615,7 +629,7 @@ class FeepaymentReport(View):
             data.append(['Receipt No','Course' ,'Student' ,'Paid Amount'])
             total = 0
             try:
-                fee_payment_installments = FeesPaymentInstallment.objects.filter(paid_date=date)
+                fee_payment_installments = FeesPaymentInstallment.objects.filter(paid_date__range=[start_date,end_date]).order_by('receipt_no')
                 
                 for fee_payment_installment in fee_payment_installments:
                     total = total + fee_payment_installment.paid_amount

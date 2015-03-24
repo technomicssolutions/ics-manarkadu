@@ -487,7 +487,28 @@ function FeesPaymentReportController($scope, $http, $element) {
     $scope.init = function(csrf_token){
         $scope.csrf_token = csrf_token;
         $scope.error_flag = false;
-        var date = new Picker.Date($$('#date'), {
+        var start_date = new Picker.Date($$('#start_date'), {
+            timePicker: false,
+            positionOffset: {x: 5, y: 0},
+            pickerClass: 'datepicker_bootstrap',
+            useFadeInOut: !Browser.ie,
+            format:'%d/%m/%Y',
+        });
+        var end_date = new Picker.Date($$('#end_date'), {
+            timePicker: false,
+            positionOffset: {x: 5, y: 0},
+            pickerClass: 'datepicker_bootstrap',
+            useFadeInOut: !Browser.ie,
+            format:'%d/%m/%Y',
+        });
+        var course_start_date = new Picker.Date($$('#course_start_date'), {
+            timePicker: false,
+            positionOffset: {x: 5, y: 0},
+            pickerClass: 'datepicker_bootstrap',
+            useFadeInOut: !Browser.ie,
+            format:'%d/%m/%Y',
+        });
+        var course_end_date = new Picker.Date($$('#course_end_date'), {
             timePicker: false,
             positionOffset: {x: 5, y: 0},
             pickerClass: 'datepicker_bootstrap',
@@ -524,13 +545,16 @@ function FeesPaymentReportController($scope, $http, $element) {
             $scope.students_list = ""
     }
     $scope.get_report = function(report_type,student){
-        $scope.date = $$('#date')[0].get('value');
+        $scope.start_date = $$('#start_date')[0].get('value');
+        $scope.end_date = $$('#end_date')[0].get('value');
+        $scope.course_start_date = $$('#course_start_date')[0].get('value');
+        $scope.course_end_date = $$('#course_end_date')[0].get('value');
         if (report_type == 'student_wise') {
             document.location.href = '/fees/fees_payment_report/?&student_id='+student.id+'&report_type='+report_type;
         }else if(report_type == 'course_wise'){
-            document.location.href = '/fees/fees_payment_report/?course='+$scope.course+ '&report_type='+report_type;
+            document.location.href = '/fees/fees_payment_report/?course='+$scope.course+'&start_date=' +$scope.course_start_date+ '&end_date=' +$scope.course_end_date + '&report_type='+report_type;
         }else if(report_type == 'date_wise'){
-            document.location.href = '/fees/fees_payment_report/?date='+$scope.date+ '&report_type='+report_type;
+            document.location.href = '/fees/fees_payment_report/?start_date='+$scope.start_date+ '&end_date=' +$scope.end_date +'&report_type='+report_type;
         }
     }
 }
