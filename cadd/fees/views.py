@@ -503,7 +503,7 @@ class FeepaymentReport(View):
             elements.append(t)
             elements.append(Spacer(4, 5))
             data = []
-            data.append(['Student' , 'Installment','Installment Amount','Paid date','Paid Amount'])
+            data.append(['Student' , 'Receipt No','Installment Amount','Paid date','Paid Amount'])
             i= 0
             total = 0
             for student in students:
@@ -513,7 +513,7 @@ class FeepaymentReport(View):
                     for fee_payment_installment in fee_payment_installments:
                         i = i + 1
                         total = total + fee_payment_installment.paid_amount
-                        data.append([Paragraph(student.student_name, para_style), 'Installment'+ str(fee_payment_installment.installment.order) if fee_payment_installment.installment.order>0 else 'Intial Payment', fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'), fee_payment_installment.paid_amount])
+                        data.append([Paragraph(student.student_name, para_style),  fee_payment_installment.receipt_no, fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y'), fee_payment_installment.paid_amount])
                 except Exception as ex:
                     print str(ex)
                     fee_payment_installments = FeesPaymentInstallment.objects.filter(student=student)
@@ -522,7 +522,7 @@ class FeepaymentReport(View):
                         print fee_payment_installment.paid_date
                         i = i + 1
                         total = total + fee_payment_installment.paid_amount
-                        data.append([Paragraph(student.student_name, para_style), 'Installment'+ str(fee_payment_installment.installment.order) if fee_payment_installment.installment.order>0 else 'Intial Payment', fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y') if fee_payment_installment.paid_date else '', fee_payment_installment.paid_amount])
+                        data.append([Paragraph(student.student_name, para_style), fee_payment_installment.receipt_no, fee_payment_installment.total_amount,fee_payment_installment.paid_date.strftime('%d/%m/%Y') if fee_payment_installment.paid_date else '', fee_payment_installment.paid_amount])
             table = Table(data, colWidths=(100, 100, 150,100,100),  style=style)
             table.setStyle([('ALIGN',(0,-1),(0,-1),'LEFT'),
                         ('TEXTCOLOR',(0,0),(-1,-1),colors.black),
