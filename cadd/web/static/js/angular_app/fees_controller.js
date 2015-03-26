@@ -313,9 +313,9 @@ function EditFeesPaymentController($scope, $element, $http, $timeout, share, $lo
         } else if (fine_balance < $scope.payment_details.paid_fine_amount ) {
             $scope.validation_error = "Please check the Paying Fine amount";
             return false;
-        } else if ($scope.payment_details.installment_balance < 0 ) {
-            $scope.validation_error = "Please check the Paying amount";
-            return false;
+        // } else if ($scope.payment_details.installment_balance < 0 ) {
+        //     $scope.validation_error = "Please check the Paying amount";
+        //     return false;
         } else if($scope.payment_details.paid_fine_amount == ''){
             $scope.validation_error = "Please enter a valid amount in fine amount" ;
             return false;
