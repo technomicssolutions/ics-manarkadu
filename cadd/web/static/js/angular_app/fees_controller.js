@@ -39,7 +39,7 @@ function FeesPaymentController($scope, $element, $http, $timeout, share, $locati
             format:'%d/%m/%Y',
         });
         get_course_list($scope, $http);
-        get_receipt_no($scope, $http);
+        // get_receipt_no($scope, $http);
     }
     $scope.get_student_list = function(){
         get_course_batch_student_list($scope, $http);
