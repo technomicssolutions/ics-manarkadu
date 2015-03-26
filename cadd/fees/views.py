@@ -487,8 +487,11 @@ class FeepaymentReport(View):
             students = Student.objects.filter(course=course)
             response = HttpResponse(content_type='application/pdf')
             p = SimpleDocTemplate(response, pagesize=A4)
-            elements = []        
-            d = [['FeesPayment Report' + '' +date.strftime('%d/%m/%Y')]]
+            elements = []  
+            if request.GET.get('start_date', '') and request.GET.get('end_date', ''):
+                d = [['FeesPayment Report'],[start_date.strftime('%d/%m/%Y')+ '-'+end_date.strftime('%d/%m/%Y')]]      
+            else:
+                d = [['FeesPayment Report' + '' +date.strftime('%d/%m/%Y')]]
 
             t = Table(d, colWidths=(450), rowHeights=25, style=style)
             t.setStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
